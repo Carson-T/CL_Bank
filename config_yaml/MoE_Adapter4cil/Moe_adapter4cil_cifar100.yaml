@@ -1,0 +1,44 @@
+basic:
+  device_ids: "2"
+  random_seed: 1993
+  version_name: "Moe_adapter4cil_cifar100_b0i5"
+  wandb_dir: "/data/jiantao"
+  is_log: True
+  save_checkpoint: True
+  save_path: "../checkpoint&log"
+  method: "MoE_Adapter4cil"
+  increment_type: "CIL"
+#  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
+  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+
+usual:
+  dataset_name: "cifar100"
+  data_shuffle: True
+  img_size: 224
+  backbone: "CLIP"
+  pretrained_path: "/data/jiantao/pretrained_model/CLIP_ViT-B-32.pt"
+  drop_rate: 0
+  drop_path_rate: 0
+  batch_size: 64
+  num_workers: 8
+  epochs: 20
+  optimizer: AdamW
+  loss_func: CEloss
+  scheduler: Warm-up-Cosine-Annealing
+  lr: 0.001
+  momentum: 0
+  weight_decay: 0
+  memory_size: 0
+  apply_nme: False
+  sampling_method: ""
+
+special:
+  prompt_template: "a bad photo of a {}."
+
+options:
+  Cosine:
+    eta_min: 0
+  Warm-up-Cosine-Annealing:
+    init_ratio: 0.1
+    warm_up_steps: 2
+    min_lr_ratio: 0.001

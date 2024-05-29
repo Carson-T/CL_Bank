@@ -1,0 +1,44 @@
+basic:
+  device_ids: "3"
+  random_seed: 1993
+  version_name: "Coda_prompt_prefix_t_cifar100_b0i5"
+  wandb_dir: "/data/jiantao"
+  is_log: True
+  save_checkpoint: True
+  save_path: "../checkpoint&log"
+  method: "Coda_Prompt"
+  increment_type: "CIL"
+#  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
+  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+
+usual:
+  dataset_name: "cifar100"
+  data_shuffle: True
+  img_size: 224
+  backbone: "vit_prompt"
+  pretrained_path: "/data/jiantao/pretrained_model/vit_base_patch16_224.augreg_in21k_ft_in1k.safetensors"
+  drop_rate: 0
+  drop_path_rate: 0
+  batch_size: 64
+  num_workers: 8
+  epochs: 20
+  optimizer: Adam
+  loss_func: CEloss
+  scheduler: Cosine
+  lr: 0.001
+  momentum: 0
+  weight_decay: 0
+  memory_size: 0
+  apply_nme: False
+  sampling_method: ""
+
+special:
+  freeze_fe: True
+  pt_type: prefix_t
+  prompt_pool_size: 100
+  prompt_length: 8
+  orth_mu: 0.001
+
+options:
+  Cosine:
+    eta_min: 0

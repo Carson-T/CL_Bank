@@ -1,0 +1,45 @@
+basic:
+  device_ids: "6"
+  random_seed: 1993
+  version_name: "Dark_ER++_imagenet_r_b0i20"
+  wandb_dir: "/data/jiantao"
+  is_log: True
+  save_checkpoint: True
+  save_path: "../checkpoint&log"
+  method: "Dark_ER"
+  increment_type: "CIL"
+  increment_steps: [ 20, 20, 20, 20, 20, 20, 20, 20, 20, 20 ]
+
+usual:
+  dataset_name: "imagenet-r"
+  data_shuffle: False
+  img_size: 224
+  backbone: "tv_resnet18"
+  pretrained_path: ""
+  drop_rate: 0
+  drop_path_rate: 0
+  batch_size: 32
+  num_workers: 8
+  epochs: 100
+  optimizer: SGD
+  loss_func: CEloss
+  scheduler: multi_step
+  lr: 0.03
+  momentum: 0
+  weight_decay: 0
+  memory_size: 2000
+  apply_nme: False
+  sampling_method: "reservoir"
+
+special:
+  replay_batch_size: 32
+  alpha: 0.1
+  beta: 0.5
+
+options:
+  multi_step:
+    milestones: [35, 45, 80]
+    gamma: 0.1
+  Warm-up-Cosine-Annealing:
+    init_ratio: 0.1
+    min_lr_ratio: 0.001

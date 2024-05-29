@@ -1,0 +1,44 @@
+basic:
+  device_ids: "1"
+  random_seed: 1993
+  version_name: "icarl_cifar100_b0i5"
+  wandb_dir: "/data/jiantao"
+  is_log: True
+  save_checkpoint: True
+  save_path: "../checkpoint&log"
+  method: "iCarL"
+  increment_type: "CIL"
+  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+#  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+
+usual:
+  dataset_name: "cifar100"
+  data_shuffle: True
+  img_size: 32
+  backbone: "cifar_resnet32"
+  pretrained_path: ""
+  drop_rate: 0
+  drop_path_rate: 0
+  batch_size: 128
+  num_workers: 8
+  epochs: 120
+  optimizer: SGD
+  loss_func: CEloss
+  scheduler: multi_step
+  lr: 0.1
+  momentum: 0.9
+  weight_decay: 0.0005
+  memory_size: 2000
+  apply_nme: True
+  sampling_method: "herding"
+
+special:
+  T: 2
+
+options:
+  multi_step:
+    milestones: [49, 63, 90]
+    gamma: 0.2
+  Warm-up-Cosine-Annealing:
+    init_ratio: 0.1
+    min_lr_ratio: 0.001
