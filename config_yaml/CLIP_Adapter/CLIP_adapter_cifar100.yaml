@@ -1,0 +1,47 @@
+basic:
+  device_ids: "0"
+  random_seed: 1993
+  version_name: "CLIP_Adapter_both_cifar100_b0i10_slower"
+  wandb_dir: "/data/jiantao"
+  is_log: True
+  save_checkpoint: False
+  save_path: "../checkpoint&log"
+  method: "CLIP_Adapter"
+  increment_type: "CIL"
+  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
+#  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+
+usual:
+  dataset_name: "cifar100"
+  data_shuffle: True
+  img_size: 224
+  backbone: "CLIP"
+  pretrained_path: "/data/jiantao/pretrained_model/CLIP_ViT-B-32.pt"
+  drop_rate: 0
+  drop_path_rate: 0
+  batch_size: 64
+  num_workers: 8
+  epochs: 10
+  optimizer: SGD
+  loss_func: CEloss
+  scheduler: Cosine
+  lr: 0.1
+  momentum: 0.9
+  weight_decay: 0
+  memory_size: 0
+  apply_nme: False
+  sampling_method: ""
+
+special:
+  prompt_template: "a bad photo of a {}."
+  ca_epoch: 0
+  ca_lr: 0.1
+  num_sampled_pcls: 256
+
+options:
+  Cosine:
+    eta_min: 0
+  Warm-up-Cosine-Annealing:
+    init_ratio: 0.1
+    warm_up_steps: 2
+    min_lr_ratio: 0.001

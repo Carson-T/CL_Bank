@@ -95,12 +95,12 @@ def extract_vectors(config, model, dataset, class_idx):
                               num_workers=config.num_workers)
     model.eval()
     all_vectors = []
-    all_logits = []
+    # all_logits = []
     with torch.no_grad():
         for idx, (inputs, targets, _) in enumerate(class_loader):
             output = model(inputs.cuda())
             all_vectors.append(output["features"])
-            all_logits.append(output["logits"])
+            # all_logits.append(output["logits"])
 
     # ret = (torch.cat(all_vectors), torch.cat(all_logits))
     return torch.cat(all_vectors), class_samples, class_targets

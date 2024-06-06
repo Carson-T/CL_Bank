@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import copy
 import timm
+from safetensors.torch import load_file
 from model.backbone import *
 
 
@@ -13,6 +14,7 @@ class Inc_Net(nn.Module):
         self.feature_dim = None
         self.fc = None
         self.backbone = None
+        self.old_fc_state_dict = None
         # self.aux_fc = None
         # self.feature_dim_list = []
 
@@ -46,21 +48,44 @@ class Inc_Net(nn.Module):
         self.fc = nn.Linear(self.feature_dim, num_classes)
         self.logger.info('Created classifier head with output dim {}'.format(num_classes))
 
+    def fc_backup(self):
+        self.old_fc_state_dict = copy.deepcopy(self.fc.state_dict())
 
-    def forward(self, x):
-        if hasattr(self.backbone, "forward_features"):
-            features = self.backbone.forward_head(self.backbone.forward_features(x), pre_logits=True)
+    def fc_recall(self):
+        self.fc.load_state_dict(self.old_fc_state_dict)
+
+    def forward(self, x, fc_only=False):
+        if fc_only:
+            logits = self.fc(x)
+            return {"logits": logits}
         else:
-            features = self.backbone(x)
-        logits = self.fc(features)
+            if hasattr(self.backbone, "forward_features"):
+                features = self.backbone.forward_head(self.backbone.forward_features(x), pre_logits=True)
+            else:
+                features = self.backbone(x)
+            logits = self.fc(features)
 
-        return {"logits": logits, "features": features}
+            return {"logits": logits, "features": features}
 
     def freeze(self):
         for param in self.parameters():
             param.requires_grad = False
         self.eval()
         return self
+
+    def unfreeze(self):
+        for param in self.parameters():
+            param.requires_grad = True
+        self.train()
+        self.show_trainable_params()
+
+    def freeze_fe(self):
+        for name, param in self.named_parameters():
+            if "backbone" in name:
+                param.requires_grad = False
+            else:
+                param.requires_grad = True
+        self.show_trainable_params()
 
     def reset_fc_parameters(self, fc):
         nn.init.kaiming_uniform_(fc.weight, nonlinearity='linear')
@@ -75,3 +100,8 @@ class Inc_Net(nn.Module):
         gamma = meanold / meannew
         print('alignweights,gamma=', gamma)
         self.fc.weight.data[-increment:, :] *= gamma
+
+    def show_trainable_params(self):
+        for name, param in self.named_parameters():
+            if param.requires_grad:
+                self.logger.info("{} {}".format(name, param.numel()))

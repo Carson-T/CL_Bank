@@ -56,7 +56,7 @@ if __name__ == '__main__':
     config = config()
     logger = log(config)
     logger.info("config: {}".format(vars(config)))
-    # os.environ["WANDB_MODE"] = "offline"
+    os.environ["WANDB_MODE"] = "offline"
     os.environ['CUDA_VISIBLE_DEVICES'] = config.device_ids
     torch.set_num_threads(config.num_workers)  # limit cpu usage, important for DarkER, X-DER
 
