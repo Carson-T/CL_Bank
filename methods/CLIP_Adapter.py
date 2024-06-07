@@ -70,8 +70,6 @@ class CLIP_Adapter(Base):
     def incremental_train(self, data_manager, task_id):
         wandb.define_metric("overall/task_id")
         wandb.define_metric("overall/*", step_metric="overall/task_id")
-        if len(self.config.device_ids.split(",")) > 1:
-            self.model = nn.DataParallel(self.model)
         # self.logger.info("new feature extractor requires_grad=True")
         # optimizer = get_optimizer(filter(lambda p: p.requires_grad, self.model.parameters()), self.config)
         optimizer = optim.SGD([{"params": self.model.img_adapter_list.parameters(), "lr": self.config.lr*0.01},
@@ -80,16 +78,18 @@ class CLIP_Adapter(Base):
         scheduler = get_scheduler(optimizer, self.config)
         hard_loss = get_loss_func(self.config)
         soft_loss = None
+        if len(self.config.device_ids.split(",")) > 1:
+            self.model = nn.DataParallel(self.model)
         self.train_model(self.train_loader, self.test_loader, hard_loss, soft_loss, optimizer, scheduler,
                          task_id=task_id, epochs=self.config.epochs)
+        if len(self.config.device_ids.split(",")) > 1:
+            self.model = self.model.module
         if self.config.ca_epoch > 0:
             self.compute_mean_cov(data_manager)
             self.logger.info("class means and covs computed!")
             if task_id > 0:
                 self.stage2_training(task_id)
                 self.logger.info("stage 2 training finished!")
-        if len(self.config.device_ids.split(",")) > 1:
-            self.model = self.model.module
 
     def epoch_train(self, model, train_loader, hard_loss, soft_loss, optimizer, task_id):
         losses = 0.

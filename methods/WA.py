@@ -32,8 +32,6 @@ class WA(Base):
             self.old_model = self.old_model.cuda()
 
     def incremental_train(self, data_manager, task_id):
-        if len(self.config.device_ids.split(",")) > 1:
-            self.model = nn.DataParallel(self.model)
         wandb.define_metric("overall/task_id")
         wandb.define_metric("overall/*", step_metric="overall/task_id")
         self.kd_lambda = self.known_classes / self.cur_classes
@@ -42,14 +40,16 @@ class WA(Base):
         scheduler = get_scheduler(optimizer, self.config)
         hard_loss = get_loss_func(self.config)
         soft_loss = KD_loss
+        if len(self.config.device_ids.split(",")) > 1:
+            self.model = nn.DataParallel(self.model)
         self.train_model(self.train_loader, self.test_loader, hard_loss, soft_loss, optimizer, scheduler,
                          task_id=task_id, epochs=self.config.epochs)
+        if len(self.config.device_ids.split(",")) > 1:
+            self.model = self.model.module
 
         if task_id > 0:
             self.model.weight_align(self.new_classes)
 
-        if len(self.config.device_ids.split(",")) > 1:
-            self.model = self.model.module
 
     def epoch_train(self, model, train_loader, hard_loss, soft_loss, optimizer, task_id):
         losses = 0.

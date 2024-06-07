@@ -48,8 +48,6 @@ class UCIR(Base):
     def incremental_train(self, data_manager, task_id):
         wandb.define_metric("overall/task_id")
         wandb.define_metric("overall/*", step_metric="overall/task_id")
-        if len(self.config.device_ids.split(",")) > 1:
-            self.model = nn.DataParallel(self.model)
 
         if task_id == 0:
             self.lamda = 0
@@ -60,6 +58,8 @@ class UCIR(Base):
         scheduler = get_scheduler(optimizer, self.config)
         hard_loss = get_loss_func(self.config)
         soft_loss = F.cosine_embedding_loss
+        if len(self.config.device_ids.split(",")) > 1:
+            self.model = nn.DataParallel(self.model)
         self.train_model(self.train_loader, self.test_loader, hard_loss, soft_loss, optimizer, scheduler,
                          task_id=task_id, epochs=self.config.epochs)
 

@@ -34,16 +34,18 @@ class Dynamic_ER(Base):
     def incremental_train(self, data_manager, task_id):
         wandb.define_metric("overall/task_id")
         wandb.define_metric("overall/*", step_metric="overall/task_id")
-        if len(self.config.device_ids.split(",")) > 1:
-            self.model = nn.DataParallel(self.model)
         self.model.change_new_feature_extractors_grad(requires_grad=True)
         self.logger.info("new feature extractor requires_grad=True")
         optimizer = get_optimizer(filter(lambda p: p.requires_grad, self.model.parameters()), self.config)
         scheduler = get_scheduler(optimizer, self.config)
         hard_loss = get_loss_func(self.config)
         soft_loss = None
+        if len(self.config.device_ids.split(",")) > 1:
+            self.model = nn.DataParallel(self.model)
         self.train_model(self.train_loader, self.test_loader, hard_loss, soft_loss, optimizer, scheduler,
                          task_id=task_id, epochs=self.config.epochs)
+        if len(self.config.device_ids.split(",")) > 1:
+            self.model = self.model.module
 
         if task_id > 0:
             ft_train_dataset = self.get_balanced_dataset(data_manager)
@@ -62,8 +64,6 @@ class Dynamic_ER(Base):
                              task_id=task_id, epochs=self.config.ft_epochs, stage=2)
 
 
-        if len(self.config.device_ids.split(",")) > 1:
-            self.model = self.model.module
 
     def train_model(self, train_loader, test_loader, hard_loss, soft_loss, optimizer, scheduler, task_id, epochs, stage):
         wandb.define_metric("task " + str(task_id + 1) + "/" + "stage" + str(stage) + "/" + "epoch")
