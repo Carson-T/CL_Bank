@@ -6,7 +6,7 @@ from safetensors.torch import load_file
 from utils.functions import *
 from utils.train_utils import ortho_penalty
 from model.backbone import *
-
+from model.Base_Net import Base_Net
 
 class Coda_prompt_module(nn.Module):
     def __init__(self, emb_dim, prompt_pool_size, prompt_length, orth_mu, task_num, pt_type="prefix_t", key_dim=768):
@@ -160,35 +160,32 @@ class Coda_prompt_module(nn.Module):
         return all_p, all_orth_loss
 
 
-class Coda_prompt_Net(nn.Module):
-    def __init__(self, logger):
-        super(Coda_prompt_Net, self).__init__()
-        self.logger = logger
+class Coda_prompt_Net(Base_Net):
+    def __init__(self, config, logger):
+        super(Coda_prompt_Net, self).__init__(config, logger)
         self.prompt_pool = None
-        self.backbone = None
-        self.fc = None
         self.embed_dim = 768
 
-    def model_init(self, config):
-        self.prompt_pool = Coda_prompt_module(self.embed_dim, config.prompt_pool_size, config.prompt_length,
-                                              config.orth_mu, len(config.increment_steps), pt_type=config.pt_type)
+    def model_init(self):
+        self.prompt_pool = Coda_prompt_module(self.embed_dim, self.config.prompt_pool_size, self.config.prompt_length,
+                                              self.config.orth_mu, len(self.config.increment_steps), pt_type=self.config.pt_type)
         # get feature encoder
-        backbone = timm.create_model(model_name=config.backbone,
-                                     pt_type=config.pt_type,
-                                     img_size=config.img_size,
+        backbone = timm.create_model(model_name=self.config.backbone,
+                                     pt_type=self.config.pt_type,
+                                     img_size=self.config.img_size,
                                      patch_size=16,
                                      embed_dim=self.embed_dim,
                                      depth=12,
                                      num_heads=12,
                                      )
-        if config.pretrained_path:
-            state_dict = load_file(config.pretrained_path)
+        if self.config.pretrained_path:
+            state_dict = load_file(self.config.pretrained_path)
             del state_dict['head.weight']
             del state_dict['head.bias']
             backbone.load_state_dict(state_dict, strict=True)
         self.backbone = backbone
 
-    def forward(self, x, train, task_id=None):
+    def forward(self, x, train=False, task_id=None):
         prompt_loss = torch.zeros((1,), requires_grad=True).cuda()
         if self.prompt_pool is not None:
             with torch.no_grad():
@@ -207,7 +204,7 @@ class Coda_prompt_Net(nn.Module):
         out = self.fc(features)
         return {"logits": out, "features": features, "prompt_loss": prompt_loss}
 
-    def freeze_FE(self):
+    def freeze_fe(self):
         for name, param in self.backbone.named_parameters():
             # if name != "pos_embed":
             param.requires_grad = False
@@ -215,9 +212,9 @@ class Coda_prompt_Net(nn.Module):
         self.logger.info('Freezing feature extractor(requires_grad=False) ...')
         return self
 
-    def update_fc(self, config, task_id):
-        new_classes = config.increment_steps[task_id]
-        known_classes = sum(config.increment_steps[:task_id])
+    def update_fc(self, task_id):
+        new_classes = self.config.increment_steps[task_id]
+        known_classes = sum(self.config.increment_steps[:task_id])
         cur_classes = new_classes + known_classes
         if self.prompt_pool is not None:
             self.prompt_pool.prompt_init_orth(task_id)

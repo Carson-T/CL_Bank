@@ -2,7 +2,7 @@ from torchvision import datasets, transforms
 import albumentations
 from albumentations import pytorch as AT
 import numpy as np
-
+import json
 
 class CIFAR100:
     """
@@ -17,7 +17,7 @@ class CIFAR100:
     Reference: https://www.cs.toronto.edu/~kriz/cifar.html
     """
 
-    def __init__(self, shuffle=False, img_size=32) -> None:
+    def __init__(self, shuffle=False, img_size=32, seed=1993) -> None:
         super().__init__()
         self.use_path = False
         self.img_size = img_size
@@ -48,6 +48,11 @@ class CIFAR100:
         self.class_order = np.arange(100).tolist()
         if shuffle:
             self.class_order = np.random.permutation(len(self.class_order)).tolist()
+            if seed == 1993:
+                assert self.class_order == [68, 56, 78, 8, 23, 84, 90, 65, 74, 76, 40, 89, 3, 92, 55, 9, 26, 80, 43, 38, 58, 70, 77, 1, 85, 19, 17, 50, 28,
+             53, 13, 81, 45, 82, 6, 59, 83, 16, 15, 44, 91, 41, 72, 60, 79, 52, 20, 10, 31, 54, 37, 95, 14, 71, 96, 98, 97,
+             2, 64, 66, 42, 22, 35, 86, 24, 34, 87, 21, 99, 0, 88, 27, 18, 94, 11, 12, 47, 25, 30, 46, 62, 69, 36, 61, 7,
+             63, 75, 5, 32, 4, 51, 48, 73, 93, 39, 67, 29, 49, 57, 33]
         # self.class_order = [
         #         87, 0, 52, 58, 44, 91, 68, 97, 51, 15, 94, 92, 10, 72, 49, 78, 61, 14, 8, 86, 84, 96, 18, 24, 32, 45,
         #         88, 11, 4, 67, 69, 66, 77, 47, 79, 93, 29, 50, 57, 83, 17, 81, 41, 12, 37, 59, 25, 20, 80, 73, 1, 28, 6,
@@ -59,39 +64,43 @@ class CIFAR100:
         train_dataset = datasets.cifar.CIFAR100("/data/jiantao/Data/cifar100", train=True, download=True)
         test_dataset = datasets.cifar.CIFAR100("/data/jiantao/Data/cifar100", train=False, download=True)
 
+        with open("/data/jiantao/projects/My_CL_Bank/code/datasets/class_descs/cifar100_prompts_base.json", "r") as f:
+            class_descs = json.load(f)
+        self.class_descs = class_descs
+
         # self.class_to_idx = train_dataset.class_to_idx
-        self.class_to_idx = {}
-        for key, value in train_dataset.class_to_idx.items():
-            if key == 'aquarium_fish':
-                print('class {}: {} => {}'.format(value, key, 'goldfish'))
-                key = 'goldfish'
-            elif key == 'lawn_mower':
-                print('class {}: {} => {}'.format(value, key, 'mower'))
-                key = 'mower'
-            elif key == 'maple_tree':
-                print('class {}: {} => {}'.format(value, key, 'maple'))
-                key = 'maple'
-            elif key == 'oak_tree':
-                print('class {}: {} => {}'.format(value, key, 'oak'))
-                key = 'oak'
-            elif key == 'palm_tree':
-                print('class {}: {} => {}'.format(value, key, 'palm'))
-                key = 'palm'
-            elif key == 'pickup_truck':
-                print('class {}: {} => {}'.format(value, key, 'truck'))
-                key = 'truck'
-            elif key == 'pine_tree':
-                print('class {}: {} => {}'.format(value, key, 'pine'))
-                key = 'pine'
-            elif key == 'sweet_pepper':
-                print('class {}: {} => {}'.format(value, key, 'pepper'))
-                key = 'pepper'
-            elif key == 'willow_tree':
-                print('class {}: {} => {}'.format(value, key, 'willow'))
-                key = 'willow'
-            else:
-                print('class {}: {}'.format(value, key))
-            self.class_to_idx[key] = value
+        self.class_to_idx = train_dataset.class_to_idx
+        # for key, value in train_dataset.class_to_idx.items():
+        #     if key == 'aquarium_fish':
+        #         print('class {}: {} => {}'.format(value, key, 'goldfish'))
+        #         key = 'goldfish'
+        #     elif key == 'lawn_mower':
+        #         print('class {}: {} => {}'.format(value, key, 'mower'))
+        #         key = 'mower'
+        #     elif key == 'maple_tree':
+        #         print('class {}: {} => {}'.format(value, key, 'maple'))
+        #         key = 'maple'
+        #     elif key == 'oak_tree':
+        #         print('class {}: {} => {}'.format(value, key, 'oak'))
+        #         key = 'oak'
+        #     elif key == 'palm_tree':
+        #         print('class {}: {} => {}'.format(value, key, 'palm'))
+        #         key = 'palm'
+        #     elif key == 'pickup_truck':
+        #         print('class {}: {} => {}'.format(value, key, 'truck'))
+        #         key = 'truck'
+        #     elif key == 'pine_tree':
+        #         print('class {}: {} => {}'.format(value, key, 'pine'))
+        #         key = 'pine'
+        #     elif key == 'sweet_pepper':
+        #         print('class {}: {} => {}'.format(value, key, 'pepper'))
+        #         key = 'pepper'
+        #     elif key == 'willow_tree':
+        #         print('class {}: {} => {}'.format(value, key, 'willow'))
+        #         key = 'willow'
+        #     else:
+        #         print('class {}: {}'.format(value, key))
+        #     self.class_to_idx[key] = value
 
         self.train_data, self.train_targets = train_dataset.data, np.array(train_dataset.targets)
         self.test_data, self.test_targets = test_dataset.data, np.array(test_dataset.targets)

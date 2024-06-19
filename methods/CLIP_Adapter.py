@@ -30,19 +30,21 @@ class CLIP_Adapter(Base):
         if config.increment_type != 'CIL':
             raise ValueError('CLIP_Adapter is a class incremental method!')
 
-    def prepare_task_data(self, data_manager, task_id):
-        if task_id > 0 and self.memory_bank is not None:
-            self.train_dataset = data_manager.get_dataset(source='train', mode='train',
-                                                          indices=np.arange(self.known_classes, self.cur_classes),
-                                                          appendent=self.memory_bank.get_memory())
-        else:
-            self.train_dataset = data_manager.get_dataset(source='train', mode='train',
-                                                          indices=np.arange(self.known_classes, self.cur_classes))
+    def prepare_task_data(self, data_manager, task_id, is_train=True):
+        if is_train:
+            if task_id > 0 and self.memory_bank is not None:
+                self.train_dataset = data_manager.get_dataset(source='train', mode='train',
+                                                              indices=np.arange(self.known_classes, self.cur_classes),
+                                                              appendent=self.memory_bank.get_memory())
+            else:
+                self.train_dataset = data_manager.get_dataset(source='train', mode='train',
+                                                              indices=np.arange(self.known_classes, self.cur_classes))
+            self.train_loader = DataLoader(self.train_dataset, batch_size=self.config.batch_size, shuffle=True,
+                                           num_workers=self.config.num_workers)
+            self.logger.info("train data num of task {}: {}".format(task_id + 1, len(self.train_dataset.samples)))
 
         self.test_dataset = data_manager.get_dataset(source='test', mode='test', indices=np.arange(0, self.cur_classes))
 
-        self.train_loader = DataLoader(self.train_dataset, batch_size=self.config.batch_size, shuffle=True,
-                                       num_workers=self.config.num_workers)
         self.test_loader = DataLoader(self.test_dataset, batch_size=self.config.batch_size, shuffle=False,
                                       num_workers=self.config.num_workers)
         if self.class_to_idx is None:
@@ -51,14 +53,20 @@ class CLIP_Adapter(Base):
         self.new_class_names = [self.idx_to_class[i] for i in range(self.known_classes, self.cur_classes)]
         self.current_class_names = [self.idx_to_class[i] for i in range(0, self.cur_classes)]
         self.logger.info('Cur Task classnames: {}'.format(self.current_class_names))
-        self.logger.info("train data num of task {}: {}".format(task_id + 1, len(self.train_dataset.samples)))
         self.logger.info("test data num of task {}: {}".format(task_id + 1, len(self.test_dataset.samples)))
 
-    def prepare_model(self, task_id):
+    def prepare_model(self, task_id, checkpoint=None):
         if self.model is None:
             self.model = CLIP_Adapter_Net(self.config, self.logger)
             self.model.model_init()
         self.model.freeze_fe()
+        if checkpoint is not None:
+            assert task_id == checkpoint["task_id"]
+            model_state_dict = checkpoint["state_dict"]
+            self.model.load_state_dict(model_state_dict)
+            if checkpoint["class_means"] is not None:
+                self.class_means = checkpoint["class_means"]
+            self.logger.info("checkpoint loaded!")
         self.model.show_trainable_params()
         self.new_text_tokens = self.model.text_tokenize(self.new_class_names, self.prompt_template)
         self.cur_text_tokens = self.model.text_tokenize(self.current_class_names, self.prompt_template)

@@ -12,7 +12,7 @@ from utils.functions import *
 from utils.train_utils import *
 
 
-class iCaRL(Base):
+class iCarL(Base):
     def __init__(self, config, logger):
         super().__init__(config, logger)
         self.memory_bank = ReplayBank(config, logger)
@@ -20,11 +20,18 @@ class iCaRL(Base):
         if config.increment_type != 'CIL':
             raise ValueError('iCaRL is a class incremental method!')
 
-    def prepare_model(self, task_id):
+    def prepare_model(self, task_id, checkpoint=None):
         if self.model is None:
-            self.model = Inc_Net(self.logger)
-            self.model.model_init(self.config)
-        self.model.update_fc(self.config, task_id)
+            self.model = Inc_Net(self.config, self.logger)
+            self.model.model_init()
+        self.model.update_fc(task_id)
+        if checkpoint is not None:
+            assert task_id == checkpoint["task_id"]
+            model_state_dict = checkpoint["state_dict"]
+            self.model.load_state_dict(model_state_dict)
+            if checkpoint["class_means"] is not None:
+                self.class_means = checkpoint["class_means"]
+            self.logger.info("checkpoint loaded!")
         self.model = self.model.cuda()
         if self.old_model is not None:
             self.old_model = self.old_model.cuda()
@@ -179,12 +186,12 @@ class iCaRL(Base):
                 np.mean(self.nme_task_acc_list[:task_id+1, task_id])))
         self.logger.info("backward transfer: {}".format(calculate_bwf(self.nme_task_acc_list, task_id)))
         self.logger.info("average forgetting: {}".format(cal_avg_forgetting(self.nme_task_acc_list, task_id)))
-
-        wandb.log({
-            "overall/task_id": task_id + 1,
-            "overall/cnn_test_overall_acc": cnn_overall_acc,
-            "overall/nme_test_overall_acc": nme_overall_acc
-        })
+        if not os.environ["WANDB_DISABLED"]:
+            wandb.log({
+                "overall/task_id": task_id + 1,
+                "overall/cnn_test_overall_acc": cnn_overall_acc,
+                "overall/nme_test_overall_acc": nme_overall_acc
+            })
 
     def after_task(self, task_id):
         super().after_task(task_id)

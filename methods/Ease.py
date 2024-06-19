@@ -24,33 +24,41 @@ class Ease(Base):
         if config.increment_type != 'CIL':
             raise ValueError('EASE is a class incremental method!')
 
-    def prepare_task_data(self, data_manager, task_id):
-        if task_id > 0 and self.memory_bank is not None:
-            self.train_dataset = data_manager.get_dataset(source='train', mode='train',
-                                                          indices=np.arange(self.known_classes, self.cur_classes),
-                                                          appendent=self.memory_bank.get_memory())
-        else:
-            self.train_dataset = data_manager.get_dataset(source='train', mode='train',
-                                                          indices=np.arange(self.known_classes, self.cur_classes))
+    def prepare_task_data(self, data_manager, task_id, is_train=True):
+        if is_train:
+            if task_id > 0 and self.memory_bank is not None:
+                self.train_dataset = data_manager.get_dataset(source='train', mode='train',
+                                                              indices=np.arange(self.known_classes, self.cur_classes),
+                                                              appendent=self.memory_bank.get_memory())
+            else:
+                self.train_dataset = data_manager.get_dataset(source='train', mode='train',
+                                                              indices=np.arange(self.known_classes, self.cur_classes))
+
+            self.train_loader = DataLoader(self.train_dataset, batch_size=self.config.batch_size, shuffle=True,
+                                           num_workers=self.config.num_workers)
+            self.logger.info("train data num of task {}: {}".format(task_id + 1, len(self.train_dataset.samples)))
+
+            self.proto_dataset = data_manager.get_dataset(indices=np.arange(self.known_classes, self.cur_classes),
+                                                             source='train', mode='test')
+            self.proto_loader = DataLoader(self.proto_dataset, batch_size=self.config.batch_size, shuffle=True, num_workers=self.config.num_workers)
 
         self.test_dataset = data_manager.get_dataset(source='test', mode='test', indices=np.arange(0, self.cur_classes))
-
-        self.train_loader = DataLoader(self.train_dataset, batch_size=self.config.batch_size, shuffle=True,
-                                       num_workers=self.config.num_workers)
         self.test_loader = DataLoader(self.test_dataset, batch_size=self.config.batch_size, shuffle=False,
                                       num_workers=self.config.num_workers)
-
-        self.proto_dataset = data_manager.get_dataset(indices=np.arange(self.known_classes, self.cur_classes),
-                                                         source='train', mode='test')
-        self.proto_loader = DataLoader(self.proto_dataset, batch_size=self.config.batch_size, shuffle=True, num_workers=self.config.num_workers)
-        self.logger.info("train data num of task {}: {}".format(task_id + 1, len(self.train_dataset.samples)))
         self.logger.info("test data num of task {}: {}".format(task_id + 1, len(self.test_dataset.samples)))
 
-    def prepare_model(self, task_id):
+    def prepare_model(self, task_id, checkpoint=None):
         if self.model is None:
             self.model = EaseNet(self.config, self.logger)
             self.model.model_init()
         self.model.update_model(task_id)
+        if checkpoint is not None:
+            assert task_id == checkpoint["task_id"]
+            model_state_dict = checkpoint["state_dict"]
+            self.model.load_state_dict(model_state_dict)
+            if checkpoint["class_means"] is not None:
+                self.class_means = checkpoint["class_means"]
+            self.logger.info("checkpoint loaded!")
         self.model.freeze_fe()
         self.model.show_trainable_params()
         self.model = self.model.cuda()
@@ -195,7 +203,7 @@ class Ease(Base):
             embedding_list = torch.cat(embedding_list, dim=0)
             label_list = torch.cat(label_list, dim=0)
 
-            for index in range(embedding_list.shape[1]//self.model.num_features):
+            for index in range(embedding_list.shape[1]//self.model.feature_dim):
                 # only use the diagonal feature, index = -1 denotes using init PTM, index = self._cur_task denotes the last adapter's feature
                 if self.use_diagonal:
                     if self.use_init_ptm and index != 0 and index != task_id+1:
@@ -206,9 +214,9 @@ class Ease(Base):
                 class_list = np.unique(train_loader_for_protonet.dataset.targets)
                 for class_index in class_list:
                     data_index = (label_list == class_index).nonzero().squeeze(-1)
-                    embedding = embedding_list[data_index, index*self.model.num_features:(index+1)*self.model.num_features]
+                    embedding = embedding_list[data_index, index*self.model.feature_dim:(index+1)*self.model.feature_dim]
                     proto = embedding.mean(0)
-                    self.model.fc.weight.data[class_index, index*self.model.num_features:(index+1)*self.model.num_features] = proto
+                    self.model.fc.weight.data[class_index, index*self.model.feature_dim:(index+1)*self.model.feature_dim] = proto
             # # self.use_exemplars is always False in ours code
             # if self.use_exemplars and self._cur_task > 0:
             #     embedding_list = []
@@ -244,16 +252,16 @@ class Ease(Base):
 
     def get_A_B_Ahat(self, start_cls, end_cls, task_id):
         if self.use_init_ptm:
-            start_dim = (task_id + 1) * self.model.num_features
-            end_dim = start_dim + self.model.num_features
+            start_dim = (task_id + 1) * self.model.feature_dim
+            end_dim = start_dim + self.model.feature_dim
         else:
-            start_dim = task_id * self.model.num_features
-            end_dim = start_dim + self.model.num_features
+            start_dim = task_id * self.model.feature_dim
+            end_dim = start_dim + self.model.feature_dim
 
         # W(Ti)  i is the i-th task index, T is the cur task index, W is a T*T matrix
         A = self.model.fc.weight.data[self.known_classes:, start_dim: end_dim]
         # W(TT)
-        B = self.model.fc.weight.data[self.known_classes:, -self.model.num_features:]
+        B = self.model.fc.weight.data[self.known_classes:, -self.model.feature_dim:]
         # W(ii)
         A_hat = self.model.fc.weight.data[start_cls: end_cls, start_dim: end_dim]
 
@@ -286,7 +294,7 @@ class Ease(Base):
                     B_hat[i] += similarity[i][j] * B[j]
 
             # B_hat(old_cls2)
-            self.model.fc.weight.data[start_cls: end_cls, -self.model.num_features:] = B_hat.cuda()
+            self.model.fc.weight.data[start_cls: end_cls, -self.model.feature_dim:] = B_hat.cuda()
 
     # a ver2 solve_similarity , use only above the diagonal to calculate
     def solve_sim_reset(self, task_id):
@@ -304,18 +312,18 @@ class Ease(Base):
                 range_dim = range(t + 1, task_id + 1)
             for dim_id in range_dim:
                 # print('Solve_similarity adapter:{}, {}'.format(task_id, dim_id))
-                start_dim_B = dim_id * self.model.num_features
-                end_dim_B = (dim_id + 1) * self.model.num_features
+                start_dim_B = dim_id * self.model.feature_dim
+                end_dim_B = (dim_id + 1) * self.model.feature_dim
                 start_cls = sum(self.config.increment_steps[:dim_id])
                 end_cls = self.cur_classes
 
                 # Use the element above the diagonal to calculate
                 if self.use_init_ptm:
-                    start_dim_A = (t + 1) * self.model.num_features
-                    end_dim_A = (t + 2) * self.model.num_features
+                    start_dim_A = (t + 1) * self.model.feature_dim
+                    end_dim_A = (t + 2) * self.model.feature_dim
                 else:
-                    start_dim_A = t * self.model.num_features
-                    end_dim_A = (t + 1) * self.model.num_features
+                    start_dim_A = t * self.model.feature_dim
+                    end_dim_A = (t + 1) * self.model.feature_dim
 
                 A = self.model.fc.weight.data[start_cls:end_cls, start_dim_A:end_dim_A].cpu()
                 B = self.model.fc.weight.data[start_cls:end_cls, start_dim_B:end_dim_B].cpu()

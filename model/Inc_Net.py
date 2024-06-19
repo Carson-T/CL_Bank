@@ -3,33 +3,29 @@ import torch.nn as nn
 import copy
 import timm
 from safetensors.torch import load_file
+from model.Base_Net import Base_Net
 from model.backbone import *
 
 
-class Inc_Net(nn.Module):
-    def __init__(self, logger):
-        super(Inc_Net, self).__init__()
-        # self.feature_extractor_list = nn.ModuleList()
-        self.logger = logger
-        self.feature_dim = None
-        self.fc = None
-        self.backbone = None
+class Inc_Net(Base_Net):
+    def __init__(self, config, logger):
+        super(Inc_Net, self).__init__(config, logger)
         self.old_fc_state_dict = None
         # self.aux_fc = None
         # self.feature_dim_list = []
 
-    def model_init(self, config):
-        self.backbone = timm.create_model(model_name=config.backbone,
-                                          drop_rate=config.drop_rate,
-                                          drop_path_rate=config.drop_path_rate
+    def model_init(self):
+        self.backbone = timm.create_model(model_name=self.config.backbone,
+                                          drop_rate=self.config.drop_rate,
+                                          drop_path_rate=self.config.drop_path_rate
                                           )
-        if config.pretrained_path:
-            self.backbone.load_state_dict(load_file(config.pretrained_path))
+        if self.config.pretrained_path:
+            self.backbone.load_state_dict(load_file(self.config.pretrained_path))
         self.feature_dim = self.backbone.num_features
 
-    def update_fc(self, config, task_id):
-        new_classes = config.increment_steps[task_id]
-        known_classes = sum(config.increment_steps[:task_id])
+    def update_fc(self, task_id):
+        new_classes = self.config.increment_steps[task_id]
+        known_classes = sum(self.config.increment_steps[:task_id])
         cur_classes = new_classes + known_classes
 
         new_fc = nn.Linear(self.feature_dim, cur_classes)
@@ -54,7 +50,7 @@ class Inc_Net(nn.Module):
     def fc_recall(self):
         self.fc.load_state_dict(self.old_fc_state_dict)
 
-    def forward(self, x, fc_only=False):
+    def forward(self, x, train=True, task_id=None, fc_only=False):
         if fc_only:
             logits = self.fc(x)
             return {"logits": logits}
@@ -67,30 +63,6 @@ class Inc_Net(nn.Module):
 
             return {"logits": logits, "features": features}
 
-    def freeze(self):
-        for param in self.parameters():
-            param.requires_grad = False
-        self.eval()
-        return self
-
-    def unfreeze(self):
-        for param in self.parameters():
-            param.requires_grad = True
-        self.train()
-        self.show_trainable_params()
-
-    def freeze_fe(self):
-        for name, param in self.named_parameters():
-            if "backbone" in name:
-                param.requires_grad = False
-            else:
-                param.requires_grad = True
-        self.show_trainable_params()
-
-    def reset_fc_parameters(self, fc):
-        nn.init.kaiming_uniform_(fc.weight, nonlinearity='linear')
-        nn.init.constant_(fc.bias, 0)
-
     def weight_align(self, increment):
         weights = self.fc.weight.data
         newnorm = (torch.norm(weights[-increment:, :], p=2, dim=1))
@@ -100,8 +72,3 @@ class Inc_Net(nn.Module):
         gamma = meanold / meannew
         print('alignweights,gamma=', gamma)
         self.fc.weight.data[-increment:, :] *= gamma
-
-    def show_trainable_params(self):
-        for name, param in self.named_parameters():
-            if param.requires_grad:
-                self.logger.info("{} {}".format(name, param.numel()))

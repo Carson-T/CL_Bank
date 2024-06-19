@@ -1,12 +1,12 @@
 basic:
-  device_ids: "6, 7"
+  device_ids: "4"
   random_seed: 1993
-  version_name: "SLCA_cifar100_b0i10_test"
+  version_name: "ctf_tuning_der_(d)_cifar100_b0i10"
   wandb_dir: "/data/jiantao"
   is_log: True
   save_checkpoint: False
   save_path: "../checkpoint&log"
-  method: "SLCA"
+  method: "CtF_tuning"
   increment_type: "CIL"
   increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
 #  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
@@ -14,36 +14,36 @@ basic:
 usual:
   dataset_name: "cifar100"
   data_shuffle: True
-  img_size: 224
-  backbone: "MyVit_B16"
-  pretrained_path: "/data/jiantao/pretrained_model/vit_base_patch16_224.augreg_in21k_ft_in1k.safetensors"
+  img_size: 32
+  backbone: "CLIP"
+  pretrained_path: "/data/jiantao/pretrained_model/CLIP_ViT-B-32.pt"
   drop_rate: 0
   drop_path_rate: 0
-  batch_size: 128
+  batch_size: 64
   num_workers: 8
-  epochs: 2
+  epochs: 20
   optimizer: SGD
   loss_func: CEloss
-  scheduler: multi_step
-  lr: 0.01
+  scheduler: Warm-up-Cosine-Annealing
+  lr: 0.1
   momentum: 0.9
-  weight_decay: 0.0005
-  memory_size: 0
+  weight_decay: 0
+  memory_size: 2000
   apply_nme: False
-  sampling_method: ""
+  sampling_method: "herding"
 
 special:
-  ca_epoch: 5
-  ca_lr: 0.01
-  num_sampled_pcls: 256
-  ca_logit_norm: 0.1
+  coarse_yaml: "/data/jiantao/projects/My_CL_Bank/code/config_yaml/Dynamic_ER/Dynamic_ER_cifar100.yaml"
+  use_desc: False
+  desc_num: 10
+  topk: 5
+  lora_r: [0, 0]
+  prompt_template: "a bad photo of a {}."
+
 
 options:
   Cosine:
     eta_min: 0
-  multi_step:
-    milestones: [8]
-    gamma: 0.1
   Warm-up-Cosine-Annealing:
     init_ratio: 0.1
     warm_up_steps: 2

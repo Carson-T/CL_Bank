@@ -2,15 +2,13 @@ from model.backbone.clip.clip import load, tokenize
 from model.backbone.Adapter import Adapter
 import torch
 import torch.nn as nn
+from model.Base_Net import Base_Net
 
-
-class CLIP_Adapter_Net(nn.Module):
+class CLIP_Adapter_Net(Base_Net):
     def __init__(self, config, logger):
-        super().__init__()
-        self.config = config
-        self.logger = logger
+        super().__init__(config, logger)
+
         assert config.backbone == "CLIP"
-        self.backbone = None
         self.img_adapter_list = nn.ModuleList([])
         # self.img_adapter_list = None
         # self.text_adapter_list = nn.ModuleList([])
@@ -83,13 +81,6 @@ class CLIP_Adapter_Net(nn.Module):
         logits_per_text = logits_per_image.t()
         return {"logits": logits_per_image, "features": image_features}
 
-    def freeze_fe(self):
-        for name, param in self.named_parameters():
-            if "backbone" in name:
-                param.requires_grad = False
-            elif "adapter" in name:
-                param.requires_grad = True
-
     def freeze_adapter(self):
         for name, param in self.named_parameters():
             if "img_final_adapter" in name:
@@ -97,7 +88,3 @@ class CLIP_Adapter_Net(nn.Module):
             else:
                 param.requires_grad = False
 
-    def show_trainable_params(self):
-        for name, param in self.named_parameters():
-            if param.requires_grad:
-                self.logger.info("{} {}".format(name, param.numel()))

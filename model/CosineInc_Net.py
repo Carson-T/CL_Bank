@@ -4,6 +4,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import timm
 from model.backbone import *
+from model.Base_Net import Base_Net
+
 
 def reduce_proxies(out, nb_proxy):
     if nb_proxy == 1:
@@ -53,58 +55,6 @@ class CosineLinear(nn.Module):
             out = self.sigma * out
         return out
 
-    def forward_reweight(self, input, task_id, increment_steps, alpha=0.1, beta=0.0, out_dim=768,
-                         use_init_ptm=False):
-        for i in range(task_id + 1):
-            if i == 0:
-                start_cls = 0
-                end_cls = increment_steps[i]
-            else:
-                start_cls = increment_steps[i-1]
-                end_cls = start_cls + increment_steps[i]
-
-
-            out = 0
-            for j in range((self.in_features // out_dim)):
-                # PTM feature
-                if use_init_ptm and j == 0:
-                    input_ptm = F.normalize(input[:, 0:out_dim], p=2, dim=1)
-                    weight_ptm = F.normalize(self.weight[start_cls:end_cls, 0:out_dim], p=2, dim=1)
-                    out_ptm = beta * F.linear(input_ptm, weight_ptm)
-                    out += out_ptm
-                    continue
-
-                input1 = F.normalize(input[:, j * out_dim:(j + 1) * out_dim], p=2, dim=1)
-                weight1 = F.normalize(self.weight[start_cls:end_cls, j * out_dim:(j + 1) * out_dim], p=2, dim=1)
-                if use_init_ptm:
-                    if j != (i + 1):
-                        out1 = alpha * F.linear(input1, weight1)
-                        out1 /= task_id
-                    else:
-                        out1 = F.linear(input1, weight1)
-                else:
-                    if j != i:
-                        out1 = alpha * F.linear(input1, weight1)
-                        out1 /= task_id
-                    else:
-                        out1 = F.linear(input1, weight1)
-
-                out += out1
-
-            if i == 0:
-                out_all = out
-            else:
-                out_all = torch.cat((out_all, out), dim=1)
-
-        if self.to_reduce:
-            # Reduce_proxy
-            out_all = reduce_proxies(out_all, self.nb_proxy)
-
-        if self.sigma is not None:
-            out_all = self.sigma * out_all
-
-        return out_all
-
 
 class SplitCosineLinear(nn.Module):
     def __init__(self, in_features, out_features1, out_features2, nb_proxy=1, sigma=True):
@@ -136,14 +86,10 @@ class SplitCosineLinear(nn.Module):
                 'old_scores': reduce_proxies(out1, self.nb_proxy),
                 'new_scores': reduce_proxies(out2, self.nb_proxy)}
 
-class CosineIncrementalNet(nn.Module):
+
+class CosineIncrementalNet(Base_Net):
     def __init__(self, config, logger):
-        super(CosineIncrementalNet, self).__init__()
-        self.config = config
-        self.logger = logger
-        self.feature_dim = None
-        self.fc = None
-        self.backbone = None
+        super(CosineIncrementalNet, self).__init__(config, logger)
 
     def model_init(self):
         self.backbone = timm.create_model(model_name=self.config.backbone,
@@ -154,8 +100,12 @@ class CosineIncrementalNet(nn.Module):
             self.backbone.load_state_dict(load_file(self.config.pretrained_path))
         self.feature_dim = self.backbone.num_features
 
-    def update_fc(self, nb_classes, task_id):
-        fc = self.generate_fc(self.feature_dim, nb_classes, nb_proxy=self.config.nb_proxy)
+    def update_fc(self, task_id):
+        new_classes = self.config.increment_steps[task_id]
+        known_classes = sum(self.config.increment_steps[:task_id])
+        cur_classes = new_classes + known_classes
+
+        fc = self.generate_fc(self.feature_dim, cur_classes, nb_proxy=self.config.nb_proxy)
         if self.fc is not None:
             if task_id == 1:
                 fc.fc1.weight.data = self.fc.weight.data
@@ -180,7 +130,7 @@ class CosineIncrementalNet(nn.Module):
             self.logger.info('Updated CosineLinear output dim from {} to {}'.format(prev_out_features, out_dim))
         return fc
 
-    def forward(self, x):
+    def forward(self, x, train=False, task_id=None):
         ret = {}
         features = self.backbone.forward_head(self.backbone.forward_features(x), pre_logits=True)
         ret["features"] = features
@@ -192,9 +142,3 @@ class CosineIncrementalNet(nn.Module):
             ret["logits"] = out
 
         return ret
-
-    def freeze(self):
-        for param in self.parameters():
-            param.requires_grad = False
-        self.eval()
-        return self

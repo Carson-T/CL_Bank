@@ -1,15 +1,15 @@
 basic:
   device_ids: "5"
   random_seed: 1993
-  version_name: "Dark_ER_cifar100_b0i5"
+  version_name: "Dark_ER_cifar100_b0i10"
   wandb_dir: "/data/jiantao"
   is_log: True
   save_checkpoint: True
   save_path: "../checkpoint&log"
   method: "Dark_ER"
   increment_type: "CIL"
-#  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
-  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
+#  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 
 usual:
   dataset_name: "cifar100"

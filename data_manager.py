@@ -19,7 +19,8 @@ class DataManager(object):
         self.use_valid = False
 
         self.data.download_data()
-
+        if hasattr(self.data, "class_descs"):
+            self.class_descs = self.data.class_descs
         self.class_order = self.data.class_order
         self.logger.info("class_order: {}".format(self.class_order))
         self.total_class_num = len(self.data.class_order)
@@ -59,22 +60,27 @@ class DataManager(object):
     def get_task_size(self, task_id):
         return self.config.increment_steps[task_id]
 
-    def get_train_transform(self):
-        return transforms.Compose([*self.train_transform, *self.common_transform])
-
-    def get_test_transform(self):
-        return transforms.Compose([*self.test_transform, *self.common_transform])
-
-    def get_dataset(self, source, mode, indices, appendent=None):
+    def get_dataset(self, source, mode, indices, appendent=None, ret_clip_img=False):
         if source == 'train':
             x, y = self.train_data, self.train_targets
         elif source == 'test':
             x, y = self.test_data, self.test_targets
 
         if mode == 'train':
-            transform = self.get_train_transform()
+            transform = transforms.Compose([*self.train_transform, *self.common_transform])
+            clip_transform = transforms.Compose([
+                *self.train_transform,
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761)),
+            ])
         elif mode == 'test' or mode == 'valid':
-            transform = self.get_test_transform()
+            transform = transforms.Compose([*self.test_transform, *self.common_transform])
+            clip_transform = transforms.Compose([
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761)),
+            ])
         else:
             raise ValueError('Unknown mode {}.'.format(mode))
 
@@ -91,7 +97,7 @@ class DataManager(object):
 
         data, targets = np.concatenate(data), np.concatenate(targets)
 
-        return MyDataset(data, targets, self.data.use_path, transform)
+        return MyDataset(data, targets, self.data.use_path, transform, clip_transform=clip_transform if ret_clip_img else None)
 
     # def get_dataset_with_split(self, source, mode, indices=None, appendent=None, val_samples_per_class=0,
     #                            two_view=False):

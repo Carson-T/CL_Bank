@@ -11,6 +11,7 @@ from model.Inc_Net import Inc_Net
 from ReplayBank import ReplayBank
 from utils.functions import *
 from utils.train_utils import *
+from utils.plots import *
 
 
 class SLCA(Base):
@@ -22,13 +23,20 @@ class SLCA(Base):
         self.num_sampled_pcls = config.num_sampled_pcls
 
         if config.increment_type != 'CIL':
-            raise ValueError('iCaRL is a class incremental method!')
+            raise ValueError('SLCA is a class incremental method!')
 
-    def prepare_model(self, task_id):
+    def prepare_model(self, task_id, checkpoint=None):
         if self.model is None:
-            self.model = Inc_Net(self.logger)
-            self.model.model_init(self.config)
-        self.model.update_fc(self.config, task_id)
+            self.model = Inc_Net(self.config, self.logger)
+            self.model.model_init()
+        self.model.update_fc(task_id)
+        if checkpoint is not None:
+            assert task_id == checkpoint["task_id"]
+            model_state_dict = checkpoint["state_dict"]
+            self.model.load_state_dict(model_state_dict)
+            if checkpoint["class_means"] is not None:
+                self.class_means = checkpoint["class_means"]
+            self.logger.info("checkpoint loaded!")
         self.model.unfreeze()
         self.model = self.model.cuda()
         if self.old_model is not None:
@@ -54,7 +62,7 @@ class SLCA(Base):
             self.model = self.model.module
         if self.config.ca_epoch > 0:
             self.model.fc_backup()
-            self.compute_mean_cov(data_manager)
+            self.compute_mean_cov(data_manager, task_id)
             self.logger.info("class means and covs computed!")
             if task_id > 0:
                 self.stage2_training(task_id)
@@ -122,8 +130,8 @@ class SLCA(Base):
                          'loss_kd': kd_losses / len(test_loader)}
             return all_preds, all_targets, test_loss
 
-    def compute_mean_cov(self, data_manager, check_diff=False, oracle=False):
-        if hasattr(self, 'class_means') and self.class_means is not None and not check_diff:
+    def compute_mean_cov(self, data_manager, task_id, check_diff=True, oracle=False):
+        if hasattr(self, 'class_means') and self.class_means is not None:
             ori_classes = self.class_means.shape[0]
             assert ori_classes == self.known_classes
             cur_class_means = torch.zeros((self.cur_classes, self.model.feature_dim))
@@ -132,15 +140,16 @@ class SLCA(Base):
             cur_class_cov = torch.zeros((self.cur_classes, self.model.feature_dim, self.model.feature_dim))
             cur_class_cov[:self.known_classes] = self.class_covs
             self.class_covs = cur_class_cov
-        elif not check_diff:
+        else:
             self.class_means = torch.zeros((self.cur_classes, self.model.feature_dim))
             self.class_covs = torch.zeros((self.cur_classes, self.model.feature_dim, self.model.feature_dim))
-
-        if check_diff or oracle:
+        old_class_vectors = []
+        if (check_diff or oracle) and task_id > 0:
             old_class_dataset = data_manager.get_dataset(source='train', mode='test', indices=np.arange(0, self.known_classes))
             for class_idx in range(0, self.known_classes):
                 vectors, _, _ = extract_vectors(self.config, self.model, old_class_dataset, class_idx)
                 vectors = vectors.type(torch.float64)
+                old_class_vectors.append(vectors)
                 old_class_mean = torch.mean(vectors, dim=0)
                 old_class_cov = torch.cov(vectors.T).detach().cpu() + torch.eye(old_class_mean.shape[-1]) * 1e-5
                 if oracle:
@@ -149,17 +158,19 @@ class SLCA(Base):
                 if check_diff:
                     log_info = "cls {} sim: {}".format(class_idx, torch.cosine_similarity(
                         self.class_means[class_idx, :].unsqueeze(0),
-                        old_class_mean.unsqueeze(0)).item())
+                        old_class_mean.unsqueeze(0).detach().cpu()).item())
                     self.logger.info(log_info)
-
+        new_class_vectors = []
         new_class_dataset = data_manager.get_dataset(source='train', mode='test', indices=np.arange(self.known_classes, self.cur_classes))
         for class_idx in range(self.known_classes, self.cur_classes):
             vectors, _, _ = extract_vectors(self.config, self.model, new_class_dataset, class_idx)
             vectors = vectors.type(torch.float64)
+            new_class_vectors.append(vectors)
             new_class_mean = torch.mean(vectors, dim=0)
             new_class_cov = torch.cov(vectors.T).detach().cpu() + torch.eye(new_class_mean.shape[-1]) * 1e-4
             self.class_means[class_idx, :] = new_class_mean
             self.class_covs[class_idx, ...] = new_class_cov
+        t_sne(self.class_means.numpy(), old_class_vectors, new_class_vectors, task_id, self.config.run_dir+f"/{task_id}.jpg")
 
     def stage2_training(self, task_id):
         self.model.freeze_fe()

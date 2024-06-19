@@ -22,19 +22,27 @@ class WA(Base):
         if config.increment_type != 'CIL':
             raise ValueError('WA is a class incremental method!')
 
-    def prepare_model(self, task_id):
+    def prepare_model(self, task_id, checkpoint=None):
         if self.model is None:
-            self.model = Inc_Net(self.logger)
-            self.model.model_init(self.config)
-        self.model.update_fc(self.config, task_id)
+            self.model = Inc_Net(self.config, self.logger)
+            self.model.model_init()
+        self.model.update_fc(task_id)
         self.model = self.model.cuda()
+        if checkpoint is not None:
+            assert task_id == checkpoint["task_id"]
+            model_state_dict = checkpoint["state_dict"]
+            self.model.load_state_dict(model_state_dict)
+            if checkpoint["class_means"] is not None:
+                self.class_means = checkpoint["class_means"]
+            self.logger.info("checkpoint loaded!")
         if self.old_model is not None:
             self.old_model = self.old_model.cuda()
+
+        self.kd_lambda = self.known_classes / self.cur_classes
 
     def incremental_train(self, data_manager, task_id):
         wandb.define_metric("overall/task_id")
         wandb.define_metric("overall/*", step_metric="overall/task_id")
-        self.kd_lambda = self.known_classes / self.cur_classes
         # self.logger.info("new feature extractor requires_grad=True")
         optimizer = get_optimizer(filter(lambda p: p.requires_grad, self.model.parameters()), self.config)
         scheduler = get_scheduler(optimizer, self.config)
@@ -171,12 +179,12 @@ class WA(Base):
                 np.mean(self.cnn_task_mcr_list[:task_id + 1, task_id])))
         self.logger.info("backward transfer: {}".format(calculate_bwf(self.cnn_task_mcr_list, task_id)))
         self.logger.info("average forgetting: {}".format(cal_avg_forgetting(self.cnn_task_mcr_list, task_id)))
-
-        wandb.log({
-            "overall/task_id": task_id + 1,
-            "overall/test_overall_acc": cnn_overall_acc,
-            "overall/test_overall_mcr": cnn_overall_mcr
-        })
+        if not os.environ["WANDB_DISABLED"]:
+            wandb.log({
+                "overall/task_id": task_id + 1,
+                "overall/test_overall_acc": cnn_overall_acc,
+                "overall/test_overall_mcr": cnn_overall_mcr
+            })
 
     def after_task(self, task_id):
         super().after_task(task_id)

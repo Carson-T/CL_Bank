@@ -5,7 +5,7 @@ import torch.nn as nn
 from safetensors.torch import load_file
 from utils.functions import *
 from model.backbone import *
-
+from model.Base_Net import Base_Net
 
 class Prompt_Pool(nn.Module):
     def __init__(self, emb_dim, prompt_pool_size, prompt_length, top_k, shallow_or_deep, pt_type, key_dim=768):
@@ -32,7 +32,7 @@ class Prompt_Pool(nn.Module):
             setattr(self, f'p_{i}', p)
             setattr(self, f'k_{i}', k)
 
-    def forward(self, query, task_id=None):
+    def forward(self, query, train=False, task_id=None):
         # prompts
         # all_K = []
         all_p = {}
@@ -70,29 +70,27 @@ class Prompt_Pool(nn.Module):
         return all_p, all_qk_loss
 
 
-class L2P_Net(nn.Module):
-    def __init__(self, logger):
-        super(L2P_Net, self).__init__()
-        self.logger = logger
+class L2P_Net(Base_Net):
+    def __init__(self, config, logger):
+        super(L2P_Net, self).__init__(config, logger)
+
         self.prompt_pool = None
-        self.backbone = None
-        self.fc = None
         self.embed_dim = 768
 
-    def model_init(self, config):
-        self.prompt_pool = Prompt_Pool(self.embed_dim, config.prompt_pool_size, config.prompt_length, config.top_k,
-                                       config.shallow_or_deep, pt_type=config.pt_type)
+    def model_init(self):
+        self.prompt_pool = Prompt_Pool(self.embed_dim, self.config.prompt_pool_size, self.config.prompt_length, self.config.top_k,
+                                       self.config.shallow_or_deep, pt_type=self.config.pt_type)
         # get feature encoder
-        backbone = timm.create_model(model_name=config.backbone,
-                                     pt_type=config.pt_type,
-                                     img_size=config.img_size,
+        backbone = timm.create_model(model_name=self.config.backbone,
+                                     pt_type=self.config.pt_type,
+                                     img_size=self.config.img_size,
                                      patch_size=16,
                                      embed_dim=self.embed_dim,
                                      depth=12,
                                      num_heads=12,
                                      )
-        if config.pretrained_path:
-            state_dict = load_file(config.pretrained_path)
+        if self.config.pretrained_path:
+            state_dict = load_file(self.config.pretrained_path)
             del state_dict['head.weight']
             del state_dict['head.bias']
             backbone.load_state_dict(state_dict, strict=True)
@@ -117,7 +115,7 @@ class L2P_Net(nn.Module):
         out = self.fc(features)
         return {"logits": out, "features": features, "prompt_loss": prompt_loss}
 
-    def freeze_FE(self):
+    def freeze_fe(self):
         for name, param in self.backbone.named_parameters():
             # if name != "pos_embed":
             param.requires_grad = False
@@ -125,9 +123,9 @@ class L2P_Net(nn.Module):
         self.logger.info('Freezing feature extractor(requires_grad=False) ...')
         return self
 
-    def update_fc(self, config, task_id):
-        new_classes = config.increment_steps[task_id]
-        known_classes = sum(config.increment_steps[:task_id])
+    def update_fc(self, task_id):
+        new_classes = self.config.increment_steps[task_id]
+        known_classes = sum(self.config.increment_steps[:task_id])
         cur_classes = new_classes + known_classes
         new_fc = nn.Linear(self.embed_dim, cur_classes)
         if self.fc is not None:

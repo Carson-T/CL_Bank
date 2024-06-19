@@ -5,6 +5,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from torch import nn
+from model.backbone.Attention_lora import MultiheadAttention_LoRA
 
 
 class Bottleneck(nn.Module):
@@ -169,10 +170,13 @@ class QuickGELU(nn.Module):
 
 
 class ResidualAttentionBlock(nn.Module):
-    def __init__(self, d_model: int, n_head: int, attn_mask: torch.Tensor = None, ffn_adapt_option="parallel"):
+    def __init__(self, d_model: int, n_head: int, attn_mask: torch.Tensor = None, ffn_adapt_option="parallel", lora_rank=0):
         super().__init__()
         self.ffn_adapt_option = ffn_adapt_option
-        self.attn = nn.MultiheadAttention(d_model, n_head)
+        if lora_rank > 0:
+            self.attn = MultiheadAttention_LoRA(d_model, n_head, r=lora_rank)
+        else:
+            self.attn = nn.MultiheadAttention(d_model, n_head)
         self.ln_1 = LayerNorm(d_model)
         self.mlp = nn.Sequential(OrderedDict([
             ("c_fc", nn.Linear(d_model, d_model * 4)),
@@ -209,11 +213,11 @@ class ResidualAttentionBlock(nn.Module):
 
 
 class Transformer(nn.Module):
-    def __init__(self, width: int, layers: int, heads: int, attn_mask: torch.Tensor = None):
+    def __init__(self, width: int, layers: int, heads: int, attn_mask: torch.Tensor = None, lora_rank=0):
         super().__init__()
         self.width = width
         self.layers = layers
-        self.resblocks = nn.Sequential(*[ResidualAttentionBlock(width, heads, attn_mask) for _ in range(layers)])
+        self.resblocks = nn.Sequential(*[ResidualAttentionBlock(width, heads, attn_mask, lora_rank=lora_rank) for _ in range(layers)])
 
     def forward(self, x: torch.Tensor, adapter_list=None):
         if adapter_list is not None:
@@ -228,7 +232,7 @@ class Transformer(nn.Module):
 
 
 class VisionTransformer(nn.Module):
-    def __init__(self, input_resolution: int, patch_size: int, width: int, layers: int, heads: int, output_dim: int):
+    def __init__(self, input_resolution: int, patch_size: int, width: int, layers: int, heads: int, output_dim: int, lora_rank=0):
         super().__init__()
         self.input_resolution = input_resolution
         self.output_dim = output_dim
@@ -239,7 +243,7 @@ class VisionTransformer(nn.Module):
         self.positional_embedding = nn.Parameter(scale * torch.randn((input_resolution // patch_size) ** 2 + 1, width))
         self.ln_pre = LayerNorm(width)
 
-        self.transformer = Transformer(width, layers, heads)
+        self.transformer = Transformer(width, layers, heads, lora_rank=lora_rank)
 
         self.ln_post = LayerNorm(width)
         self.proj = nn.Parameter(scale * torch.randn(width, output_dim))
@@ -277,7 +281,9 @@ class CLIP(nn.Module):
                  vocab_size: int,
                  transformer_width: int,
                  transformer_heads: int,
-                 transformer_layers: int
+                 transformer_layers: int,
+                 img_lora_rank=0,
+                 text_lora_rank=0
                  ):
         super().__init__()
 
@@ -304,14 +310,16 @@ class CLIP(nn.Module):
                 width=vision_width,
                 layers=vision_layers,
                 heads=vision_heads,
-                output_dim=embed_dim
+                output_dim=embed_dim,
+                lora_rank=img_lora_rank
             )
 
         self.transformer = Transformer(
             width=transformer_width,
             layers=transformer_layers,
             heads=transformer_heads,
-            attn_mask=self.build_attention_mask()
+            attn_mask=self.build_attention_mask(),
+            lora_rank=text_lora_rank
         )
 
         self.vocab_size = vocab_size
@@ -409,7 +417,10 @@ def convert_weights(model: nn.Module):
             if l.bias is not None:
                 l.bias.data = l.bias.data.half()
 
-        if isinstance(l, nn.MultiheadAttention):
+        if isinstance(l, nn.MultiheadAttention) or isinstance(l, MultiheadAttention_LoRA):
+            for name, param in l.named_parameters():
+                if "lora" in name and param is not None:
+                    param.data = param.data.half()
             for attr in [*[f"{s}_proj_weight" for s in ["in", "q", "k", "v"]], "in_proj_bias", "bias_k", "bias_v"]:
                 tensor = getattr(l, attr)
                 if tensor is not None:
@@ -424,7 +435,7 @@ def convert_weights(model: nn.Module):
     model.apply(_convert_weights_to_fp16)
 
 
-def build_model(state_dict: dict):
+def build_model(state_dict: dict, lora_r):
     vit = "visual.proj" in state_dict
 
     if vit:
@@ -452,13 +463,16 @@ def build_model(state_dict: dict):
     model = CLIP(
         embed_dim,
         image_resolution, vision_layers, vision_width, vision_patch_size,
-        context_length, vocab_size, transformer_width, transformer_heads, transformer_layers
+        context_length, vocab_size, transformer_width, transformer_heads, transformer_layers,
+        img_lora_rank=lora_r[0], text_lora_rank=lora_r[1]
     )
 
     for key in ["input_resolution", "context_length", "vocab_size"]:
         if key in state_dict:
             del state_dict[key]
 
-    convert_weights(model)
-    model.load_state_dict(state_dict)
+    # convert_weights(model)
+    missing_keys, unexpected_keys = model.load_state_dict(state_dict, strict=False)
+    print("missing_keys:", missing_keys)
+    print("unexpected_keys:", unexpected_keys)
     return model.eval()

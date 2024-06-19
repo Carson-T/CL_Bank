@@ -14,18 +14,23 @@ from utils.train_utils import *
 class Dynamic_ER(Base):
     def __init__(self, config, logger):
         super().__init__(config, logger)
-        self.is_finetuning = False
         self.memory_bank = ReplayBank(config, logger)
 
         if config.increment_type != 'CIL':
             raise ValueError('Dynamic_ER is a class incremental method!')
 
-
-    def prepare_model(self, task_id):
+    def prepare_model(self, task_id, checkpoint=None):
         if self.model is None:
-            self.model = DERNet()
-        self.model.update(self.config, task_id)
+            self.model = DERNet(self.config, self.logger)
+        self.model.update(task_id)
         self.logger.info("model updated!")
+        if checkpoint is not None:
+            assert task_id == checkpoint["task_id"]
+            model_state_dict = checkpoint["state_dict"]
+            self.model.load_state_dict(model_state_dict)
+            if checkpoint["class_means"] is not None:
+                self.class_means = checkpoint["class_means"]
+            self.logger.info("checkpoint loaded!")
         if task_id > 0:
             self.model.freeze_old_feature_extractors(task_id)
             self.logger.info("freezed feature extractors 0-{}".format(task_id-1))
@@ -43,7 +48,7 @@ class Dynamic_ER(Base):
         if len(self.config.device_ids.split(",")) > 1:
             self.model = nn.DataParallel(self.model)
         self.train_model(self.train_loader, self.test_loader, hard_loss, soft_loss, optimizer, scheduler,
-                         task_id=task_id, epochs=self.config.epochs)
+                         task_id=task_id, epochs=self.config.epochs, stage=1)
         if len(self.config.device_ids.split(",")) > 1:
             self.model = self.model.module
 

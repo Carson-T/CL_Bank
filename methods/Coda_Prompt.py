@@ -20,13 +20,20 @@ class Coda_Prompt(Base):
         if config.increment_type != 'CIL':
             raise ValueError('Coda_Prompt is a class incremental method!')
 
-    def prepare_model(self, task_id):
+    def prepare_model(self, task_id, checkpoint=None):
         if self.model is None:
-            self.model = Coda_prompt_Net(self.logger)
-            self.model.model_init(self.config)
-        self.model.update_fc(self.config, task_id)
+            self.model = Coda_prompt_Net(self.config, self.logger)
+            self.model.model_init()
+        self.model.update_fc(task_id)
+        if checkpoint is not None:
+            assert task_id == checkpoint["task_id"]
+            model_state_dict = checkpoint["state_dict"]
+            self.model.load_state_dict(model_state_dict)
+            if checkpoint["class_means"] is not None:
+                self.class_means = checkpoint["class_means"]
+            self.logger.info("checkpoint loaded!")
         if self.config.freeze_fe:
-            self.model.freeze_FE()
+            self.model.freeze_fe()
         self.model = self.model.cuda()
 
     def epoch_train(self, model, train_loader, hard_loss, soft_loss, optimizer, task_id):

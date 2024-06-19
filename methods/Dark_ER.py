@@ -24,11 +24,18 @@ class Dark_ER(Base):
         if config.increment_type != 'CIL':
             raise ValueError('Dark_ER is a class incremental method!')
 
-    def prepare_model(self, task_id):
+    def prepare_model(self, task_id, checkpoint=None):
         if self.model is None:
-            self.model = Inc_Net(self.logger)
-            self.model.model_init(self.config)
+            self.model = Inc_Net(self.config, self.logger)
+            self.model.model_init()
             self.model.create_all_class_fc(sum(self.config.increment_steps))
+        if checkpoint is not None:
+            assert task_id == checkpoint["task_id"]
+            model_state_dict = checkpoint["state_dict"]
+            self.model.load_state_dict(model_state_dict)
+            if checkpoint["class_means"] is not None:
+                self.class_means = checkpoint["class_means"]
+            self.logger.info("checkpoint loaded!")
         self.model = self.model.cuda()
 
     def incremental_train(self, data_manager, task_id):

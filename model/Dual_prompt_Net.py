@@ -5,6 +5,7 @@ import torch.nn as nn
 from safetensors.torch import load_file
 from utils.functions import *
 from model.backbone import *
+from model.Base_Net import Base_Net
 
 
 class Dual_prompt_module(nn.Module):
@@ -100,35 +101,32 @@ class Dual_prompt_module(nn.Module):
         return all_p, all_qk_loss
 
 
-class Dual_prompt_Net(nn.Module):
-    def __init__(self, logger):
-        super(Dual_prompt_Net, self).__init__()
-        self.logger = logger
+class Dual_prompt_Net(Base_Net):
+    def __init__(self, config, logger):
+        super(Dual_prompt_Net, self).__init__(config, logger)
         self.prompt_pool = None
-        self.backbone = None
-        self.fc = None
         self.embed_dim = 768
 
-    def model_init(self, config):
-        assert config.e_prompt_pool_size == len(config.increment_steps), "special prompt num should be the same with the task num"
-        self.prompt_pool = Dual_prompt_module(self.embed_dim, config.e_prompt_pool_size, config.g_prompt_length, config.e_prompt_length, pt_type=config.pt_type)
+    def model_init(self):
+        assert self.config.e_prompt_pool_size == len(self.config.increment_steps), "special prompt num should be the same with the task num"
+        self.prompt_pool = Dual_prompt_module(self.embed_dim, self.config.e_prompt_pool_size, self.config.g_prompt_length, self.config.e_prompt_length, pt_type=self.config.pt_type)
         # get feature encoder
-        backbone = timm.create_model(model_name=config.backbone,
-                                     pt_type=config.pt_type,
-                                     img_size=config.img_size,
+        backbone = timm.create_model(model_name=self.config.backbone,
+                                     pt_type=self.config.pt_type,
+                                     img_size=self.config.img_size,
                                      patch_size=16,
                                      embed_dim=self.embed_dim,
                                      depth=12,
                                      num_heads=12,
                                      )
-        if config.pretrained_path:
-            state_dict = load_file(config.pretrained_path)
+        if self.config.pretrained_path:
+            state_dict = load_file(self.config.pretrained_path)
             del state_dict['head.weight']
             del state_dict['head.bias']
             backbone.load_state_dict(state_dict, strict=True)
         self.backbone = backbone
 
-    def forward(self, x, train, task_id=None):
+    def forward(self, x, train=False, task_id=None):
         prompt_loss = torch.zeros((1,), requires_grad=True).cuda()
         if self.prompt_pool is not None:
             with torch.no_grad():
@@ -147,17 +145,16 @@ class Dual_prompt_Net(nn.Module):
         out = self.fc(features)
         return {"logits": out, "features": features, "prompt_loss": prompt_loss}
 
-    def freeze_FE(self):
+    def freeze_fe(self):
         for name, param in self.backbone.named_parameters():
-            # if name != "pos_embed":
             param.requires_grad = False
         self.backbone.eval()
         self.logger.info('Freezing feature extractor(requires_grad=False) ...')
         return self
 
-    def update_fc(self, config, task_id):
-        new_classes = config.increment_steps[task_id]
-        known_classes = sum(config.increment_steps[:task_id])
+    def update_fc(self, task_id):
+        new_classes = self.config.increment_steps[task_id]
+        known_classes = sum(self.config.increment_steps[:task_id])
         cur_classes = new_classes + known_classes
         new_fc = nn.Linear(self.embed_dim, cur_classes)
         if self.fc is not None:

@@ -3,32 +3,34 @@ import torch.nn as nn
 import copy
 import timm
 from model.backbone import *
+from model.Base_Net import Base_Net
 
 
-class DERNet(nn.Module):
-    def __init__(self):
-        super(DERNet, self).__init__()
+class DERNet(Base_Net):
+    def __init__(self, config, logger):
+        super(DERNet, self).__init__(config, logger)
         self.feature_extractor_list = nn.ModuleList()
-        self.feature_dim = None
-        self.fc = None
         self.aux_fc = None
         self.feature_dim_list = []
 
-    def update(self, config, task_id):
-        backbone = timm.create_model(model_name=config.backbone,
-                                     drop_rate=config.drop_rate,
-                                     drop_path_rate=config.drop_path_rate
+    def model_init(self):
+        pass
+
+    def update(self, task_id):
+        backbone = timm.create_model(model_name=self.config.backbone,
+                                     drop_rate=self.config.drop_rate,
+                                     drop_path_rate=self.config.drop_path_rate
                                      )
         if len(self.feature_extractor_list) == 0:
-            if config.pretrained_path:
-                backbone.load_state_dict(load_file(config.pretrained_path))
+            if self.config.pretrained_path:
+                backbone.load_state_dict(load_file(self.config.pretrained_path))
         else:
             backbone.load_state_dict(self.feature_extractor_list[-1].state_dict())
         self.feature_extractor_list.append(backbone)
         self.feature_dim_list.append(backbone.num_features)
 
-        new_classes = config.increment_steps[task_id]
-        known_classes = sum(config.increment_steps[:task_id])
+        new_classes = self.config.increment_steps[task_id]
+        known_classes = sum(self.config.increment_steps[:task_id])
         cur_classes = new_classes + known_classes
 
         new_fc = nn.Linear(sum(self.feature_dim_list), cur_classes)
@@ -44,7 +46,7 @@ class DERNet(nn.Module):
         del self.fc
         self.fc = new_fc
 
-    def forward(self, x):
+    def forward(self, x, train=False, task_id=None):
         features = [fe.forward_head(fe.forward_features(x), pre_logits=True) for fe in self.feature_extractor_list]
         all_features = torch.cat(features, 1)
 
@@ -53,12 +55,6 @@ class DERNet(nn.Module):
         aux_logits = self.aux_fc(features[-1])
 
         return {"logits": logits, "aux_logits": aux_logits, "features": all_features}
-
-    def freeze(self):
-        for param in self.parameters():
-            param.requires_grad = False
-        self.eval()
-        return self
 
     def change_new_feature_extractors_grad(self, requires_grad):
         for param in self.feature_extractor_list[-1].parameters():
@@ -74,6 +70,3 @@ class DERNet(nn.Module):
                 p.requires_grad = False
             self.feature_extractor_list[i].eval()
 
-    def reset_fc_parameters(self, fc):
-        nn.init.kaiming_uniform_(fc.weight, nonlinearity='linear')
-        nn.init.constant_(fc.bias, 0)

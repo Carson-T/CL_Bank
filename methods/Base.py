@@ -38,27 +38,28 @@ class Base():
         self.cur_classes = self.new_classes + self.known_classes
         self.logger.info("known classes: {}, new classes: {}, current classes: {}".format(self.known_classes, self.new_classes, self.cur_classes))
 
-    def prepare_task_data(self, data_manager, task_id):
-        if task_id > 0 and self.memory_bank is not None:
-            self.train_dataset = data_manager.get_dataset(source='train', mode='train',
-                                                          indices=np.arange(self.known_classes, self.cur_classes),
-                                                          appendent=self.memory_bank.get_memory())
-        else:
-            self.train_dataset = data_manager.get_dataset(source='train', mode='train',
-                                                          indices=np.arange(self.known_classes, self.cur_classes))
+    def prepare_task_data(self, data_manager, task_id, is_train=True):
+        if is_train:
+            if task_id > 0 and self.memory_bank is not None:
+                self.train_dataset = data_manager.get_dataset(source='train', mode='train',
+                                                              indices=np.arange(self.known_classes, self.cur_classes),
+                                                              appendent=self.memory_bank.get_memory())
+            else:
+                self.train_dataset = data_manager.get_dataset(source='train', mode='train',
+                                                              indices=np.arange(self.known_classes, self.cur_classes))
 
+            self.train_loader = DataLoader(self.train_dataset, batch_size=self.config.batch_size, shuffle=True,
+                                           num_workers=self.config.num_workers)
+            self.logger.info("train data num of task {}: {}".format(task_id + 1, len(self.train_dataset.samples)))
         self.test_dataset = data_manager.get_dataset(source='test', mode='test', indices=np.arange(0, self.cur_classes))
 
-        self.train_loader = DataLoader(self.train_dataset, batch_size=self.config.batch_size, shuffle=True,
-                                       num_workers=self.config.num_workers)
         self.test_loader = DataLoader(self.test_dataset, batch_size=self.config.batch_size, shuffle=False,
                                       num_workers=self.config.num_workers)
 
-        self.logger.info("train data num of task {}: {}".format(task_id + 1, len(self.train_dataset.samples)))
         self.logger.info("test data num of task {}: {}".format(task_id + 1, len(self.test_dataset.samples)))
 
     @abstractmethod
-    def prepare_model(self, task_id):
+    def prepare_model(self, task_id, checkpoint=None):
         pass
 
     def incremental_train(self, data_manager, task_id):
@@ -164,12 +165,12 @@ class Base():
             "average of task mcr at current increment step: {}".format(np.mean(self.cnn_task_mcr_list[:task_id + 1, task_id])))
         self.logger.info("backward transfer: {}".format(calculate_bwf(self.cnn_task_mcr_list, task_id)))
         self.logger.info("average forgetting: {}".format(cal_avg_forgetting(self.cnn_task_mcr_list, task_id)))
-
-        wandb.log({
-            "overall/task_id": task_id + 1,
-            "overall/test_overall_acc": cnn_overall_acc,
-            "overall/test_overall_mcr": cnn_overall_mcr
-        })
+        if not os.environ["WANDB_DISABLED"]:
+            wandb.log({
+                "overall/task_id": task_id + 1,
+                "overall/test_overall_acc": cnn_overall_acc,
+                "overall/test_overall_mcr": cnn_overall_mcr
+            })
 
     def update_memory(self, data_manager):
         if self.memory_bank:
@@ -191,7 +192,8 @@ class Base():
             checkpoint_saved_path = self.config.save_path+"/"+self.config.method+"/"+self.config.version_name
             if not os.path.exists(checkpoint_saved_path):
                 os.makedirs(checkpoint_saved_path)
-            save_dict = {'state_dict': self.model.state_dict(),
+            save_dict = {'config': self.config,
+                         'state_dict': self.model.state_dict(),
                          'task_id': task_id,
                          'class_means': self.class_means if hasattr(self, "class_means") else None}
             torch.save(save_dict, os.path.join(checkpoint_saved_path, f"checkpoint_task{task_id}" + ".pkl"))

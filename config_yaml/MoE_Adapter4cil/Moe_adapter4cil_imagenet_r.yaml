@@ -33,7 +33,7 @@ usual:
   sampling_method: ""
 
 special:
-  prompt_template: "a bad photo of a {}."
+  prompt_template: "a photo of a {}."
 
 options:
   Cosine:

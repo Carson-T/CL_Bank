@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import timm
 from safetensors.torch import load_file
+from model.Base_Net import Base_Net
 from model.backbone import *
 
 
@@ -107,22 +108,19 @@ class EaseCosineLinear(nn.Module):
 
         return out_all
 
-class EaseNet(nn.Module):
+class EaseNet(Base_Net):
 
     def __init__(self, config, logger):
-        super(EaseNet, self).__init__()
-        self.logger = logger
-        self.config = config
-        self.backbone = None
+        super(EaseNet, self).__init__(config, logger)
+
         self.adapter_list = nn.ModuleList()
         self.cur_adapter = None
         self.proxy_fc = None
-        self.fc = None
+
         self.use_init_ptm = config.use_init_ptm
         self.alpha = config.alpha
         self.beta = config.beta
         self.embed_dim = 768
-
 
     def model_init(self):
         backbone = timm.create_model(model_name=self.config.backbone,
@@ -155,7 +153,7 @@ class EaseNet(nn.Module):
             del state_dict['head.bias']
             backbone.load_state_dict(state_dict, strict=False)
         self.backbone = backbone
-        self.num_features = self.backbone.num_features
+        self.feature_dim = self.backbone.num_features
 
     def update_model(self, task_id):
         self.update_adapter()
@@ -207,7 +205,7 @@ class EaseNet(nn.Module):
         fc = EaseCosineLinear(in_dim, out_dim)
         return fc
 
-    def forward(self, x, task_id, train=True):
+    def forward(self, x, train=False, task_id=None):
         if train:
             features = self.backbone.forward(x, self.adapter_list, self.cur_adapter, train=True)
             logits = self.proxy_fc(features)    # B new_class_num
@@ -238,10 +236,6 @@ class EaseNet(nn.Module):
 
         self.logger.info("backbone and old adapter freeze, current adapter unfreeze!")
 
-    def show_trainable_params(self):
-        for name, param in self.named_parameters():
-            if param.requires_grad:
-                self.logger.info("{} {}".format(name, param.numel()))
     # def show_trainable_params(self):
     #     for name, param in self.named_parameters():
     #         if param.requires_grad:
