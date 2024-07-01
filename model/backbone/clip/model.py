@@ -187,6 +187,7 @@ class ResidualAttentionBlock(nn.Module):
         self.attn_mask = attn_mask
 
     def attention(self, x: torch.Tensor):
+
         self.attn_mask = self.attn_mask.to(dtype=x.dtype, device=x.device) if self.attn_mask is not None else None
         return self.attn(x, x, x, need_weights=False, attn_mask=self.attn_mask)[0]
 
@@ -283,11 +284,13 @@ class CLIP(nn.Module):
                  transformer_heads: int,
                  transformer_layers: int,
                  img_lora_rank=0,
-                 text_lora_rank=0
+                 text_lora_rank=0,
+                 prompt_length=0
                  ):
         super().__init__()
 
         self.context_length = context_length
+        self.prompt_length = prompt_length
         self.vision_layers = vision_layers
         self.transformer_layers = transformer_layers
         self.vision_width = vision_width
@@ -318,7 +321,7 @@ class CLIP(nn.Module):
             width=transformer_width,
             layers=transformer_layers,
             heads=transformer_heads,
-            attn_mask=self.build_attention_mask(),
+            # attn_mask=self.build_attention_mask(),
             lora_rank=text_lora_rank
         )
 
@@ -364,7 +367,7 @@ class CLIP(nn.Module):
     def build_attention_mask(self):
         # lazily create causal attention mask, with full attention between the vision tokens
         # pytorch uses additive attention mask; fill with -inf
-        mask = torch.empty(self.context_length, self.context_length)
+        mask = torch.empty(self.context_length+self.prompt_length, self.context_length+self.prompt_length)
         mask.fill_(float("-inf"))
         mask.triu_(1)  # zero out the lower diagonal
         return mask
@@ -376,10 +379,12 @@ class CLIP(nn.Module):
     def encode_image(self, image, adapter_list=None):
         return self.visual(image.type(self.dtype), adapter_list)
 
-    def encode_text(self, text, adapter_list=None):
+    def encode_text(self, text, adapter_list=None, prompt=None):
         x = self.token_embedding(text).type(self.dtype)  # [batch_size, n_ctx, d_model]
 
         x = x + self.positional_embedding.type(self.dtype)
+        if prompt:
+            x = torch.cat([prompt.expand(text.shape[0], -1, -1).type(self.dtype), x], dim=1)
         x = x.permute(1, 0, 2)  # NLD -> LND
         # print(x.shape)
         x = self.transformer(x, adapter_list)
@@ -388,7 +393,7 @@ class CLIP(nn.Module):
 
         # x.shape = [batch_size, n_ctx, transformer.width]
         # take features from the eot embedding (eot_token is the highest number in each sequence)
-        x = x[torch.arange(x.shape[0]), text.argmax(dim=-1)] @ self.text_projection
+        x = x[torch.arange(x.shape[0]), text.argmax(dim=-1)+self.prompt_length] @ self.text_projection
 
         return x
 
@@ -435,7 +440,7 @@ def convert_weights(model: nn.Module):
     model.apply(_convert_weights_to_fp16)
 
 
-def build_model(state_dict: dict, lora_r):
+def build_model(state_dict: dict, lora_r, prompt_length):
     vit = "visual.proj" in state_dict
 
     if vit:
@@ -464,15 +469,15 @@ def build_model(state_dict: dict, lora_r):
         embed_dim,
         image_resolution, vision_layers, vision_width, vision_patch_size,
         context_length, vocab_size, transformer_width, transformer_heads, transformer_layers,
-        img_lora_rank=lora_r[0], text_lora_rank=lora_r[1]
+        img_lora_rank=lora_r[0], text_lora_rank=lora_r[1], prompt_length=prompt_length
     )
 
     for key in ["input_resolution", "context_length", "vocab_size"]:
         if key in state_dict:
             del state_dict[key]
 
-    # convert_weights(model)
     missing_keys, unexpected_keys = model.load_state_dict(state_dict, strict=False)
     print("missing_keys:", missing_keys)
     print("unexpected_keys:", unexpected_keys)
+    # convert_weights(model)
     return model.eval()

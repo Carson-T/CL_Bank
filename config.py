@@ -5,7 +5,7 @@ import argparse
 
 def config():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--yaml_path', default="config_yaml/ctf_tuning/ctf_tuning_icarl_cifar100.yaml")
+    parser.add_argument('--yaml_path', default="config_yaml/PRCLIP/prclip_cifar100.yaml")
 
     parser.add_argument('--device_ids', default=None)
     parser.add_argument('--random_seed', type=int, default=None)

@@ -23,13 +23,11 @@ class ImageNet_R:
         self.img_size = img_size
 
         self.train_transform = [
+            transforms.RandomResizedCrop(size=224),
             transforms.RandomHorizontalFlip(),
-            transforms.ColorJitter(brightness=63 / 255),
-            # transforms.RandomResizedCrop(size=224, scale=(0.2, 1.)),
-            # transforms.RandomHorizontalFlip(),
-            # transforms.ColorJitter(0.4, 0.4, 0.4, 0.1)
+            transforms.ColorJitter(0.4, 0.4, 0.4, 0.1)
         ]
-        self.strong_trsf = [
+        self.strong_transform = [
             transforms.RandomResizedCrop(size=224, scale=(0.2, 1.)),
             transforms.RandomHorizontalFlip(),
             transforms.RandomApply([
@@ -48,9 +46,10 @@ class ImageNet_R:
             self.class_order = np.random.permutation(len(self.class_order)).tolist()
 
     def download_data(self):
-        train_dataset = datasets.ImageFolder(root="/data/jiantao/Data/imagenet_r_coda/train")
-        test_dataset = datasets.ImageFolder(root="/data/jiantao/Data/imagenet_r_coda/test")
+        train_dataset = datasets.ImageFolder(root="/data/jiantao/Data/imagenet_r/train")
+        test_dataset = datasets.ImageFolder(root="/data/jiantao/Data/imagenet_r/test")
         assert train_dataset.class_to_idx == test_dataset.class_to_idx
+        self.class_descs = None
 
         with open("/data/jiantao/Data/imagenet_r_coda/class_name.txt", "r") as f:
             lines = f.readlines()

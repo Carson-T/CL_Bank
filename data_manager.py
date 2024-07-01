@@ -15,6 +15,8 @@ class DataManager(object):
             self.data = CIFAR100(shuffle=config.data_shuffle, img_size=config.img_size)
         elif config.dataset_name == "imagenet-r":
             self.data = ImageNet_R(shuffle=config.data_shuffle, img_size=config.img_size)
+        elif config.dataset_name == "imagenet100":
+            self.data = ImageNet100(shuffle=config.data_shuffle, img_size=config.img_size)
         self.img_size = self.data.img_size
         self.use_valid = False
 
@@ -89,7 +91,6 @@ class DataManager(object):
             class_data, class_targets, _ = select(x, y, low_range=idx, high_range=idx + 1)
             data.append(class_data)
             targets.append(class_targets)
-
         if appendent is not None:
             appendent_data, appendent_targets = appendent
             data.append(appendent_data)

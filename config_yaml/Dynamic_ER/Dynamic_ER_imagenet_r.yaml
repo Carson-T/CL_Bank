@@ -1,27 +1,27 @@
 basic:
   device_ids: "1"
   random_seed: 1993
-  version_name: "DER_default"
+  version_name: "Dynamic_ER_imagenet_r_b0i20_test"
   wandb_dir: "/data/jiantao"
   is_log: True
   save_checkpoint: True
   save_path: "../checkpoint&log"
-  method: "DER"
+  method: "Dynamic_ER"
   increment_type: "CIL"
-  increment_steps: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
-
+#  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+  increment_steps: [ 20, 20, 20, 20, 20, 20, 20, 20, 20, 20 ]
 
 usual:
-  dataset_name: "cifar100"
+  dataset_name: "imagenet-r"
   data_shuffle: True
-  img_size: 32
-  backbone: "cifar_resnet32"
-  pretrained_path: ""
+  img_size: 224
+  backbone: "timm_resnet18"
+  pretrained_path: ""  # /data/jiantao/pretrained_model/resnet18.a1_in1k.safetensors
   drop_rate: 0
   drop_path_rate: 0
   batch_size: 128
   num_workers: 8
-  epochs: 170
+  epochs: 150
   optimizer: SGD
   loss_func: CEloss
   scheduler: multi_step
@@ -33,16 +33,15 @@ usual:
   sampling_method: "herding"
 
 special:
-  ft_epochs: 30
-  ft_lr: 0.1
-  ft_milestones: [15]
+  T: 2
+  ft_epochs: 50
+  ft_lr: 0.01
+  ft_milestones: [15, 30]
   ft_gamma: 0.1
-  T: 5
-
 
 options:
   multi_step:
-    milestones: [80, 120, 150]
+    milestones: [80, 100, 120]     # [100, 120, 145]
     gamma: 0.1
   Warm-up-Cosine-Annealing:
     init_ratio: 0.1

@@ -4,6 +4,7 @@ import copy
 import timm
 from model.backbone import *
 from model.Base_Net import Base_Net
+from safetensors.torch import load_file
 
 
 class DERNet(Base_Net):
@@ -47,9 +48,12 @@ class DERNet(Base_Net):
         self.fc = new_fc
 
     def forward(self, x, train=False, task_id=None):
-        features = [fe.forward_head(fe.forward_features(x), pre_logits=True) for fe in self.feature_extractor_list]
-        all_features = torch.cat(features, 1)
-
+        if hasattr(self.feature_extractor_list[0], "forward_features"):
+            features = [fe.forward_head(fe.forward_features(x), pre_logits=True) for fe in self.feature_extractor_list]
+            all_features = torch.cat(features, 1)
+        else:
+            features = [fe(x) for fe in self.feature_extractor_list]
+            all_features = torch.cat(features, 1)
         logits = self.fc(all_features)  # {logics: self.fc(features)}
 
         aux_logits = self.aux_fc(features[-1])

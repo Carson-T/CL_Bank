@@ -1,18 +1,18 @@
 basic:
-  device_ids: "6"
+  device_ids: "2"
   random_seed: 1993
-  version_name: "ctf_tuning_der_mlp3_cifar100_b0i10"
+  version_name: "ctf_tuning_der_(e)_imagenet_r_b0i20"
   wandb_dir: "/data/jiantao"
   is_log: True
   save_checkpoint: False
   save_path: "../checkpoint&log"
   method: "CtF_tuning"
   increment_type: "CIL"
-  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
+  increment_steps: [ 20, 20, 20, 20, 20, 20, 20, 20, 20, 20 ]
 #  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 
 usual:
-  dataset_name: "cifar100"
+  dataset_name: "imagenet-r"
   data_shuffle: True
   img_size: 32
   backbone: "CLIP"
@@ -25,7 +25,7 @@ usual:
   optimizer: SGD
   loss_func: CEloss
   scheduler: Warm-up-Cosine-Annealing
-  lr: 0.05
+  lr: 0.005
   momentum: 0.9
   weight_decay: 0
   memory_size: 2000
@@ -33,12 +33,12 @@ usual:
   sampling_method: "herding"
 
 special:
-  coarse_yaml: "/data/jiantao/projects/My_CL_Bank/code/config_yaml/Dynamic_ER/Dynamic_ER_cifar100.yaml"
+  coarse_yaml: "/data/jiantao/projects/My_CL_Bank/code/config_yaml/Dynamic_ER/Dynamic_ER_imagenet_r.yaml"
   use_desc: False
   desc_num: 10
   topk: 5
-  lora_r: [0, 16]
-  prompt_template: "a bad photo of a {}."
+  lora_r: [0, 0]
+  prompt_template: "a photo of a {}."
 
 
 options:
