@@ -1,0 +1,14 @@
+albumentations==1.4.10
+ftfy==6.2.0
+matplotlib==3.3.2
+numpy==1.19.2
+Pillow==8.0.1
+Pillow==10.4.0
+PyYAML==6.0.1
+regex==2020.10.15
+safetensors==0.4.3
+scikit_learn==0.23.2
+timm==1.0.7
+torch==2.3.1
+torchvision==0.18.1
+tqdm==4.50.2
