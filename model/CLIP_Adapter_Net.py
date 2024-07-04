@@ -11,8 +11,8 @@ class CLIP_Adapter_Net(Base_Net):
         super().__init__(config, logger)
 
         assert config.backbone == "CLIP"
-        self.img_adapter_list = nn.ModuleList([])
-        # self.img_adapter_list = None
+        # self.img_adapter_list = nn.ModuleList([])
+        self.img_adapter_list = None
         # self.text_adapter_list = nn.ModuleList([])
         self.text_adapter_list = None
         self.img_final_adapter = None
@@ -29,13 +29,13 @@ class CLIP_Adapter_Net(Base_Net):
         #                       adapter_scalar="0.1",
         #                       adapter_layernorm_option=None)
         #     self.img_adapter_list.append(img_adapter)
-        self.img_final_adapter = Adapter(d_model=self.output_dim,
-                              dropout=0.1,
-                              bottleneck=64,
-                              init_option="lora",
-                              adapter_scalar="0.1",
-                              adapter_layernorm_option=None).half()
-        # self.img_final_adapter = nn.Linear(self.output_dim, self.output_dim)
+        # self.img_final_adapter = Adapter(d_model=self.output_dim,
+        #                       dropout=0.1,
+        #                       bottleneck=64,
+        #                       init_option="lora",
+        #                       adapter_scalar="0.1",
+        #                       adapter_layernorm_option=None)
+        self.img_final_adapter = nn.Linear(self.output_dim, self.output_dim)
         # for j in range(self.backbone.transformer_layers):
         #     text_adapter = Adapter(d_model=self.backbone.transformer_width,
         #                       dropout=0.1,

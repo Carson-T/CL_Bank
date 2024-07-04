@@ -101,3 +101,24 @@ class L2P(Base):
             test_loss = {'all_loss': losses / len(test_loader), 'loss_clf': ce_losses / len(test_loader),
                          'loss_prompt': prompt_losses / len(test_loader)}
             return all_preds, all_targets, test_loss
+
+    def predict(self, model, test_loader, task_id):
+        model.eval()
+        with torch.no_grad():
+            for idx, (inputs, targets, _) in enumerate(test_loader):
+                inputs, targets = inputs.cuda(), targets.cuda()
+                out = model(inputs)
+                logits = out["logits"]
+                # outputs = F.softmax(logits, dim=-1)
+                scores, preds = torch.max(F.softmax(logits[:, :self.cur_classes], dim=-1), dim=1)
+
+                if idx == 0:
+                    all_preds = preds
+                    all_scores = scores
+                    all_targets = targets
+                else:
+                    all_preds = torch.cat((all_preds, preds))
+                    all_scores = torch.cat((all_scores, scores))
+                    all_targets = torch.cat((all_targets, targets))
+
+            return all_preds, all_scores, all_targets

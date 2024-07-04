@@ -1,5 +1,4 @@
 basic:
-  device_ids: "3"
   random_seed: 1993
   version_name: "Moe_adapter4cil_imagenet_r_b0i10"
   wandb_dir: "/data/jiantao"

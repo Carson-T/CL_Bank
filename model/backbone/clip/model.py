@@ -321,7 +321,7 @@ class CLIP(nn.Module):
             width=transformer_width,
             layers=transformer_layers,
             heads=transformer_heads,
-            # attn_mask=self.build_attention_mask(),
+            attn_mask=self.build_attention_mask(),
             lora_rank=text_lora_rank
         )
 

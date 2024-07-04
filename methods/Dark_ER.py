@@ -46,12 +46,12 @@ class Dark_ER(Base):
         scheduler = get_scheduler(optimizer, self.config)
         hard_loss = get_loss_func(self.config)
         soft_loss = F.mse_loss
-        if len(self.config.device_ids.split(",")) > 1:
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = nn.DataParallel(self.model)
         self.train_model(self.train_loader, self.test_loader, hard_loss, soft_loss, optimizer, scheduler,
                          task_id=task_id, epochs=self.config.epochs)
 
-        if len(self.config.device_ids.split(",")) > 1:
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = self.model.module
 
     def epoch_train(self, model, train_loader, hard_loss, soft_loss, optimizer, task_id):

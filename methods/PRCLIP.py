@@ -86,15 +86,15 @@ class PRCLIP(Base):
         scheduler = get_scheduler(optimizer, self.config)
         hard_loss = get_loss_func(self.config)
         soft_loss = None
-        if len(self.config.device_ids.split(",")) > 1:
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = nn.DataParallel(self.model)
         self.train_model(self.train_loader, self.test_loader, hard_loss, soft_loss, optimizer, scheduler,
                          task_id=task_id, epochs=self.config.epochs)
-        if len(self.config.device_ids.split(",")) > 1:
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = self.model.module
 
-        # if task_id > 0:
-        #     self.model.param_retention()
+        if task_id > 0:
+            self.model.param_retention()
 
     def epoch_train(self, model, train_loader, hard_loss, soft_loss, optimizer, task_id):
         losses = 0.
@@ -157,6 +157,29 @@ class PRCLIP(Base):
 
             test_loss = {'all_loss': losses / len(test_loader), 'loss_clf': ce_losses / len(test_loader)}
             return all_preds, all_targets, test_loss
+
+    def predict(self, model, test_loader, task_id):
+        model.eval()
+        with torch.no_grad():
+            for idx, (inputs, targets, _) in enumerate(test_loader):
+                inputs, targets = inputs.cuda(), targets.cuda()
+                out = model(inputs, text_tokens=self.cur_text_tokens.cuda())
+                logits = out["logits"]
+                # features = out["features"]
+                assert logits.shape[1] == self.cur_classes, "epoch train error"
+                scores, preds = torch.max(F.softmax(logits[:, :self.cur_classes], dim=-1), dim=1)
+
+                if idx == 0:
+                    all_preds = preds
+                    all_scores = scores
+                    all_targets = targets
+                else:
+                    all_preds = torch.cat((all_preds, preds))
+                    all_scores = torch.cat((all_scores, scores))
+                    all_targets = torch.cat((all_targets, targets))
+
+            return all_preds, all_scores, all_targets
+
 
     def after_task(self, task_id):
         super().after_task(task_id)

@@ -45,6 +45,11 @@ class Ease(Base):
         self.test_dataset = data_manager.get_dataset(source='test', mode='test', indices=np.arange(0, self.cur_classes))
         self.test_loader = DataLoader(self.test_dataset, batch_size=self.config.batch_size, shuffle=False,
                                       num_workers=self.config.num_workers)
+        self.openset_test_dataset = data_manager.get_openset_dataset(source='test', mode='test',
+                                                                     known_indices=np.arange(0, self.cur_classes))
+        self.openset_test_loader = DataLoader(self.openset_test_dataset, batch_size=self.config.batch_size,
+                                              shuffle=False,
+                                              num_workers=self.config.num_workers)
         self.logger.info("test data num of task {}: {}".format(task_id + 1, len(self.test_dataset.samples)))
 
     def prepare_model(self, task_id, checkpoint=None):
@@ -70,11 +75,11 @@ class Ease(Base):
         scheduler = get_scheduler(optimizer, self.config)
         hard_loss = get_loss_func(self.config)
         soft_loss = None
-        if len(self.config.device_ids.split(",")) > 1:
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = nn.DataParallel(self.model)
         self.train_model(self.train_loader, self.test_loader, hard_loss, soft_loss, optimizer, scheduler,
                          task_id=task_id, epochs=self.config.epochs)
-        if len(self.config.device_ids.split(",")) > 1:
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = self.model.module
 
         self.replace_fc(self.proto_loader, task_id)
@@ -185,6 +190,26 @@ class Ease(Base):
 
             test_loss = {'all_loss': losses / len(test_loader), 'loss_clf': ce_losses / len(test_loader)}
             return all_preds, all_targets, test_loss
+
+    def predict(self, model, test_loader, task_id):
+        model.eval()
+        with torch.no_grad():
+            for idx, (inputs, targets, _) in enumerate(test_loader):
+                inputs, targets = inputs.cuda(), targets.cuda()
+                out = model(inputs, task_id=task_id, train=False)
+                logits = out["logits"]
+                scores, preds = torch.max(F.softmax(logits[:, :self.cur_classes], dim=-1), dim=1)
+
+                if idx == 0:
+                    all_preds = preds
+                    all_scores = scores
+                    all_targets = targets
+                else:
+                    all_preds = torch.cat((all_preds, preds))
+                    all_scores = torch.cat((all_scores, scores))
+                    all_targets = torch.cat((all_targets, targets))
+
+            return all_preds, all_scores, all_targets
 
     def replace_fc(self, train_loader_for_protonet, task_id):
         self.model.eval()

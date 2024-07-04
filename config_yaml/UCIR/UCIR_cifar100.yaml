@@ -1,5 +1,4 @@
 basic:
-  device_ids: "1"
   random_seed: 1993
   version_name: "ucir_default"
   wandb_dir: "/data/jiantao"

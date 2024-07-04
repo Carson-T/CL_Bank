@@ -1,7 +1,7 @@
 import os
 import sys
-from methods import get_method
 import torch
+from methods import get_method
 from data_manager import DataManager
 import numpy as np
 import random
@@ -53,6 +53,7 @@ def log(config, run_dir):
 if __name__ == '__main__':
     is_train = True
     config = config()
+    config.pretrained_path = os.path.join(os.environ["HOME"], config.pretrained_path)
     run_dir = config.save_path + "/" + config.method + "/" + config.version_name
     if not os.path.exists(run_dir):
         os.makedirs(run_dir)
@@ -62,7 +63,6 @@ if __name__ == '__main__':
         config.save_checkpoint = False
         logger = log(config, run_dir)
         os.environ["WANDB_DISABLED"] = "true"
-        os.environ['CUDA_VISIBLE_DEVICES'] = config.device_ids
         torch.set_num_threads(config.num_workers)  # limit cpu usage, important for DarkER, X-DER
         set_random(config.random_seed)
         data_manager = DataManager(config, logger)
@@ -87,7 +87,7 @@ if __name__ == '__main__':
         logger.info("config: {}".format(vars(config)))
         os.environ["WANDB_DISABLED"] = "false"
         os.environ["WANDB_MODE"] = "offline"
-        os.environ['CUDA_VISIBLE_DEVICES'] = config.device_ids
+
         # torch.set_num_threads(config.num_workers)  # limit cpu usage, important for DarkER, X-DER
 
         set_random(config.random_seed)
@@ -96,7 +96,7 @@ if __name__ == '__main__':
             project="CL_Bank",
             name=config.version_name,
             # id=version_name,
-            dir=config.wandb_dir,
+            dir=os.environ["HOME"],
             resume=False,
             # track hyperparameters and run metadata
             config=vars(config)

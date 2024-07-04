@@ -1,5 +1,4 @@
 basic:
-  device_ids: "6"
   random_seed: 1993
   version_name: "Dark_ER++_cifar100_b0i10"
   wandb_dir: "/data/jiantao"

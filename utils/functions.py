@@ -1,6 +1,6 @@
 from PIL import Image
 import numpy as np
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, roc_curve, average_precision_score, auc
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -16,6 +16,14 @@ def select(x, y, low_range, high_range):
 
     return x[idxes], y[idxes], idxes
 
+def cal_openset_metrics(scores, y_true):
+    fpr, tpr, thresholds = roc_curve(y_true, scores)
+    roc_auc = auc(fpr, tpr)
+    fpr95_idx = np.where(tpr >= 0.95)[0]
+    fpr95 = fpr[fpr95_idx[0]]
+
+    ap = average_precision_score(y_true, scores)
+    return roc_auc * 100, fpr95 * 100, ap * 100
 
 def calculate_acc(y_pred, y_true, nb_old, increment, cal_task_acc=False):
     assert len(y_pred) == len(y_true), 'Data length error.'

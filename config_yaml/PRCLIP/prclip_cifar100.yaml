@@ -1,39 +1,38 @@
 basic:
-  device_ids: "8"
-  random_seed: 1994
-  version_name: "prclip_cifar100_b0i10_mlp"
-  wandb_dir: "/data/jiantao"
+  random_seed: 1145114
+  version_name: "prclip_cifar100_b0i5_1145114"
   is_log: True
-  save_checkpoint: False
+  save_checkpoint: True
   save_path: "../checkpoint&log"
   method: "PRCLIP"
   increment_type: "CIL"
-  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
-#  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+#  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
+#  increment_steps: [ 20, 20, 20, 20, 20]
+  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 
 usual:
   dataset_name: "cifar100"
   data_shuffle: True
   img_size: 224
   backbone: "CLIP"
-  pretrained_path: "/data/jiantao/pretrained_model/CLIP_ViT-B-32.pt"
+  pretrained_path: "pretrained_model/CLIP_ViT-B-32.pt"
   drop_rate: 0
   drop_path_rate: 0
   batch_size: 64
   num_workers: 8
-  epochs: 20
+  epochs: 30
   optimizer: SGD
   loss_func: CEloss
   scheduler: Cosine
   lr: 0.1
-  momentum: 0.9
-  weight_decay: 0
+  momentum: 0
+  weight_decay: 0.0002
   memory_size: 2000
   apply_nme: False
   sampling_method: "herding"
 
 special:
-  prompt_template: "a bad photo of a {}."
+  prompt_template: "a photo of a {}."
   ret_ratio: 0.8
 
 options:

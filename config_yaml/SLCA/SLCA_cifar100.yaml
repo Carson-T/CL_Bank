@@ -1,7 +1,6 @@
 basic:
-  device_ids: "6, 7"
   random_seed: 1993
-  version_name: "SLCA_cifar100_b0i10_test"
+  version_name: "SLCA_cifar100_freeze"
   wandb_dir: "/data/jiantao"
   is_log: True
   save_checkpoint: False
@@ -19,13 +18,13 @@ usual:
   pretrained_path: "/data/jiantao/pretrained_model/vit_base_patch16_224.augreg_in21k_ft_in1k.safetensors"
   drop_rate: 0
   drop_path_rate: 0
-  batch_size: 128
+  batch_size: 64
   num_workers: 8
-  epochs: 2
+  epochs: 10
   optimizer: SGD
   loss_func: CEloss
   scheduler: multi_step
-  lr: 0.01
+  lr: 0.005
   momentum: 0.9
   weight_decay: 0.0005
   memory_size: 0
@@ -34,7 +33,7 @@ usual:
 
 special:
   ca_epoch: 5
-  ca_lr: 0.01
+  ca_lr: 0.005
   num_sampled_pcls: 256
   ca_logit_norm: 0.1
 

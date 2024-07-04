@@ -1,5 +1,4 @@
 basic:
-  device_ids: "1"
   random_seed: 1993
   version_name: "icarl_imagenet100_b0i10"
   wandb_dir: "/data/jiantao"

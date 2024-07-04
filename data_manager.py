@@ -67,6 +67,8 @@ class DataManager(object):
             x, y = self.train_data, self.train_targets
         elif source == 'test':
             x, y = self.test_data, self.test_targets
+        else:
+            raise ValueError('Unknown data source {}.'.format(source))
 
         if mode == 'train':
             transform = transforms.Compose([*self.train_transform, *self.common_transform])
@@ -100,56 +102,46 @@ class DataManager(object):
 
         return MyDataset(data, targets, self.data.use_path, transform, clip_transform=clip_transform if ret_clip_img else None)
 
-    # def get_dataset_with_split(self, source, mode, indices=None, appendent=None, val_samples_per_class=0,
-    #                            two_view=False):
-    #     if source == 'train':
-    #         x, y = self.train_data, self.train_targets
-    #     elif source == 'test':
-    #         x, y = self.test_data, self.test_targets
-    #     elif source == 'valid':
-    #         raise ValueError('get_dataset_with_split do not allow mode valid yet!')
-    #     else:
-    #         raise ValueError('Unknown data source {}.'.format(source))
-    #
-    #     if mode == 'train':
-    #         transform = transforms.Compose([*self.train_transform, *self.common_transform])
-    #     elif mode == 'test' or mode == 'valid':
-    #         transform = transforms.Compose([*self.test_transform, *self.common_transform])
-    #     else:
-    #         raise ValueError('Unknown mode {}.'.format(mode))
-    #
-    #     train_data, train_targets = [], []
-    #     val_data, val_targets = [], []
-    #     for idx in indices:
-    #         class_data, class_targets = self.select(x, y, low_range=idx, high_range=idx + 1)
-    #         val_indx = np.random.choice(len(class_data), val_samples_per_class, replace=False)
-    #         train_indx = list(set(np.arange(len(class_data))) - set(val_indx))
-    #         val_data.append(class_data[val_indx])
-    #         val_targets.append(class_targets[val_indx])
-    #         train_data.append(class_data[train_indx])
-    #         train_targets.append(class_targets[train_indx])
-    #
-    #     sampler_data, sampler_targets = np.concatenate(train_data), np.concatenate(train_targets)
-    #
-    #     if appendent is not None:
-    #         appendent_data, appendent_targets = appendent
-    #         for idx in range(0, int(np.max(appendent_targets)) + 1):
-    #             append_data, append_targets = self.select(appendent_data, appendent_targets,
-    #                                                        low_range=idx, high_range=idx + 1)
-    #             val_indx = np.random.choice(len(append_data), val_samples_per_class, replace=False)
-    #             train_indx = list(set(np.arange(len(append_data))) - set(val_indx))
-    #
-    #             val_data.append(append_data[val_indx])
-    #             val_targets.append(append_targets[val_indx])
-    #
-    #             train_data.append(append_data[train_indx])
-    #             train_targets.append(append_targets[train_indx])
-    #
-    #     train_data, train_targets = np.concatenate(train_data), np.concatenate(train_targets)
-    #     val_data, val_targets = np.concatenate(val_data), np.concatenate(val_targets)
-    #
-    #     # train_dataset, valid_dataset, sampler_dataset
-    #     return MyDataset(train_data, train_targets, self.use_path, transform), \
-    #         MyDataset(val_data, val_targets, self.use_path, transform), \
-    #         MyDataset(sampler_data, sampler_targets, self.use_path, transforms.Compose([*self.test_transform, *self.common_transform]))
+    def get_openset_dataset(self, source, mode, known_indices, ret_clip_img=False):
+        """
+        known_indices 必须是连续的, 从0开始的
+        """
+        self.logger.info(
+            'getting openset dataset: {}-{} classes have been learned.'.format(known_indices[0], known_indices[-1]))
+        if source == 'train':
+            x, y = self.train_data, self.train_targets
+        elif source == 'test':
+            x, y = self.test_data, self.test_targets
+        else:
+            raise ValueError('Unknown data source {}.'.format(source))
 
+        if mode == 'train':
+            transform = transforms.Compose([*self.train_transform, *self.common_transform])
+            clip_transform = transforms.Compose([
+                *self.train_transform,
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761)),
+            ])
+        elif mode == 'test' or mode == 'valid':
+            transform = transforms.Compose([*self.test_transform, *self.common_transform])
+            clip_transform = transforms.Compose([
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=(0.5071, 0.4867, 0.4408), std=(0.2675, 0.2565, 0.2761)),
+            ])
+        else:
+            raise ValueError('Unknown mode {}.'.format(mode))
+
+        data, targets = [], []
+        for idx in known_indices:
+            class_data, class_targets, _ = select(x, y, low_range=idx, high_range=idx + 1)
+            data.append(class_data)
+            targets.append(class_targets)
+        unknown_class_data, unknown_class_targets, _ = select(x, y, low_range=max(known_indices) + 1, high_range=self.total_classes)
+        data.append(unknown_class_data)
+        targets.append(np.full_like(unknown_class_targets, self.total_classes))
+
+        data, targets = np.concatenate(data), np.concatenate(targets)
+
+        return MyDataset(data, targets, self.data.use_path, transform, clip_transform=clip_transform if ret_clip_img else None)

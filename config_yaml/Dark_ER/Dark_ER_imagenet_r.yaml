@@ -1,5 +1,4 @@
 basic:
-  device_ids: "4"
   random_seed: 1993
   version_name: "Dark_ER_imagenet_r_b0i20"
   wandb_dir: "/data/jiantao"

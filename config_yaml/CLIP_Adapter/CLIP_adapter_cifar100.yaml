@@ -1,5 +1,4 @@
 basic:
-  device_ids: "6"
   random_seed: 1993
   version_name: "CLIP_Adapter_cifar100_b0i10_test"
   wandb_dir: "/data/jiantao"

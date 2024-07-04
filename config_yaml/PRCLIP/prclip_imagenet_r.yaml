@@ -1,43 +1,43 @@
 basic:
   random_seed: 1993
-  version_name: "icarl_imagenet_r_b0i20"
-  wandb_dir: "/data/jiantao"
+  version_name: "prclip_imagenet_r_b0i20_test"
   is_log: True
   save_checkpoint: True
   save_path: "../checkpoint&log"
-  method: "iCarL"
+  method: "PRCLIP"
   increment_type: "CIL"
-  increment_steps: [ 20, 20, 20, 20, 20, 20, 20, 20, 20, 20 ]
+#  increment_steps: [ 40, 40, 40, 40, 40 ]
+  increment_steps: [ 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
 #  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
 
 usual:
   dataset_name: "imagenet-r"
   data_shuffle: True
   img_size: 224
-  backbone: "tv_resnet18"
-  pretrained_path: ""
+  backbone: "CLIP"
+  pretrained_path: "pretrained_model/CLIP_ViT-B-32.pt"
   drop_rate: 0
   drop_path_rate: 0
   batch_size: 64
   num_workers: 8
-  epochs: 100
-  optimizer: SGD
+  epochs: 10
+  optimizer: Adam
   loss_func: CEloss
-  scheduler: multi_step
-  lr: 0.01
-  momentum: 0.9
-  weight_decay: 0.0005
+  scheduler: Cosine
+  lr: 0.001
+  momentum: 0
+  weight_decay: 0
   memory_size: 2000
-  apply_nme: True
+  apply_nme: False
   sampling_method: "herding"
 
 special:
-  T: 2
+  prompt_template: "a photo of a {}."
+  ret_ratio: 0.8
 
 options:
-  multi_step:
-    milestones: [40, 60, 80]
-    gamma: 0.1
+  Cosine:
+    eta_min: 0
   Warm-up-Cosine-Annealing:
     init_ratio: 0.1
     warm_up_steps: 2

@@ -64,12 +64,12 @@ class UCIR(Base):
         scheduler = get_scheduler(optimizer, self.config)
         hard_loss = get_loss_func(self.config)
         soft_loss = F.cosine_embedding_loss
-        if len(self.config.device_ids.split(",")) > 1:
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = nn.DataParallel(self.model)
         self.train_model(self.train_loader, self.test_loader, hard_loss, soft_loss, optimizer, scheduler,
                          task_id=task_id, epochs=self.config.epochs)
 
-        if len(self.config.device_ids.split(",")) > 1:
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = self.model.module
 
     def epoch_train(self, model, train_loader, hard_loss, soft_loss, optimizer, task_id):
@@ -180,62 +180,6 @@ class UCIR(Base):
             test_loss = {'all_loss': losses / len(test_loader), 'loss_clf': ce_losses / len(test_loader),
                          'loss_lf': lf_losses / len(test_loader), 'loss_is': is_losses / len(test_loader)}
             return all_preds, all_targets, test_loss
-
-    def eval_task(self, task_id):
-        hard_loss = get_loss_func(self.config)
-        soft_loss = F.cosine_embedding_loss
-        cnn_all_preds, cnn_all_targets, _ = self.epoch_test(self.model, self.test_loader, hard_loss, soft_loss, task_id)
-
-        cnn_overall_acc, cnn_task_acc = calculate_acc(cnn_all_preds.cpu().detach().numpy(),
-                                                      cnn_all_targets.cpu().detach().numpy(), self.cur_classes,
-                                                      self.config.increment_steps, cal_task_acc=True)
-
-        self.cnn_overall_acc_list.append(cnn_overall_acc)
-        self.logger.info("=" * 100)
-        self.logger.info("CNN ACC results:")
-        self.logger.info("overall acc at each increment step: {}".format(self.cnn_overall_acc_list))
-        self.logger.info(
-            "average of all overall acc until current increment step: {}".format(np.mean(self.cnn_overall_acc_list)))
-        for i in range(task_id + 1):
-            self.cnn_task_acc_list[i][task_id] = cnn_task_acc[i]
-            self.logger.info("acc of task {} at each increment step (row is task, column is step): {}".format(i + 1,
-                                                                                                              self.cnn_task_acc_list[
-                                                                                                                  i]))
-        self.logger.info(
-            "average of task acc at current increment step: {}".format(
-                np.mean(self.cnn_task_acc_list[:task_id + 1, task_id])))
-        self.logger.info("backward transfer: {}".format(calculate_bwf(self.cnn_task_acc_list, task_id)))
-        self.logger.info("average forgetting: {}".format(cal_avg_forgetting(self.cnn_task_acc_list, task_id)))
-
-        cnn_overall_mcr, cnn_task_mcr = cal_mean_class_recall(cnn_all_preds.cpu().detach().numpy(),
-                                                              cnn_all_targets.cpu().detach().numpy(),
-                                                              self.cur_classes,
-                                                              self.config.increment_steps, cal_task_mcr=True)
-
-        self.cnn_overall_mcr_list.append(cnn_overall_mcr)
-        self.logger.info("=" * 100)
-        self.logger.info("CNN MCR results:")
-        self.logger.info(
-            "overall mcr at each increment step: {}".format(self.cnn_overall_mcr_list))
-        self.logger.info(
-            "average of all overall mcr until current increment step: {}".format(np.mean(
-                self.cnn_overall_mcr_list)))
-        for i in range(task_id + 1):
-            self.cnn_task_mcr_list[i][task_id] = cnn_task_mcr[i]
-            self.logger.info("mcr of task {} at each increment step (row is task, column is step): {}".format(i + 1,
-                                                                                                              self.cnn_task_mcr_list[
-                                                                                                                  i]))
-        self.logger.info(
-            "average of task mcr at current increment step: {}".format(
-                np.mean(self.cnn_task_mcr_list[:task_id + 1, task_id])))
-        self.logger.info("backward transfer: {}".format(calculate_bwf(self.cnn_task_mcr_list, task_id)))
-        self.logger.info("average forgetting: {}".format(cal_avg_forgetting(self.cnn_task_mcr_list, task_id)))
-        if not os.environ["WANDB_DISABLED"]:
-            wandb.log({
-                "overall/task_id": task_id + 1,
-                "overall/test_overall_acc": cnn_overall_acc,
-                "overall/test_overall_mcr": cnn_overall_mcr
-            })
 
     def after_task(self, task_id):
         super().after_task(task_id)

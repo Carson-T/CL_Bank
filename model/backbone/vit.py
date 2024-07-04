@@ -73,7 +73,6 @@ class Block(nn.Module):
         x = x + self.drop_path(self.mlp(self.norm2(x)))
         return x
 
-
 class VisionTransformer(nn.Module):
     """ Vision Transformer
 

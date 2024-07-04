@@ -1,7 +1,6 @@
 basic:
-  device_ids: "6"
   random_seed: 1993
-  version_name: "ctf_tuning_der_mlp3_cifar100_b0i10"
+  version_name: "ctf_tuning_der_cifar100_b0i10"
   wandb_dir: "/data/jiantao"
   is_log: True
   save_checkpoint: False
@@ -25,7 +24,7 @@ usual:
   optimizer: SGD
   loss_func: CEloss
   scheduler: Warm-up-Cosine-Annealing
-  lr: 0.05
+  lr: 0.1
   momentum: 0.9
   weight_decay: 0
   memory_size: 2000
@@ -37,7 +36,7 @@ special:
   use_desc: False
   desc_num: 10
   topk: 5
-  lora_r: [0, 16]
+  lora_r: [0, 0]
   prompt_template: "a bad photo of a {}."
 
 

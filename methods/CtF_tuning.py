@@ -110,6 +110,11 @@ class CtF_tuning(Base):
         self.test_dataset = data_manager.get_dataset(source='test', mode='test', indices=np.arange(0, self.cur_classes), ret_clip_img=True)
         self.test_loader = DataLoader(self.test_dataset, batch_size=self.config.batch_size, shuffle=False,
                                       num_workers=self.config.num_workers)
+        self.openset_test_dataset = data_manager.get_openset_dataset(source='test', mode='test',
+                                                                     known_indices=np.arange(0, self.cur_classes))
+        self.openset_test_loader = DataLoader(self.openset_test_dataset, batch_size=self.config.batch_size,
+                                              shuffle=False,
+                                              num_workers=self.config.num_workers)
         self.logger.info("test data num of task {}: {}".format(task_id + 1, len(self.test_dataset.samples)))
 
         # self.new_class_names = [self.idx_to_class[i] for i in range(self.known_classes, self.cur_classes)]
@@ -157,11 +162,11 @@ class CtF_tuning(Base):
         scheduler = get_scheduler(optimizer, self.config)
         hard_loss = get_loss_func(self.config)
         soft_loss = None
-        if len(self.config.device_ids.split(",")) > 1:
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = nn.DataParallel(self.model)
         self.train_model(self.train_loader, self.test_loader, hard_loss, soft_loss, optimizer, scheduler,
                          task_id=task_id, epochs=self.config.epochs)
-        if len(self.config.device_ids.split(",")) > 1:
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = self.model.module
         # if self.config.ca_epoch > 0:
         #     self.compute_mean_cov(data_manager)
@@ -269,10 +274,34 @@ class CtF_tuning(Base):
             test_loss = {'all_loss': losses / len(test_loader), 'loss_clf': ce_losses / len(test_loader)}
             return [all_preds, all_preds_topk], all_targets, test_loss
 
+    def predict(self, model, test_loader, task_id):
+        model.eval()
+        with torch.no_grad():
+            for idx, (inputs, targets, _, clip_inputs) in enumerate(test_loader):
+                inputs, targets, clip_inputs = inputs.cuda(), targets.cuda(), clip_inputs.cuda()
+                preds_topk = self.stage1_batch_infer(inputs, task_id)
+                text_inputs = torch.cat(
+                    [self.test_text_tokens[i] for i in preds_topk]).cuda()  # 从template中挑选出top5对应的文本输入 # [320,77]
+                out = model(clip_inputs, text_tokens=text_inputs, train=False)
+                logits = out["logits"]
+                # features = out["features"]
+                values_top1, indices_top1 = logits.softmax(dim=-1).topk(1)  # indices_top1 的shape为[1]， 而predicts_topk的shape为[1,5]
+                preds = torch.gather(preds_topk, 1, indices_top1).squeeze()
+                scores = torch.max(logits.softmax(dim=-1), dim=-1)[0]
+
+                if idx == 0:
+                    all_preds = preds
+                    all_scores = scores
+                    all_targets = targets
+                else:
+                    all_preds = torch.cat((all_preds, preds))
+                    all_scores = torch.cat((all_scores, scores))
+                    all_targets = torch.cat((all_targets, targets))
+
+            return all_preds, all_scores, all_targets
+
     def eval_task(self, task_id):
-        hard_loss = get_loss_func(self.config)
-        soft_loss = None
-        preds, cnn_all_targets, _ = self.epoch_test(self.model, self.test_loader, hard_loss, soft_loss, task_id)
+        preds, cnn_all_scores, cnn_all_targets = self.predict(self.model, self.test_loader, task_id)
         cnn_all_preds, cnn_all_preds_topk = preds[0].cpu().detach().numpy(), preds[1].cpu().detach().numpy()
         cnn_all_targets = cnn_all_targets.cpu().detach().numpy()
         topk_acc = round(np.array([cnn_all_targets[i] in cnn_all_preds_topk[i] for i in range(len(cnn_all_targets))]).sum() * 100/len(cnn_all_targets), 2)

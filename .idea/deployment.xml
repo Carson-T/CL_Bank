@@ -9,17 +9,17 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="jiantao@172.18.167.16:22 agent">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/projects/My_CL_Bank/code" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="jiantao@172.18.167.97:22 key">
         <serverdata>
           <mappings>
             <mapping deploy="/projects/My_CL_Bank/code" local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="jiantao@172.18.167.97:22 key (2)">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

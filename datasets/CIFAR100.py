@@ -1,3 +1,5 @@
+import os
+
 from torchvision import datasets, transforms
 import albumentations
 from albumentations import pytorch as AT
@@ -21,17 +23,18 @@ class CIFAR100:
         super().__init__()
         self.use_path = False
         self.img_size = img_size
-        self.train_transform = [
-            transforms.RandomCrop(32, padding=4),
-            transforms.RandomHorizontalFlip(p=0.5),
-            transforms.ColorJitter(brightness=63 / 255)
-        ]
         # self.train_transform = [
-        #     albumentations.HorizontalFlip(p=0.5),
-        #     albumentations.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
-        #     # albumentations.HueSaturationValue(hue_shift_limit=20, sat_shift_limit=20, val_shift_limit=20, p=0.5),
-        #     # albumentations.ShiftScaleRotate(shift_limit=0.2, scale_limit=0.2, rotate_limit=20, border_mode=0, p=0.5),
+        #     transforms.RandomCrop(32, padding=4),
+        #     transforms.RandomHorizontalFlip(p=0.5),
+        #     transforms.ColorJitter(brightness=63 / 255)
         # ]
+        self.train_transform = [
+            transforms.Resize(256),
+            transforms.RandomResizedCrop(224, scale=(0.5, 1.0)),
+            transforms.RandomHorizontalFlip(p=0.5),
+            # transforms.ColorJitter(brightness=63 / 255)
+        ]
+
         self.test_transform = []
         self.common_transform = [
             transforms.Resize((self.img_size, self.img_size)),
@@ -57,10 +60,10 @@ class CIFAR100:
         #     ]
 
     def download_data(self):
-        train_dataset = datasets.cifar.CIFAR100("/data/jiantao/Data/cifar100", train=True, download=True)
-        test_dataset = datasets.cifar.CIFAR100("/data/jiantao/Data/cifar100", train=False, download=True)
+        train_dataset = datasets.cifar.CIFAR100(os.environ["HOME"]+"/Data/cifar100", train=True, download=True)
+        test_dataset = datasets.cifar.CIFAR100(os.environ["HOME"]+"/Data/cifar100", train=False, download=True)
 
-        with open("/data/jiantao/projects/My_CL_Bank/code/datasets/class_descs/cifar100_prompts_base.json", "r") as f:
+        with open(os.environ["HOME"]+"/projects/My_CL_Bank/code/datasets/class_descs/cifar100_prompts_base.json", "r") as f:
             class_descs = json.load(f)
         self.class_descs = class_descs
 

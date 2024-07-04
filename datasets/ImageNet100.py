@@ -64,11 +64,26 @@ class ImageNet100:
         return np.array(data), np.array(targets)
 
     def download_data(self):
-        # train_dataset = datasets.ImageFolder(root="/data/jiantao/Datasets/Datasets/miniImageNet/train")
-        # test_dataset = datasets.ImageFolder(root="/data/jiantao/Datasets/Datasets/miniImageNet/val")
-        # assert train_dataset.class_to_idx == test_dataset.class_to_idx
-        self.train_data, self.train_targets = self.getdata("/data/jiantao/Datasets/Datasets/miniImageNet", "train.txt")
-        self.test_data, self.test_targets = self.getdata("/data/jiantao/Datasets/Datasets/miniImageNet", "val.txt")
-        self.class_to_idx = {}
+        train_dataset = datasets.ImageFolder(root=os.environ["HOME"]+"/Datasets/Datasets/miniImageNet/train")
+        test_dataset = datasets.ImageFolder(root=os.environ["HOME"]+"/Datasets/Datasets/miniImageNet/val")
+        assert train_dataset.class_to_idx == test_dataset.class_to_idx
+        self.class_to_idx = train_dataset.class_to_idx
+        self.train_data, self.train_targets = [], []
+        for (img_path, label) in train_dataset.imgs:
+            self.train_data.append(img_path)
+            self.train_targets.append(label)
+        self.train_data = np.array(self.train_data)
+        self.train_targets = np.array(self.train_targets)
+
+        self.test_data, self.test_targets = [], []
+        for (img_path, label) in train_dataset.imgs:
+            self.test_data.append(img_path)
+            self.test_targets.append(label)
+        self.test_data = np.array(self.test_data)
+        self.test_targets = np.array(self.test_targets)
+
+        # self.train_data, self.train_targets = self.getdata(os.environ["HOME"]+"/Datasets/Datasets/miniImageNet", "train.txt")
+        # self.test_data, self.test_targets = self.getdata(os.environ["HOME"]+"/Datasets/Datasets/miniImageNet", "val.txt")
+        # self.class_to_idx = {}
         self.class_descs = {}
 

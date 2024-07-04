@@ -1,3 +1,5 @@
+import os
+
 from torchvision import datasets, transforms
 import albumentations
 from albumentations import pytorch as AT
@@ -46,12 +48,14 @@ class ImageNet_R:
             self.class_order = np.random.permutation(len(self.class_order)).tolist()
 
     def download_data(self):
-        train_dataset = datasets.ImageFolder(root="/data/jiantao/Data/imagenet_r/train")
-        test_dataset = datasets.ImageFolder(root="/data/jiantao/Data/imagenet_r/test")
+        # train_dataset = datasets.ImageFolder(root=os.environ["HOME"]+"/Datasets/imagenet_r/train")
+        # test_dataset = datasets.ImageFolder(root=os.environ["HOME"]+"/Datasets/imagenet_r/test")
+        train_dataset = datasets.ImageFolder(root=os.environ["HOME"] + "/Data/imagenet_r/train")
+        test_dataset = datasets.ImageFolder(root=os.environ["HOME"]+"/Data/imagenet_r/test")
         assert train_dataset.class_to_idx == test_dataset.class_to_idx
         self.class_descs = None
 
-        with open("/data/jiantao/Data/imagenet_r_coda/class_name.txt", "r") as f:
+        with open(os.environ["HOME"]+"/Data/imagenet_r/class_name.txt", "r") as f:
             lines = f.readlines()
         labels = [item[0:9] for item in lines]
         class_names = [item[10:-1] for item in lines]

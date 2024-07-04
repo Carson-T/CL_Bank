@@ -5,12 +5,13 @@ import argparse
 
 def config():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--yaml_path', default="config_yaml/PRCLIP/prclip_cifar100.yaml")
+    parser.add_argument('--yaml_path', default="config_yaml/L2P/L2P_cifar100.yaml")
 
     parser.add_argument('--device_ids', default=None)
     parser.add_argument('--random_seed', type=int, default=None)
     parser.add_argument('--increment_type', default=None)
     parser.add_argument('--increment_steps', type=list, default=None)
+    parser.add_argument('--is_openset_test', type=bool, default=False)
 
     parser.add_argument('--dataset_name', default=None)
     parser.add_argument('--data_shuffle', default=True)

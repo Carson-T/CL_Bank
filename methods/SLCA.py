@@ -30,6 +30,7 @@ class SLCA(Base):
             self.model = Inc_Net(self.config, self.logger)
             self.model.model_init()
         self.model.update_fc(task_id)
+        self.model.freeze_fe()
         if checkpoint is not None:
             assert task_id == checkpoint["task_id"]
             model_state_dict = checkpoint["state_dict"]
@@ -37,28 +38,26 @@ class SLCA(Base):
             if checkpoint["class_means"] is not None:
                 self.class_means = checkpoint["class_means"]
             self.logger.info("checkpoint loaded!")
-        self.model.unfreeze()
+        self.model.show_trainable_params()
         self.model = self.model.cuda()
-        if self.old_model is not None:
-            self.old_model = self.old_model.cuda()
 
     def incremental_train(self, data_manager, task_id):
         wandb.define_metric("overall/task_id")
         wandb.define_metric("overall/*", step_metric="overall/task_id")
-        optimizer = optim.SGD([{"params": self.model.backbone.parameters(), "lr": self.config.lr * 0.01},
-                               {"params": self.model.fc.parameters(), "lr": self.config.lr}],
-                              lr=self.config.lr, momentum=self.config.momentum, weight_decay=self.config.weight_decay)
+        # optimizer = optim.SGD([{"params": self.model.backbone.parameters(), "lr": self.config.lr * 0.01},
+        #                        {"params": self.model.fc.parameters(), "lr": self.config.lr}],
+        #                       lr=self.config.lr, momentum=self.config.momentum, weight_decay=self.config.weight_decay)
         # self.logger.info("new feature extractor requires_grad=True")
-        # optimizer = get_optimizer(filter(lambda p: p.requires_grad, self.model.parameters()), self.config)
+        optimizer = get_optimizer(filter(lambda p: p.requires_grad, self.model.parameters()), self.config)
         scheduler = get_scheduler(optimizer, self.config)
         hard_loss = get_loss_func(self.config)
-        soft_loss = KD_loss
-        if len(self.config.device_ids.split(",")) > 1:
+        soft_loss = None
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = nn.DataParallel(self.model)
         self.train_model(self.train_loader, self.test_loader, hard_loss, soft_loss, optimizer, scheduler,
                          task_id=task_id, epochs=self.config.epochs)
 
-        if len(self.config.device_ids.split(",")) > 1:
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = self.model.module
         if self.config.ca_epoch > 0:
             self.model.fc_backup()
@@ -130,7 +129,7 @@ class SLCA(Base):
                          'loss_kd': kd_losses / len(test_loader)}
             return all_preds, all_targets, test_loss
 
-    def compute_mean_cov(self, data_manager, task_id, check_diff=True, oracle=False):
+    def compute_mean_cov(self, data_manager, task_id, check_diff=False, oracle=False):
         if hasattr(self, 'class_means') and self.class_means is not None:
             ori_classes = self.class_means.shape[0]
             assert ori_classes == self.known_classes

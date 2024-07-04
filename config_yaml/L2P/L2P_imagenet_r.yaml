@@ -1,5 +1,4 @@
 basic:
-  device_ids: "2"
   random_seed: 1993
   version_name: "L2P_prefix_t_imagenet_r_b0i10"
   wandb_dir: "/data/jiantao"

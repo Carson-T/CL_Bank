@@ -1,5 +1,4 @@
 basic:
-  device_ids: "1"
   random_seed: 1993
   version_name: "Dynamic_ER_imagenet_r_b0i20_test"
   wandb_dir: "/data/jiantao"

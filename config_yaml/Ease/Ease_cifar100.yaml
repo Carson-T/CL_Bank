@@ -1,5 +1,4 @@
 basic:
-  device_ids: "2"
   random_seed: 1993
   version_name: "Ease_cifar100_b0i5"
   wandb_dir: "/data/jiantao"

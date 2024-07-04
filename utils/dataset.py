@@ -14,7 +14,6 @@ class MyDataset(Dataset):
         self.transform = transform
         self.clip_transform = clip_transform
 
-
     def __len__(self):
         return len(self.samples)
 

@@ -32,6 +32,11 @@ class Base():
         self.nme_overall_acc_list = []
         self.nme_task_acc_list = np.zeros((len(config.increment_steps), len(config.increment_steps)))
 
+        self.is_openset_test = config.is_openset_test if config.is_openset_test else False
+        self.cnn_auc_curve = []
+        self.cnn_fpr95_curve = []
+        self.cnn_AP_curve = []
+
     def update_class_num(self, task_id):
         self.new_classes = self.config.increment_steps[task_id]
         self.known_classes = sum(self.config.increment_steps[:task_id])
@@ -55,7 +60,9 @@ class Base():
 
         self.test_loader = DataLoader(self.test_dataset, batch_size=self.config.batch_size, shuffle=False,
                                       num_workers=self.config.num_workers)
-
+        self.openset_test_dataset = data_manager.get_openset_dataset(source='test', mode='test', known_indices=np.arange(0, self.cur_classes))
+        self.openset_test_loader = DataLoader(self.openset_test_dataset, batch_size=self.config.batch_size, shuffle=False,
+                                      num_workers=self.config.num_workers)
         self.logger.info("test data num of task {}: {}".format(task_id + 1, len(self.test_dataset.samples)))
 
     @abstractmethod
@@ -70,12 +77,12 @@ class Base():
         scheduler = get_scheduler(optimizer, self.config)
         hard_loss = get_loss_func(self.config)
         soft_loss = None
-        if len(self.config.device_ids.split(",")) > 1:
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = nn.DataParallel(self.model)
         self.train_model(self.train_loader, self.test_loader, hard_loss, soft_loss, optimizer, scheduler,
                          task_id=task_id, epochs=self.config.epochs)
 
-        if len(self.config.device_ids.split(",")) > 1:
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = self.model.module
 
     def train_model(self, train_loader, test_loader, hard_loss, soft_loss, optimizer, scheduler, task_id, epochs):
@@ -122,13 +129,66 @@ class Base():
     def epoch_test(self, model, test_loader, hard_loss, soft_loss, task_id):
         pass
 
-    def eval_task(self, task_id):
-        hard_loss = get_loss_func(self.config)
-        soft_loss = None
-        cnn_all_preds, cnn_all_targets, _ = self.epoch_test(self.model, self.test_loader, hard_loss, soft_loss, task_id)
+    @abstractmethod
+    def predict(self, model, test_loader, task_id):
+        model.eval()
+        with torch.no_grad():
+            for idx, (inputs, targets, _) in enumerate(test_loader):
+                inputs, targets = inputs.cuda(), targets.cuda()
+                out = model(inputs)
+                logits = out["logits"]
+                scores, preds = torch.max(F.softmax(logits[:, :self.cur_classes], dim=-1), dim=1)
 
-        cnn_overall_acc, cnn_task_acc = calculate_acc(cnn_all_preds.cpu().detach().numpy(),
-                                                        cnn_all_targets.cpu().detach().numpy(), self.cur_classes,
+                if idx == 0:
+                    all_preds = preds
+                    all_scores = scores
+                    all_targets = targets
+                else:
+                    all_preds = torch.cat((all_preds, preds))
+                    all_scores = torch.cat((all_scores, scores))
+                    all_targets = torch.cat((all_targets, targets))
+
+            return all_preds, all_scores, all_targets
+
+    def eval_task(self, task_id):
+        if self.is_openset_test and task_id < len(self.config.increment_steps)-1:
+            cnn_all_preds, cnn_all_scores, cnn_all_targets = self.predict(self.model, self.openset_test_loader, task_id)
+            cnn_all_preds = cnn_all_preds.cpu().detach().numpy()
+            cnn_all_scores = cnn_all_scores.cpu().detach().numpy()
+            cnn_all_targets = cnn_all_targets.cpu().detach().numpy()
+            openset_target = np.ones_like(cnn_all_preds)
+            openset_idx = np.where(cnn_all_targets == sum(self.config.increment_steps))[0]
+            openset_target[openset_idx] = 0
+            cnn_openset_score = cnn_all_scores.copy()
+
+            cnn_all_targets = np.delete(cnn_all_targets, openset_idx)
+            cnn_all_preds = np.delete(cnn_all_preds, openset_idx)
+            cnn_all_scores = np.delete(cnn_all_scores, openset_idx)
+
+            roc_auc, fpr95, ap = cal_openset_metrics(cnn_openset_score, openset_target)
+            self.cnn_auc_curve.append(roc_auc)
+            self.cnn_fpr95_curve.append(fpr95)
+            self.cnn_AP_curve.append(ap)
+            self.logger.info("=" * 100)
+            self.logger.info(
+                "CNN : openset AUC curve at each increment step: [\t" + ("{:2.2f}\t" * len(self.cnn_auc_curve)).format(
+                    *self.cnn_auc_curve) + ']')
+            self.logger.info("CNN : Average AUC of all steps: {:.2f}".format(np.mean(self.cnn_auc_curve)))
+            self.logger.info(
+                "CNN : openset fpr95 curve at each increment step: [\t" + ("{:2.2f}\t" * len(self.cnn_fpr95_curve)).format(
+                    *self.cnn_fpr95_curve) + ']')
+            self.logger.info("CNN : Average fpr95 of all steps: {:.2f}".format(np.mean(self.cnn_fpr95_curve)))
+            self.logger.info(
+                "CNN : openset AP curve at each increment step: [\t" + ("{:2.2f}\t" * len(self.cnn_AP_curve)).format(
+                    *self.cnn_AP_curve) + ']')
+            self.logger.info("CNN : Average AP of all steps: {:.2f}".format(np.mean(self.cnn_AP_curve)))
+        else:
+            cnn_all_preds, cnn_all_scores, cnn_all_targets = self.predict(self.model, self.test_loader, task_id)
+            cnn_all_preds = cnn_all_preds.cpu().detach().numpy()
+            cnn_all_scores = cnn_all_scores.cpu().detach().numpy()
+            cnn_all_targets = cnn_all_targets.cpu().detach().numpy()
+
+        cnn_overall_acc, cnn_task_acc = calculate_acc(cnn_all_preds, cnn_all_targets, self.cur_classes,
                                                         self.config.increment_steps, cal_task_acc=True)
 
         self.cnn_overall_acc_list.append(cnn_overall_acc)
@@ -145,8 +205,7 @@ class Base():
         self.logger.info("backward transfer: {}".format(calculate_bwf(self.cnn_task_acc_list, task_id)))
         self.logger.info("average forgetting: {}".format(cal_avg_forgetting(self.cnn_task_acc_list, task_id)))
 
-        cnn_overall_mcr, cnn_task_mcr = cal_mean_class_recall(cnn_all_preds.cpu().detach().numpy(),
-                                                                cnn_all_targets.cpu().detach().numpy(),
+        cnn_overall_mcr, cnn_task_mcr = cal_mean_class_recall(cnn_all_preds, cnn_all_targets,
                                                                 self.cur_classes,
                                                                 self.config.increment_steps, cal_task_mcr=True)
 
@@ -171,6 +230,8 @@ class Base():
                 "overall/test_overall_acc": cnn_overall_acc,
                 "overall/test_overall_mcr": cnn_overall_mcr
             })
+
+
 
     def update_memory(self, data_manager):
         if self.memory_bank:

@@ -44,12 +44,12 @@ class iCarL(Base):
         scheduler = get_scheduler(optimizer, self.config)
         hard_loss = get_loss_func(self.config)
         soft_loss = KD_loss
-        if len(self.config.device_ids.split(",")) > 1:
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = nn.DataParallel(self.model)
         self.train_model(self.train_loader, self.test_loader, hard_loss, soft_loss, optimizer, scheduler,
                          task_id=task_id, epochs=self.config.epochs)
 
-        if len(self.config.device_ids.split(",")) > 1:
+        if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = self.model.module
 
     def epoch_train(self, model, train_loader, hard_loss, soft_loss, optimizer, task_id):
@@ -130,31 +130,72 @@ class iCarL(Base):
                          'loss_kd': kd_losses / len(test_loader)}
             return all_preds, all_targets, test_loss
 
-    def eval_task(self, task_id):
-        self.model.eval()
+    def predict(self, model, test_loader, task_id):
+        model.eval()
         with torch.no_grad():
-            for idx, (inputs, targets, _) in enumerate(self.test_loader):
+            for idx, (inputs, targets, _) in enumerate(test_loader):
                 inputs, targets = inputs.cuda(), targets.cuda()
                 out = self.model(inputs)
                 logits = out["logits"]
                 features = out["features"]
-                nme_preds, _ = self.memory_bank.KNN_classify(features, self.class_means)
-                cnn_preds = torch.max(logits[:, :self.cur_classes], dim=1)[1]
+                cnn_scores, cnn_preds = torch.max(F.softmax(logits[:, :self.cur_classes], dim=-1), dim=1)
+                nme_preds, nme_scores = self.memory_bank.KNN_classify(features, self.class_means)
                 if idx == 0:
                     all_cnn_preds = cnn_preds
                     all_nme_preds = nme_preds
+                    all_cnn_scores = cnn_scores
+                    all_nme_scores = nme_scores
                     all_targets = targets
                 else:
                     all_cnn_preds = torch.cat((all_cnn_preds, cnn_preds))
                     all_nme_preds = torch.cat((all_nme_preds, nme_preds))
+                    all_cnn_scores = torch.cat((all_cnn_scores, cnn_scores))
+                    all_nme_scores = torch.cat((all_nme_scores, nme_scores))
                     all_targets = torch.cat((all_targets, targets))
 
+            return all_cnn_preds, all_nme_preds, all_cnn_scores, all_nme_scores, all_targets
 
+
+    def eval_task(self, task_id):
+        all_cnn_preds, all_nme_preds, all_cnn_scores, all_nme_scores, all_targets = self.predict(self.model, self.openset_test_loader, task_id)
+        if self.is_openset_test and task_id < len(self.config.increment_steps):
+            openset_target = np.ones_like(all_nme_preds)
+            openset_idx = np.where(all_targets == sum(self.config.increment_steps))[0]
+            openset_target[openset_idx] = 0
+            nme_openset_scores = all_nme_scores.copy()
+
+            all_targets = np.delete(all_targets, openset_idx)
+            all_cnn_preds = np.delete(all_cnn_preds, openset_idx)
+            all_cnn_scores = np.delete(all_cnn_scores, openset_idx)
+            all_nme_preds = np.delete(all_nme_preds, openset_idx)
+            all_nme_scores = np.delete(all_nme_scores, openset_idx)
+
+            roc_auc, fpr95, ap = cal_openset_metrics(nme_openset_scores, openset_target)
+            self.cnn_auc_curve.append(roc_auc)
+            self.cnn_fpr95_curve.append(fpr95)
+            self.cnn_AP_curve.append(ap)
+            self.logger.info("=" * 100)
+            self.logger.info(
+                "CNN : openset AUC curve at each increment step: [\t" + ("{:2.2f}\t" * len(self.cnn_auc_curve)).format(
+                    *self.cnn_auc_curve) + ']')
+            self.logger.info("CNN : Average AUC of all steps: {:.2f}".format(np.mean(self.cnn_auc_curve)))
+            self.logger.info(
+                "CNN : openset fpr95 curve at each increment step: [\t" + ("{:2.2f}\t" * len(self.cnn_fpr95_curve)).format(
+                    *self.cnn_fpr95_curve) + ']')
+            self.logger.info("CNN : Average fpr95 of all steps: {:.2f}".format(np.mean(self.cnn_fpr95_curve)))
+            self.logger.info(
+                "CNN : openset AP curve at each increment step: [\t" + ("{:2.2f}\t" * len(self.cnn_AP_curve)).format(
+                    *self.cnn_AP_curve) + ']')
+            self.logger.info("CNN : Average AP of all steps: {:.2f}".format(np.mean(self.cnn_AP_curve)))
+        else:
+            all_cnn_preds, all_nme_preds, all_cnn_scores, all_nme_scores, all_targets = self.predict(self.model,
+                                                                                                     self.test_loader,
+                                                                                                     task_id)
         nme_overall_acc, nme_task_acc = calculate_acc(all_nme_preds.cpu().detach().numpy(),
                                                         all_targets.cpu().detach().numpy(), self.cur_classes,
                                                         self.config.increment_steps, cal_task_acc=True)
         cnn_overall_acc, cnn_task_acc = calculate_acc(all_cnn_preds.cpu().detach().numpy(),
-                                                        all_targets.cpu().detach().numpy(), self.cur_classes,
+                                                       all_targets.cpu().detach().numpy(), self.cur_classes,
                                                         self.config.increment_steps, cal_task_acc=True)
         self.logger.info("=" * 100)
         self.logger.info("CNN results:")
