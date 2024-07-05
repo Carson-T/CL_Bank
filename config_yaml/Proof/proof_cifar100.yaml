@@ -15,7 +15,7 @@ usual:
   data_shuffle: True
   img_size: 224
   backbone: "CLIP"
-  pretrained_path: "pretrained_model/CLIP_ViT-B-32.pt"
+  pretrained_path: "pretrained_model/CLIP_ViT-B-16.pt"
   drop_rate: 0
   drop_path_rate: 0
   batch_size: 64

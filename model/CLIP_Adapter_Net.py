@@ -20,6 +20,7 @@ class CLIP_Adapter_Net(Base_Net):
     def model_init(self):
         self.backbone, _ = load(self.config.pretrained_path, jit=False)
         self.output_dim = self.backbone.output_dim
+        # self.output_dim = 512
         self.logger.info("model loaded!")
         # for i in range(self.backbone.vision_layers):  #self.backbone.vision_layers
         #     img_adapter = Adapter(d_model=self.backbone.vision_width,
@@ -51,13 +52,13 @@ class CLIP_Adapter_Net(Base_Net):
 
     def forward(self, image, text_tokens=None):
         if text_tokens is None:
-            image_features = self.backbone.encode_image(image, self.img_adapter_list)
+            image_features = self.backbone.encode_image(image)
             return {"features": image_features}
         else:
-            image_features = self.backbone.encode_image(image, self.img_adapter_list)
+            image_features = self.backbone.encode_image(image)
             # print(image_features.shape)
             image_features = self.img_final_adapter(image_features)
-            text_features = self.backbone.encode_text(text_tokens, self.text_adapter_list)
+            text_features = self.backbone.encode_text(text_tokens)
             image_features_normed = image_features / image_features.norm(dim=1, keepdim=True)
             text_features_normed = text_features / text_features.norm(dim=1, keepdim=True)
             # cosine similarity as logits

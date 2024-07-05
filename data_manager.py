@@ -97,7 +97,6 @@ class DataManager(object):
             appendent_data, appendent_targets = appendent
             data.append(appendent_data)
             targets.append(appendent_targets)
-
         data, targets = np.concatenate(data), np.concatenate(targets)
 
         return MyDataset(data, targets, self.data.use_path, transform, clip_transform=clip_transform if ret_clip_img else None)

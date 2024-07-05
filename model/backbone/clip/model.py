@@ -476,8 +476,8 @@ def build_model(state_dict: dict, lora_r, prompt_length):
         if key in state_dict:
             del state_dict[key]
 
+    # convert_weights(model)
     missing_keys, unexpected_keys = model.load_state_dict(state_dict, strict=False)
     print("missing_keys:", missing_keys)
     print("unexpected_keys:", unexpected_keys)
-    # convert_weights(model)
     return model.eval()

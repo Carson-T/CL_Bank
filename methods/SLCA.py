@@ -30,7 +30,9 @@ class SLCA(Base):
             self.model = Inc_Net(self.config, self.logger)
             self.model.model_init()
         self.model.update_fc(task_id)
-        self.model.freeze_fe()
+        if task_id > 0:
+            self.model.freeze_fe()
+        # self.model.unfreeze()
         if checkpoint is not None:
             assert task_id == checkpoint["task_id"]
             model_state_dict = checkpoint["state_dict"]
@@ -44,11 +46,12 @@ class SLCA(Base):
     def incremental_train(self, data_manager, task_id):
         wandb.define_metric("overall/task_id")
         wandb.define_metric("overall/*", step_metric="overall/task_id")
-        # optimizer = optim.SGD([{"params": self.model.backbone.parameters(), "lr": self.config.lr * 0.01},
-        #                        {"params": self.model.fc.parameters(), "lr": self.config.lr}],
-        #                       lr=self.config.lr, momentum=self.config.momentum, weight_decay=self.config.weight_decay)
-        # self.logger.info("new feature extractor requires_grad=True")
-        optimizer = get_optimizer(filter(lambda p: p.requires_grad, self.model.parameters()), self.config)
+        if task_id == 0:
+            optimizer = optim.SGD([{"params": self.model.backbone.parameters(), "lr": self.config.lr * 0.01},
+                                   {"params": self.model.fc.parameters(), "lr": self.config.lr}],
+                                  lr=self.config.lr, momentum=self.config.momentum, weight_decay=self.config.weight_decay)
+        else:
+            optimizer = get_optimizer(filter(lambda p: p.requires_grad, self.model.parameters()), self.config)
         scheduler = get_scheduler(optimizer, self.config)
         hard_loss = get_loss_func(self.config)
         soft_loss = None

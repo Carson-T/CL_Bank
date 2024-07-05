@@ -1,6 +1,6 @@
 basic:
   random_seed: 1993
-  version_name: "SLCA_cifar100_freeze"
+  version_name: "SLCA_cifar100_no_pretrained"
   wandb_dir: "/data/jiantao"
   is_log: True
   save_checkpoint: False
@@ -15,16 +15,16 @@ usual:
   data_shuffle: True
   img_size: 224
   backbone: "MyVit_B16"
-  pretrained_path: "/data/jiantao/pretrained_model/vit_base_patch16_224.augreg_in21k_ft_in1k.safetensors"
+  pretrained_path: ""  # /data/jiantao/pretrained_model/vit_base_patch16_224.augreg_in21k_ft_in1k.safetensors
   drop_rate: 0
   drop_path_rate: 0
   batch_size: 64
   num_workers: 8
-  epochs: 10
-  optimizer: SGD
+  epochs: 20
+  optimizer: AdamW
   loss_func: CEloss
-  scheduler: multi_step
-  lr: 0.005
+  scheduler: Cosine
+  lr: 0.001
   momentum: 0.9
   weight_decay: 0.0005
   memory_size: 0
@@ -33,7 +33,7 @@ usual:
 
 special:
   ca_epoch: 5
-  ca_lr: 0.005
+  ca_lr: 0.01
   num_sampled_pcls: 256
   ca_logit_norm: 0.1
 

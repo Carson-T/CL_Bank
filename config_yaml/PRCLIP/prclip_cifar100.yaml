@@ -1,6 +1,6 @@
 basic:
-  random_seed: 1145114
-  version_name: "prclip_cifar100_b0i5_1145114"
+  random_seed: 1993
+  version_name: "cifar100_b0i5"
   is_log: True
   save_checkpoint: True
   save_path: "../checkpoint&log"
@@ -12,10 +12,11 @@ basic:
 
 usual:
   dataset_name: "cifar100"
+  is_openset_test: True
   data_shuffle: True
   img_size: 224
   backbone: "CLIP"
-  pretrained_path: "pretrained_model/CLIP_ViT-B-32.pt"
+  pretrained_path: "pretrained_model/CLIP_ViT-B-16.pt"
   drop_rate: 0
   drop_path_rate: 0
   batch_size: 64

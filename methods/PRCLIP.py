@@ -9,7 +9,6 @@ import wandb
 from tqdm import tqdm
 from methods.Base import Base
 from model.CLIP_Adapter_Net import CLIP_Adapter_Net
-from model.backbone import clip
 from ReplayBank import ReplayBank
 from utils.functions import *
 from utils.train_utils import *
@@ -22,7 +21,7 @@ class PRCLIP(Base):
         self.memory_bank = ReplayBank(config, logger)
         self.class_covs = None
         self.class_to_idx = None
-        self.current_class_names = []
+        self.cur_class_names = []
         self.new_class_names = []
         self.cur_text_tokens = None
         self.new_text_tokens = None
@@ -48,12 +47,17 @@ class PRCLIP(Base):
 
         self.test_loader = DataLoader(self.test_dataset, batch_size=self.config.batch_size, shuffle=False,
                                       num_workers=self.config.num_workers)
+        self.openset_test_dataset = data_manager.get_openset_dataset(source='test', mode='test',
+                                                                     known_indices=np.arange(0, self.cur_classes))
+        self.openset_test_loader = DataLoader(self.openset_test_dataset, batch_size=self.config.batch_size,
+                                              shuffle=False,
+                                              num_workers=self.config.num_workers)
         if self.class_to_idx is None:
             self.class_to_idx = data_manager.class_to_idx
             self.idx_to_class = dict((value, key) for key, value in self.class_to_idx.items())
         self.new_class_names = [self.idx_to_class[i] for i in range(self.known_classes, self.cur_classes)]
-        self.current_class_names = [self.idx_to_class[i] for i in range(0, self.cur_classes)]
-        self.logger.info('Cur Task classnames: {}'.format(self.current_class_names))
+        self.cur_class_names = [self.idx_to_class[i] for i in range(0, self.cur_classes)]
+        self.logger.info('Cur Task classnames: {}'.format(self.cur_class_names))
         self.logger.info("test data num of task {}: {}".format(task_id + 1, len(self.test_dataset.samples)))
 
     def prepare_model(self, task_id, checkpoint=None):
@@ -70,7 +74,7 @@ class PRCLIP(Base):
             self.logger.info("checkpoint loaded!")
         self.model.show_trainable_params()
         self.new_text_tokens = self.model.text_tokenize(self.new_class_names, self.prompt_template)
-        self.cur_text_tokens = self.model.text_tokenize(self.current_class_names, self.prompt_template)
+        self.cur_text_tokens = self.model.text_tokenize(self.cur_class_names, self.prompt_template)
         self.model = self.model.cuda()
         # for name, param in self.model.named_parameters():
         #     if param.requires_grad:

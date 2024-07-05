@@ -1,6 +1,6 @@
 basic:
-  random_seed: 1993
-  version_name: "prclip_imagenet_r_b0i20_test"
+  random_seed: 1145114
+  version_name: "imagenet_r_b0i20_1145114"
   is_log: True
   save_checkpoint: True
   save_path: "../checkpoint&log"
@@ -12,10 +12,11 @@ basic:
 
 usual:
   dataset_name: "imagenet-r"
+  is_openset_test: True
   data_shuffle: True
   img_size: 224
   backbone: "CLIP"
-  pretrained_path: "pretrained_model/CLIP_ViT-B-32.pt"
+  pretrained_path: "pretrained_model/CLIP_ViT-B-16.pt"
   drop_rate: 0
   drop_path_rate: 0
   batch_size: 64
@@ -24,7 +25,7 @@ usual:
   optimizer: Adam
   loss_func: CEloss
   scheduler: Cosine
-  lr: 0.001
+  lr: 0.01
   momentum: 0
   weight_decay: 0
   memory_size: 2000

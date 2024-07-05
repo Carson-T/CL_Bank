@@ -1,21 +1,22 @@
 basic:
   random_seed: 1993
-  version_name: "prclip_imagenet100_b0i10_test"
+  version_name: "imagenet100_b0i20"
   is_log: True
   save_checkpoint: True
   save_path: "../checkpoint&log"
   method: "PRCLIP"
   increment_type: "CIL"
-  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
-#  increment_steps: [ 20, 20, 20, 20, 20]
+#  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
+  increment_steps: [ 20, 20, 20, 20, 20]
 #  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 
 usual:
   dataset_name: "imagenet100"
   data_shuffle: True
+  is_openset_test: True
   img_size: 224
   backbone: "CLIP"
-  pretrained_path: "pretrained_model/CLIP_ViT-B-32.pt"
+  pretrained_path: "pretrained_model/CLIP_ViT-B-16.pt"
   drop_rate: 0
   drop_path_rate: 0
   batch_size: 64

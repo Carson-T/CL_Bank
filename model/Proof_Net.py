@@ -49,7 +49,6 @@ class Proof_Net(Base_Net):
         self.logit_scale2 = None
         self.logit_scale3 = None
 
-
     def model_init(self):
         self.backbone, _ = load(self.config.pretrained_path, jit=False)
         self.output_dim = self.backbone.output_dim

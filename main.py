@@ -53,7 +53,7 @@ def log(config, run_dir):
 if __name__ == '__main__':
     is_train = True
     config = config()
-    config.pretrained_path = os.path.join(os.environ["HOME"], config.pretrained_path)
+    config.pretrained_path = os.path.join(os.environ["HOME"], config.pretrained_path) if config.pretrained_path else ""
     run_dir = config.save_path + "/" + config.method + "/" + config.version_name
     if not os.path.exists(run_dir):
         os.makedirs(run_dir)

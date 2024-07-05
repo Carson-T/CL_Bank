@@ -53,6 +53,11 @@ class Proof(Base):
                                                       source='train', mode='test')
         self.proto_loader = DataLoader(self.proto_dataset, batch_size=self.config.batch_size, shuffle=True,
                                        num_workers=self.config.num_workers)
+        self.openset_test_dataset = data_manager.get_openset_dataset(source='test', mode='test',
+                                                                     known_indices=np.arange(0, self.cur_classes))
+        self.openset_test_loader = DataLoader(self.openset_test_dataset, batch_size=self.config.batch_size,
+                                              shuffle=False,
+                                              num_workers=self.config.num_workers)
         if self.class_to_idx is None:
             self.class_to_idx = data_manager.class_to_idx
             self.idx_to_class = dict((value, key) for key, value in self.class_to_idx.items())

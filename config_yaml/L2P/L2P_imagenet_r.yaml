@@ -16,7 +16,7 @@ usual:
   data_shuffle: True
   img_size: 224
   backbone: "vit_prompt"
-  pretrained_path: "/data/jiantao/pretrained_model/vit_base_patch16_224.augreg_in21k_ft_in1k.safetensors"
+  pretrained_path: "pretrained_model/vit_base_patch16_224.augreg_in21k_ft_in1k.safetensors"
   drop_rate: 0
   drop_path_rate: 0
   batch_size: 64
