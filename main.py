@@ -20,7 +20,7 @@ def set_random(seed):
     torch.backends.cudnn.benchmark = False
 
 
-def log(config, run_dir):
+def log(config, run_dir, log_mode="w"):
     logger = logging.getLogger("mylogger")
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s => %(message)s')
@@ -41,7 +41,7 @@ def log(config, run_dir):
         else:
             log_permission = True
         if log_permission:
-            file_handler = logging.FileHandler(filename=log_file, mode="w")
+            file_handler = logging.FileHandler(filename=log_file, mode=log_mode)
             file_handler.setLevel(logging.DEBUG)
             file_handler.setFormatter(formatter)
             logger.addHandler(file_handler)
@@ -58,6 +58,7 @@ if __name__ == '__main__':
     if not os.path.exists(run_dir):
         os.makedirs(run_dir)
     config.run_dir = run_dir
+    ckpt_path = config.save_path+"/"+config.method+"/"+config.version_name
     if not is_train:
         config.is_log = False
         config.save_checkpoint = False
@@ -68,7 +69,6 @@ if __name__ == '__main__':
         data_manager = DataManager(config, logger)
         method_class = get_method(config.method)
         trainer = method_class(config, logger)
-        ckpt_path = config.save_path+"/"+config.method+"/"+config.version_name
 
         for task_id in range(data_manager.num_tasks):
             logger.info("="*100)
@@ -83,7 +83,8 @@ if __name__ == '__main__':
         del trainer
 
     elif is_train:
-        logger = log(config, run_dir)
+        resume = True
+        logger = log(config, run_dir, log_mode="a" if resume else "w")
         logger.info("config: {}".format(vars(config)))
         os.environ["WANDB_DISABLED"] = "false"
         os.environ["WANDB_MODE"] = "offline"
@@ -111,8 +112,12 @@ if __name__ == '__main__':
             logger.info("="*100)
             trainer.update_class_num(task_id)
             trainer.prepare_task_data(data_manager, task_id)
-            trainer.prepare_model(task_id)
-            trainer.incremental_train(data_manager, task_id)
+            if os.path.exists(os.path.join(ckpt_path, f"checkpoint_task{task_id}.pkl")) and resume:
+                task_ckpt = torch.load(os.path.join(ckpt_path, f"checkpoint_task{task_id}.pkl"))
+                trainer.prepare_model(task_id, checkpoint=task_ckpt)
+            else:
+                trainer.prepare_model(task_id)
+                trainer.incremental_train(data_manager, task_id)
             trainer.update_memory(data_manager)
             trainer.eval_task(task_id)
             trainer.after_task(task_id)

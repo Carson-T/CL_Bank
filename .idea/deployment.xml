@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="jiantao@172.18.167.97:22 agent" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="jiantao@172.18.167.97:22 key" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
       <paths name="jiantao@172.18.166.247:22 key">
         <serverdata>
@@ -9,7 +9,14 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="jiantao@172.18.167.97:22 agent">
+      <paths name="jiantao@172.18.167.16:22 agent">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="jiantao@172.18.167.97:22 key">
         <serverdata>
           <mappings>
             <mapping deploy="/projects/My_CL_Bank/code" local="$PROJECT_DIR$" web="/" />

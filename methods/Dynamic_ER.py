@@ -68,8 +68,6 @@ class Dynamic_ER(Base):
             self.train_model(ft_train_loader, self.test_loader, ft_hard_loss, ft_soft_loss, ft_optimizer, ft_scheduler,
                              task_id=task_id, epochs=self.config.ft_epochs, stage=2)
 
-
-
     def train_model(self, train_loader, test_loader, hard_loss, soft_loss, optimizer, scheduler, task_id, epochs, stage):
         wandb.define_metric("task " + str(task_id + 1) + "/" + "stage" + str(stage) + "/" + "epoch")
         wandb.define_metric("task " + str(task_id + 1) + "/" + "stage" + str(stage) + "/*",

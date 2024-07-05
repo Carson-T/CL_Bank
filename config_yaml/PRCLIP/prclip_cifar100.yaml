@@ -1,14 +1,14 @@
 basic:
-  random_seed: 1993
-  version_name: "cifar100_b0i5"
+  random_seed: 1145114
+  version_name: "cifar100_b0i10_1145114"
   is_log: True
   save_checkpoint: True
   save_path: "../checkpoint&log"
   method: "PRCLIP"
   increment_type: "CIL"
-#  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
+  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
 #  increment_steps: [ 20, 20, 20, 20, 20]
-  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+#  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 
 usual:
   dataset_name: "cifar100"

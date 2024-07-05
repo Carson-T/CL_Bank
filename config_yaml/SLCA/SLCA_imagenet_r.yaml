@@ -1,0 +1,50 @@
+basic:
+  random_seed: 1993
+  version_name: "SLCA_imagenet_r_B20"
+  wandb_dir: "/data/jiantao"
+  is_log: True
+  save_checkpoint: False
+  save_path: "../checkpoint&log"
+  method: "SLCA"
+  increment_type: "CIL"
+#  increment_steps: [ 40, 40, 40, 40, 40 ]
+  increment_steps: [ 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+#  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
+
+usual:
+  dataset_name: "imagenet-r"
+  data_shuffle: True
+  img_size: 224
+  backbone: "MyVit_B16"
+  pretrained_path: "pretrained_model/vit_base_patch16_224.augreg_in21k_ft_in1k.safetensors"
+  drop_rate: 0
+  drop_path_rate: 0
+  batch_size: 64
+  num_workers: 8
+  epochs: 10
+  optimizer: SGD
+  loss_func: CEloss
+  scheduler: multi_step
+  lr: 0.005
+  momentum: 0.9
+  weight_decay: 0.0005
+  memory_size: 0
+  apply_nme: False
+  sampling_method: ""
+
+special:
+  ca_epoch: 5
+  ca_lr: 0.005
+  num_sampled_pcls: 256
+  ca_logit_norm: 0.1
+
+options:
+  Cosine:
+    eta_min: 0
+  multi_step:
+    milestones: [8]
+    gamma: 0.1
+  Warm-up-Cosine-Annealing:
+    init_ratio: 0.1
+    warm_up_steps: 2
+    min_lr_ratio: 0.001
