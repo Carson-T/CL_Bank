@@ -54,11 +54,10 @@ if __name__ == '__main__':
     is_train = True
     config = config()
     config.pretrained_path = os.path.join(os.environ["HOME"], config.pretrained_path) if config.pretrained_path else ""
-    run_dir = config.save_path + "/" + config.method + "/" + config.version_name
+    run_dir = ckpt_path = config.save_path + "/" + config.method + "/" + config.version_name
     if not os.path.exists(run_dir):
         os.makedirs(run_dir)
     config.run_dir = run_dir
-    ckpt_path = config.save_path+"/"+config.method+"/"+config.version_name
     if not is_train:
         config.is_log = False
         config.save_checkpoint = False
@@ -83,7 +82,7 @@ if __name__ == '__main__':
         del trainer
 
     elif is_train:
-        resume = True
+        resume = False
         logger = log(config, run_dir, log_mode="a" if resume else "w")
         logger.info("config: {}".format(vars(config)))
         os.environ["WANDB_DISABLED"] = "false"

@@ -48,7 +48,6 @@ def config():
     parser.add_argument('--sampling_method', default=None)
 
     parser.add_argument('--version_name', default=None)
-    parser.add_argument('--wandb_dir', default="/data/jiantao")
     parser.add_argument('--save_path', default="../checkpoint&log")
     parser.add_argument('--is_log', default=True)
     parser.add_argument('--save_checkpoint', default=False)

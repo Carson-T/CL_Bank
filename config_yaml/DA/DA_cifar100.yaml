@@ -1,44 +1,47 @@
 basic:
   random_seed: 1993
-  version_name: "cifar100_b0i10_openclip"
+  version_name: "DA_cifar100"
   is_log: True
   save_checkpoint: False
   save_path: "../checkpoint&log"
-  method: "PRCLIP"
+  method: "DA"
   increment_type: "CIL"
   increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
-#  increment_steps: [ 20, 20, 20, 20, 20]
 #  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 
 usual:
   dataset_name: "cifar100"
-  is_openset_test: True
   data_shuffle: True
   img_size: 224
-  backbone: "OpenCLIP"
-  pretrained_path: "pretrained_model/OpenCLIP_ViT-B-16-DataComp.XL-s13B-b90K"  #  pretrained_model/CLIP_ViT-B-16.pt
+  backbone: "MyVit_B16"
+  pretrained_path: ""  # /data/jiantao/pretrained_model/vit_base_patch16_224.augreg_in21k_ft_in1k.safetensors
   drop_rate: 0
   drop_path_rate: 0
-  batch_size: 1
+  batch_size: 64
   num_workers: 8
-  epochs: 10
-  optimizer: SGD
+  epochs: 20
+  optimizer: AdamW
   loss_func: CEloss
   scheduler: Cosine
-  lr: 0.1
-  momentum: 0
-  weight_decay: 0.0002
-  memory_size: 2000
+  lr: 0.001
+  momentum: 0.9
+  weight_decay: 0.0005
+  memory_size: 0
   apply_nme: False
-  sampling_method: "herding"
+  sampling_method: ""
 
 special:
-  prompt_template: "a photo of a {}."
-  ret_ratio: 0.8
+  ca_epoch: 5
+  ca_lr: 0.01
+  num_sampled_pcls: 256
+  ca_logit_norm: 0.1
 
 options:
   Cosine:
     eta_min: 0
+  multi_step:
+    milestones: [8]
+    gamma: 0.1
   Warm-up-Cosine-Annealing:
     init_ratio: 0.1
     warm_up_steps: 2

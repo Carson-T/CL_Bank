@@ -1,7 +1,6 @@
 basic:
   random_seed: 1993
   version_name: "SLCA_cifar100_no_pretrained"
-  wandb_dir: "/data/jiantao"
   is_log: True
   save_checkpoint: False
   save_path: "../checkpoint&log"

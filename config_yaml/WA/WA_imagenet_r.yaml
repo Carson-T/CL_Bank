@@ -1,7 +1,6 @@
 basic:
   random_seed: 1993
   version_name: "WA_imagenet_r_b0i10"
-  wandb_dir: "/data/jiantao"
   is_log: True
   save_checkpoint: True
   save_path: "../checkpoint&log"

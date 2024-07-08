@@ -1,22 +1,25 @@
 basic:
-  random_seed: 1145114
-  version_name: "imagenet_r_b0i10_1145114"
+  random_seed: 1993
+  version_name: "imagenet_r_b0i20_test"
   is_log: True
   save_checkpoint: True
   save_path: "../checkpoint&log"
   method: "PRCLIP"
   increment_type: "CIL"
 #  increment_steps: [ 40, 40, 40, 40, 40 ]
-#  increment_steps: [ 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
-  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
+  increment_steps: [ 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+#  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
 
 usual:
   dataset_name: "imagenet-r"
   is_openset_test: True
   data_shuffle: True
   img_size: 224
-  backbone: "CLIP"
-  pretrained_path: "pretrained_model/CLIP_ViT-B-16.pt"
+  backbone: "OpenCLIP"
+#  pretrained_path: "pretrained_model/CLIP_ViT-B-16.pt"
+#  pretrained_path: "pretrained_model/OpenCLIP_ViT-B-16-DataComp.XL-s13B-b90K"
+  pretrained_path: "pretrained_model/OpenCLIP_ViT-B-16-SigLIP"
+#  pretrained_path: "pretrained_model/MedCLIP_vit_weight"
   drop_rate: 0
   drop_path_rate: 0
   batch_size: 64
@@ -25,7 +28,7 @@ usual:
   optimizer: Adam
   loss_func: CEloss
   scheduler: Cosine
-  lr: 0.01
+  lr: 0.0001
   momentum: 0
   weight_decay: 0
   memory_size: 2000

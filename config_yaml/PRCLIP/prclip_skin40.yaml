@@ -1,34 +1,36 @@
 basic:
-  random_seed: 1993
-  version_name: "cifar100_b0i10_openclip"
+  random_seed: 1145114
+  version_name: "skin40_b0i4_openclip_siglip_1145114"
   is_log: True
   save_checkpoint: False
   save_path: "../checkpoint&log"
   method: "PRCLIP"
   increment_type: "CIL"
-  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
-#  increment_steps: [ 20, 20, 20, 20, 20]
-#  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+  increment_steps: [ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 ]
+#  increment_steps: [ 8, 8, 8, 8, 8 ]
 
 usual:
-  dataset_name: "cifar100"
+  dataset_name: "Skin40"
   is_openset_test: True
   data_shuffle: True
   img_size: 224
   backbone: "OpenCLIP"
-  pretrained_path: "pretrained_model/OpenCLIP_ViT-B-16-DataComp.XL-s13B-b90K"  #  pretrained_model/CLIP_ViT-B-16.pt
+#  pretrained_path: "pretrained_model/CLIP_ViT-B-16.pt"
+#  pretrained_path: "pretrained_model/OpenCLIP_ViT-B-16-DataComp.XL-s13B-b90K"
+  pretrained_path: "pretrained_model/OpenCLIP_ViT-B-16-SigLIP"
+#  pretrained_path: "pretrained_model/MedCLIP_vit_weight"
   drop_rate: 0
   drop_path_rate: 0
-  batch_size: 1
+  batch_size: 64
   num_workers: 8
   epochs: 10
-  optimizer: SGD
+  optimizer: Adam
   loss_func: CEloss
   scheduler: Cosine
-  lr: 0.1
+  lr: 0.01
   momentum: 0
-  weight_decay: 0.0002
-  memory_size: 2000
+  weight_decay: 0
+  memory_size: 80
   apply_nme: False
   sampling_method: "herding"
 

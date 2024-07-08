@@ -1,7 +1,6 @@
 basic:
   random_seed: 1993
   version_name: "ctf_tuning_der_(e)_imagenet_r_b0i20"
-  wandb_dir: "/data/jiantao"
   is_log: True
   save_checkpoint: False
   save_path: "../checkpoint&log"

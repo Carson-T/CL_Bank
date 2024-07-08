@@ -1,16 +1,19 @@
-from model.backbone.clip.clip import load, tokenize
-from model.backbone.Adapter import Adapter
+import open_clip
+from open_clip.tokenizer import HFTokenizer
 import torch
 import torch.nn as nn
 from model.Base_Net import Base_Net
 import copy
+from model.backbone.clip.clip import load, tokenize
+from model.backbone.MedCLIP.model import MedCLIPModel, MedCLIPVisionModelViT
+
+
 
 
 class CLIP_Adapter_Net(Base_Net):
     def __init__(self, config, logger):
         super().__init__(config, logger)
 
-        assert config.backbone == "CLIP"
         # self.img_adapter_list = nn.ModuleList([])
         self.img_adapter_list = None
         # self.text_adapter_list = nn.ModuleList([])
@@ -18,9 +21,16 @@ class CLIP_Adapter_Net(Base_Net):
         self.img_final_adapter = None
 
     def model_init(self):
-        self.backbone, _ = load(self.config.pretrained_path, jit=False)
-        self.output_dim = self.backbone.output_dim
-        # self.output_dim = 512
+        if self.config.backbone == "CLIP":
+            self.backbone, _ = load(self.config.pretrained_path, jit=False)
+        elif self.config.backbone == "OpenCLIP":
+            self.backbone, _ = open_clip.create_model_from_pretrained("ViT-B-16", pretrained=self.config.pretrained_path+"/open_clip_pytorch_model.bin")
+            self.backbone.float()
+        elif self.config.backbone == "MedCLIP":
+            self.backbone = MedCLIPModel(MedCLIPVisionModelViT)
+            self.backbone.from_pretrained(self.config.pretrained_path)
+        # self.output_dim = self.backbone.output_dim
+        self.output_dim = 512
         self.logger.info("model loaded!")
         # for i in range(self.backbone.vision_layers):  #self.backbone.vision_layers
         #     img_adapter = Adapter(d_model=self.backbone.vision_width,
@@ -47,7 +57,16 @@ class CLIP_Adapter_Net(Base_Net):
         #     self.text_adapter_list.append(text_adapter.half())
 
     def text_tokenize(self, cur_class_names, prompt_template):
-        text_tokens = tokenize([prompt_template.format(c) for c in cur_class_names])
+        if self.config.backbone == "CLIP":
+            text_tokens = tokenize([prompt_template.format(c) for c in cur_class_names])
+        elif self.config.backbone == "OpenCLIP":
+            # tokenizer = open_clip.get_tokenizer("ViT-B-16")
+            tokenizer = HFTokenizer(self.config.pretrained_path)
+            text_tokens = tokenizer([prompt_template.format(c) for c in cur_class_names], context_length=self.backbone.context_length)
+        elif self.config.backbone == "MedCLIP":
+            text_tokens = self.backbone.tokenize([prompt_template.format(c) for c in cur_class_names])
+            del text_tokens["token_type_ids"]
+
         return text_tokens
 
     def forward(self, image, text_tokens=None):
@@ -58,13 +77,16 @@ class CLIP_Adapter_Net(Base_Net):
             image_features = self.backbone.encode_image(image)
             # print(image_features.shape)
             image_features = self.img_final_adapter(image_features)
-            text_features = self.backbone.encode_text(text_tokens)
+            if isinstance(text_tokens, torch.Tensor):
+                text_features = self.backbone.encode_text(text_tokens)
+            else:
+                text_features = self.backbone.encode_text(**text_tokens)
             image_features_normed = image_features / image_features.norm(dim=1, keepdim=True)
             text_features_normed = text_features / text_features.norm(dim=1, keepdim=True)
             # cosine similarity as logits
             logit_scale = self.backbone.logit_scale.exp()
             logits_per_image = logit_scale * image_features_normed @ text_features_normed.t()
-            logits_per_text = logits_per_image.t()
+            # logits_per_text = logits_per_image.t()
             return {"logits": logits_per_image, "features": image_features}
 
     # def forward(self, image, text_tokens):
@@ -112,3 +134,10 @@ class CLIP_Adapter_Net(Base_Net):
                 param.requires_grad = True
             else:
                 param.requires_grad = False
+
+    def freeze_text(self):
+        for name, param in self.backbone.named_parameters():
+            if "text" in name:
+                param.requires_grad = False
+            else:
+                param.requires_grad = True

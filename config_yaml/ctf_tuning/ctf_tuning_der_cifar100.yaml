@@ -1,7 +1,6 @@
 basic:
   random_seed: 1993
   version_name: "ctf_tuning_der_cifar100_b0i10"
-  wandb_dir: "/data/jiantao"
   is_log: True
   save_checkpoint: False
   save_path: "../checkpoint&log"
