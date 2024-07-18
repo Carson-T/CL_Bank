@@ -207,10 +207,10 @@ class EaseNet(Base_Net):
 
     def forward(self, x, train=False, task_id=None):
         if train:
-            features = self.backbone.forward(x, self.adapter_list, self.cur_adapter, train=True)
+            features = self.backbone.forward(x, self.adapter_list, self.cur_adapter, use_old=False)
             logits = self.proxy_fc(features)    # B new_class_num
         else:
-            features = self.backbone.forward(x, self.adapter_list, self.cur_adapter, train=False, use_init_ptm=self.use_init_ptm)
+            features = self.backbone.forward(x, self.adapter_list, self.cur_adapter, use_old=True, use_init_ptm=self.use_init_ptm)
             if not self.config.use_reweight:
                 logits = self.fc(features)      # B cur_class_num
             else:

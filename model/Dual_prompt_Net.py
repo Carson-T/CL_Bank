@@ -60,8 +60,8 @@ class Dual_prompt_module(nn.Module):
                     e_qk_loss = (1.0 - cos_sim[:, task_id]).mean()
                     selected_P = p[task_id].expand(B, -1, -1)
                 else:
-                    _, top_1 = torch.topk(cos_sim, 1, dim=1)
-                    e_qk_loss = (1.0 - cos_sim[:, top_1]).sum(dim=-1).mean()
+                    top1_sim, top_1 = torch.topk(cos_sim, 1, dim=1)
+                    e_qk_loss = (1.0 - top1_sim).mean()
                     selected_P = p[top_1].squeeze(dim=1)
 
                 # select prompts

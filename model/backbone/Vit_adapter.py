@@ -146,7 +146,7 @@ class VisionTransformer_adapter(nn.Module):
     def no_weight_decay(self):
         return {'pos_embed', 'cls_token'}
 
-    def forward_train(self, x, cur_adapter):
+    def forward_no_old(self, x, cur_adapter):
         B = x.shape[0]
         x = self.patch_embed(x)
 
@@ -167,7 +167,7 @@ class VisionTransformer_adapter(nn.Module):
 
         return out
 
-    def forward_test(self, x, old_adapters, cur_adapter, use_init_ptm=False):
+    def forward_old(self, x, old_adapters, cur_adapter, use_init_ptm=False):
         B = x.shape[0]
         x = self.patch_embed(x)
 
@@ -185,6 +185,7 @@ class VisionTransformer_adapter(nn.Module):
                 x = self.norm(x)
             features.append(x[:, 0, :])  # B N 768
 
+        assert old_adapters is not None
         for i in range(len(old_adapters)):
             x = copy.deepcopy(x_init)
             for j in range(len(self.blocks)):
@@ -202,16 +203,16 @@ class VisionTransformer_adapter(nn.Module):
 
         return features  # 1+cur_task B 1 768
 
-    def forward(self, x, old_adapters, cur_adapter, train=True, use_init_ptm=False):
-        if train:
-            output = self.forward_train(x, cur_adapter)
+    def forward(self, x, old_adapters=None, cur_adapter=None, use_old=False, use_init_ptm=False):
+        if not use_old:
+            output = self.forward_no_old(x, cur_adapter)
         else:
-            features = self.forward_test(x, old_adapters, cur_adapter, use_init_ptm)
+            features = self.forward_old(x, old_adapters, cur_adapter, use_init_ptm)
             output = torch.Tensor().to(features[0].device)
             for cls in features:
                 output = torch.cat((output, cls), dim=1)
 
-        return output  # B 768*(1+cur_task)
+        return output  # B,768 or  B,768*(1+cur_task)
 
 
 @register_model

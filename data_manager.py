@@ -17,6 +17,8 @@ class DataManager(object):
             self.data = ImageNet_R(shuffle=config.data_shuffle, img_size=config.img_size)
         elif config.dataset_name == "imagenet100":
             self.data = ImageNet100(shuffle=config.data_shuffle, img_size=config.img_size)
+        elif config.dataset_name == "Skin40":
+            self.data = Skin40(shuffle=config.data_shuffle, img_size=config.img_size)
         self.img_size = self.data.img_size
         self.use_valid = False
 

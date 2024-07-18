@@ -5,7 +5,7 @@ import argparse
 
 def config():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--yaml_path', default="config_yaml/L2P/L2P_cifar100.yaml")
+    parser.add_argument('--yaml_path', default="config_yaml/DA/DA_cifar100.yaml")
 
     parser.add_argument('--device_ids', default=None)
     parser.add_argument('--random_seed', type=int, default=None)
@@ -48,7 +48,6 @@ def config():
     parser.add_argument('--sampling_method', default=None)
 
     parser.add_argument('--version_name', default=None)
-    parser.add_argument('--wandb_dir', default="/data/jiantao")
     parser.add_argument('--save_path', default="../checkpoint&log")
     parser.add_argument('--is_log', default=True)
     parser.add_argument('--save_checkpoint', default=False)

@@ -47,7 +47,7 @@ class DERNet(Base_Net):
         del self.fc
         self.fc = new_fc
 
-    def forward(self, x, train=False, task_id=None):
+    def forward(self, x):
         if hasattr(self.feature_extractor_list[0], "forward_features"):
             features = [fe.forward_head(fe.forward_features(x), pre_logits=True) for fe in self.feature_extractor_list]
             all_features = torch.cat(features, 1)

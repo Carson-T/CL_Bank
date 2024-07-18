@@ -1,8 +1,8 @@
 basic:
-  random_seed: 1145114
-  version_name: "cifar100_b0i10_1145114"
+  random_seed: 1993
+  version_name: "cifar100_b0i10_openclip"
   is_log: True
-  save_checkpoint: True
+  save_checkpoint: False
   save_path: "../checkpoint&log"
   method: "PRCLIP"
   increment_type: "CIL"
@@ -15,13 +15,13 @@ usual:
   is_openset_test: True
   data_shuffle: True
   img_size: 224
-  backbone: "CLIP"
-  pretrained_path: "pretrained_model/CLIP_ViT-B-16.pt"
+  backbone: "OpenCLIP"
+  pretrained_path: "pretrained_model/OpenCLIP_ViT-B-16-DataComp.XL-s13B-b90K"  #  pretrained_model/CLIP_ViT-B-16.pt
   drop_rate: 0
   drop_path_rate: 0
-  batch_size: 64
+  batch_size: 1
   num_workers: 8
-  epochs: 30
+  epochs: 10
   optimizer: SGD
   loss_func: CEloss
   scheduler: Cosine

@@ -47,10 +47,9 @@ class Prompt_Pool(nn.Module):
             q = nn.functional.normalize(query, dim=1).detach()
             cos_sim = torch.einsum('bj,kj->bk', q, n_K)
             # print(cos_sim.shape)
-            top_k = torch.topk(cos_sim, self.top_k, dim=1)
-            k_idx = top_k.indices
-            qk_loss = (1.0 - cos_sim[:, k_idx]).sum(dim=-1).mean()
-            selected_P = p[k_idx]
+            topk_sim, topk = torch.topk(cos_sim, self.top_k, dim=1)
+            qk_loss = (1.0 - topk_sim).sum(dim=-1).mean()
+            selected_P = p[topk]
 
             # select prompts
             if self.pt_type == "prefix_t":

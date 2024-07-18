@@ -1,10 +1,10 @@
 basic:
   random_seed: 1993
-  version_name: "CLIP_Adapter_imagenet_r_b0i20_2stage_proto"
+  version_name: "imagenet_r_b0i20_replay_no_text_loss_v2"
   is_log: True
   save_checkpoint: False
   save_path: "../checkpoint&log"
-  method: "CLIP_Adapter"
+  method: "CLIP_local_fe"
   increment_type: "CIL"
 #  increment_steps: [ 40, 40, 40, 40, 40 ]
   increment_steps: [ 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
@@ -25,12 +25,12 @@ usual:
   optimizer: AdamW
   loss_func: CEloss
   scheduler: Cosine
-  lr: 0.01
+  lr: 0.005
   momentum: 0.9
   weight_decay: 0.00005
-  memory_size: 0
+  memory_size: 2000
   apply_nme: False
-  sampling_method: ""
+  sampling_method: "herding"
 
 special:
   prompt_template: "a photo of a {}."
@@ -38,6 +38,8 @@ special:
   use_addi_desc: False
   prompt_length: 4
   desc_num: 0
+  topk: 3
+  alpha: 0
 
 options:
   Cosine:

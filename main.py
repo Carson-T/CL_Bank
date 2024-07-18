@@ -1,4 +1,5 @@
 import os
+# os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 import sys
 import torch
 from methods import get_method
@@ -58,7 +59,6 @@ if __name__ == '__main__':
     if not os.path.exists(run_dir):
         os.makedirs(run_dir)
     config.run_dir = run_dir
-    ckpt_path = config.save_path+"/"+config.method+"/"+config.version_name
     if not is_train:
         config.is_log = False
         config.save_checkpoint = False
@@ -74,7 +74,7 @@ if __name__ == '__main__':
             logger.info("="*100)
             trainer.update_class_num(task_id)
             trainer.prepare_task_data(data_manager, task_id, is_train)
-            task_checkpoint = torch.load(os.path.join(ckpt_path, f"checkpoint_task{task_id}.pkl"))
+            task_checkpoint = torch.load(os.path.join(run_dir, f"checkpoint_task{task_id}.pkl"))
             trainer.prepare_model(task_id, task_checkpoint)
             trainer.eval_task(task_id)
             # trainer.after_task(task_id)
@@ -83,7 +83,7 @@ if __name__ == '__main__':
         del trainer
 
     elif is_train:
-        resume = True
+        resume = False
         logger = log(config, run_dir, log_mode="a" if resume else "w")
         logger.info("config: {}".format(vars(config)))
         os.environ["WANDB_DISABLED"] = "false"
@@ -112,8 +112,8 @@ if __name__ == '__main__':
             logger.info("="*100)
             trainer.update_class_num(task_id)
             trainer.prepare_task_data(data_manager, task_id)
-            if os.path.exists(os.path.join(ckpt_path, f"checkpoint_task{task_id}.pkl")) and resume:
-                task_ckpt = torch.load(os.path.join(ckpt_path, f"checkpoint_task{task_id}.pkl"))
+            if os.path.exists(os.path.join(run_dir, f"checkpoint_task{task_id}.pkl")) and resume:
+                task_ckpt = torch.load(os.path.join(run_dir, f"checkpoint_task{task_id}.pkl"))
                 trainer.prepare_model(task_id, checkpoint=task_ckpt)
             else:
                 trainer.prepare_model(task_id)

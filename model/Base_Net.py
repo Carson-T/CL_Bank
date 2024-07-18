@@ -54,11 +54,8 @@ class Base_Net(nn.Module):
         return self
 
     def freeze_fe(self):
-        for name, param in self.named_parameters():
-            if "backbone" in name:
-                param.requires_grad = False
-            else:
-                param.requires_grad = True
+        for param in self.backbone.parameters():
+            param.requires_grad = False
 
     def reset_fc_parameters(self, fc):
         nn.init.kaiming_uniform_(fc.weight, nonlinearity='linear')

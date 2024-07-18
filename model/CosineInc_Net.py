@@ -130,7 +130,7 @@ class CosineIncrementalNet(Base_Net):
             self.logger.info('Updated CosineLinear output dim from {} to {}'.format(prev_out_features, out_dim))
         return fc
 
-    def forward(self, x, train=False, task_id=None):
+    def forward(self, x):
         ret = {}
         features = self.backbone.forward_head(self.backbone.forward_features(x), pre_logits=True)
         ret["features"] = features

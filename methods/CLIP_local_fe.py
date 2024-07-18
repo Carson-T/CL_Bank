@@ -7,30 +7,58 @@ from torch.utils.data import DataLoader
 from torch.distributions.multivariate_normal import MultivariateNormal
 import wandb
 from tqdm import tqdm
+from random import sample
 from methods.Base import Base
-from model.CLIP_Adapter_Net import CLIP_Adapter_Net
-from model.backbone import clip
+from model.CLIP_local_fe_Net import CLIP_local_fe_Net
+from model.backbone.clip import clip
 from ReplayBank import ReplayBank
 from utils.functions import *
 from utils.train_utils import *
 
 
-class CLIP_Adapter(Base):
+class CLIP_local_fe(Base):
     def __init__(self, config, logger):
         super().__init__(config, logger)
+        self.memory_bank = ReplayBank(config, logger) if self.config.memory_size else None
 
+        self.use_addi_desc = config.use_addi_desc
+        self.desc_num = config.desc_num
         self.class_covs = None
         self.class_to_idx = None
-        self.current_class_names = []
+        self.cur_class_names = []
         self.new_class_names = []
         self.cur_text_tokens = None
         self.new_text_tokens = None
-        self.prompt_template = config.prompt_template if config.prompt_template is not None else "a bad photo of a {}."
+        self.prompt_template = config.prompt_template if config.prompt_template is not None else "a photo of a {}."
 
         if config.increment_type != 'CIL':
             raise ValueError('CLIP_Adapter is a class incremental method!')
 
+    def get_desc(self, class_names, descs):
+        # descs = []
+        # for idx, class_name in enumerate(class_names):
+        #     assert class_name in self.all_descs, "Class_name not in prompt_json!"
+        #     cls_desc = sample(self.all_descs[class_name], self.desc_num)
+        #     # cls_desc_tokens = torch.cat([clip.tokenize(c) for c in cls_desc])  # [prompt_num, 77]
+        #     descs.append(cls_desc)
+        # # descs_tokens = torch.stack(descs_tokens, dim=0)  # [classes_num, prompt_num, 77]
+        #
+        # return descs
+
+        result = []
+        for a in self.config.attr_list:
+            attr_values = []
+            for cls in class_names:
+                attr_values.append("The {} of the object in the photo is {}".format(a, descs[cls][a]))
+            result.append(attr_values)
+
+        return result
+
     def prepare_task_data(self, data_manager, task_id, is_train=True):
+        if self.class_to_idx is None:
+            self.class_to_idx = data_manager.class_to_idx
+            self.all_descs = data_manager.class_descs
+            self.idx_to_class = dict((value, key) for key, value in self.class_to_idx.items())
         if is_train:
             if task_id > 0 and self.memory_bank is not None:
                 self.train_dataset = data_manager.get_dataset(source='train', mode='train',
@@ -52,18 +80,20 @@ class CLIP_Adapter(Base):
         self.openset_test_loader = DataLoader(self.openset_test_dataset, batch_size=self.config.batch_size,
                                               shuffle=False,
                                               num_workers=self.config.num_workers)
-        if self.class_to_idx is None:
-            self.class_to_idx = data_manager.class_to_idx
-            self.idx_to_class = dict((value, key) for key, value in self.class_to_idx.items())
+
         self.new_class_names = [self.idx_to_class[i] for i in range(self.known_classes, self.cur_classes)]
-        self.current_class_names = [self.idx_to_class[i] for i in range(0, self.cur_classes)]
-        self.logger.info('Cur Task classnames: {}'.format(self.current_class_names))
+        self.cur_class_names = [self.idx_to_class[i] for i in range(0, self.cur_classes)]
+        if self.use_addi_desc:
+            self.new_descs = self.get_desc(self.new_class_names, self.all_descs)
+            self.cur_descs = self.get_desc(self.cur_class_names, self.all_descs)
+        self.logger.info('Cur Task classnames: {}'.format(self.cur_class_names))
         self.logger.info("test data num of task {}: {}".format(task_id + 1, len(self.test_dataset.samples)))
 
     def prepare_model(self, task_id, checkpoint=None):
         if self.model is None:
-            self.model = CLIP_Adapter_Net(self.config, self.logger)
+            self.model = CLIP_local_fe_Net(self.config, self.logger)
             self.model.model_init()
+        self.model.update_model(task_id)
         self.model.freeze_fe()
         if checkpoint is not None:
             assert task_id == checkpoint["task_id"]
@@ -73,8 +103,12 @@ class CLIP_Adapter(Base):
                 self.class_means = checkpoint["class_means"]
             self.logger.info("checkpoint loaded!")
         self.model.show_trainable_params()
-        self.new_text_tokens = self.model.text_tokenize(self.new_class_names, self.prompt_template)
-        self.cur_text_tokens = self.model.text_tokenize(self.current_class_names, self.prompt_template)
+
+        if self.use_addi_desc:
+            self.new_desc_tokens = torch.stack([clip.tokenize(i) for i in self.new_descs])
+            self.cur_desc_tokens = torch.stack([clip.tokenize(i) for i in self.cur_descs])
+        self.new_text_tokens = self.model.text_tokenize(self.new_class_names, self.prompt_template, descs=self.new_descs if self.use_addi_desc else None)
+        self.cur_text_tokens = self.model.text_tokenize(self.cur_class_names, self.prompt_template, descs=self.cur_descs if self.use_addi_desc else None)
         self.model = self.model.cuda()
         # for name, param in self.model.named_parameters():
         #     if param.requires_grad:
@@ -83,11 +117,10 @@ class CLIP_Adapter(Base):
     def incremental_train(self, data_manager, task_id):
         wandb.define_metric("overall/task_id")
         wandb.define_metric("overall/*", step_metric="overall/task_id")
-        # self.logger.info("new feature extractor requires_grad=True")
-        # optimizer = get_optimizer(filter(lambda p: p.requires_grad, self.model.parameters()), self.config)
-        optimizer = optim.SGD([{"params": self.model.img_adapter_list.parameters(), "lr": self.config.lr*0.01},
-                               {"params": self.model.img_final_adapter.parameters(), "lr": self.config.lr}],
-                              lr=self.config.lr, momentum=self.config.momentum, weight_decay=self.config.weight_decay)
+        optimizer = get_optimizer(filter(lambda p: p.requires_grad, self.model.parameters()), self.config)
+        # optimizer = optim.SGD([{"params": self.model.img_adapter_list.parameters(), "lr": self.config.lr*0.01},
+        #                        {"params": self.model.img_final_adapter.parameters(), "lr": self.config.lr}],
+        #                       lr=self.config.lr, momentum=self.config.momentum, weight_decay=self.config.weight_decay)
         scheduler = get_scheduler(optimizer, self.config)
         hard_loss = get_loss_func(self.config)
         soft_loss = None
@@ -97,30 +130,87 @@ class CLIP_Adapter(Base):
                          task_id=task_id, epochs=self.config.epochs)
         if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = self.model.module
-        if self.config.ca_epoch > 0:
-            self.compute_mean_cov(data_manager)
-            self.logger.info("class means and covs computed!")
-            if task_id > 0:
-                self.stage2_training(task_id)
-                self.logger.info("stage 2 training finished!")
+
+        # new_class_dataset = data_manager.get_dataset(source='train', mode='test',
+        #                                              indices=np.arange(self.known_classes, self.cur_classes))
+        #
+        # self.logger.info("calculate class means")
+        # if self.class_means is not None:
+        #     ori_classes = self.class_means.shape[0]
+        #     assert ori_classes == self.known_classes
+        #     cur_class_means = torch.zeros((self.cur_classes, self.model.output_dim))
+        #     cur_class_means[:self.known_classes] = self.class_means
+        #     self.class_means = cur_class_means
+        # else:
+        #     self.class_means = torch.zeros((self.cur_classes, self.model.output_dim))
+        #
+        # for class_idx in range(self.known_classes, self.cur_classes):
+        #     vectors, _, _ = extract_vectors(self.config, self.model, new_class_dataset, class_idx)
+        #     new_class_mean = torch.mean(vectors, dim=0)
+        #     self.class_means[class_idx, :] = new_class_mean
+
+    def train_model(self, train_loader, test_loader, hard_loss, soft_loss, optimizer, scheduler, task_id, epochs):
+        wandb.define_metric("task " + str(task_id + 1) + "/" + "epoch")
+        wandb.define_metric("task " + str(task_id + 1) + "/*",
+                            step_metric="task" + str(task_id + 1) + "/" + "epoch")
+
+        for epoch in range(epochs):
+            train_preds, train_targets, train_loss = self.epoch_train(self.model, train_loader, hard_loss, soft_loss,
+                                                                      optimizer,
+                                                                      task_id)
+            if scheduler is not None:
+                scheduler.step()
+
+            test_preds, test_targets, test_loss = self.epoch_test(self.model, test_loader, hard_loss, soft_loss,
+                                                                  task_id)
+
+            train_overall_acc, _ = calculate_acc(train_preds.cpu().detach().numpy(),
+                                                                   train_targets.cpu().detach().numpy(),
+                                                                   self.cur_classes, self.config.increment_steps)
+            test_overall_acc, _ = calculate_acc(test_preds.cpu().detach().numpy(),
+                                                                 test_targets.cpu().detach().numpy(),
+                                                                 self.cur_classes, self.config.increment_steps)
+
+            wandb.log({
+                "task " + str(task_id + 1) + "/" + "epoch": epoch + 1,
+                "task " + str(task_id + 1) + "/" + "train_overall_acc": train_overall_acc,
+                "task " + str(task_id + 1) + "/" + "test_overall_acc": test_overall_acc,
+                "task " + str(task_id + 1) + "/" + "train_loss": train_loss["all_loss"],
+                "task " + str(task_id + 1) + "/" + "test_loss": test_loss["all_loss"]
+            })
+
+            self.logger.info("task_id: {}, epoch: {}/{}".format(task_id + 1, epoch + 1, epochs))
+            self.logger.info(
+                "train_overall_acc: {:.2f}, test_overall_acc: {:.2f}".format(train_overall_acc, test_overall_acc))
+            self.logger.info("train_losses: {}".format(train_loss))
+            self.logger.info("test_losses: {}".format(test_loss))
 
     def epoch_train(self, model, train_loader, hard_loss, soft_loss, optimizer, task_id):
         losses = 0.
-        ce_losses = 0.
+        ce_losses, local_losses, text_losses, = 0., 0., 0.
         model.train()
         for idx, (inputs, targets, _) in enumerate(train_loader):
             inputs, targets = inputs.cuda(), targets.cuda()
-            out = model(inputs, text_tokens=self.new_text_tokens.cuda())
-            logits_per_image = out["logits"]
-            # features = out["features"]
-            assert logits_per_image.shape[1] == self.new_classes, "epoch train error"
-
-            # ce loss version implementation
-            ce_loss = hard_loss(logits_per_image, targets-self.known_classes)
-            # ce_loss = F.cross_entropy(logits[:, :self.cur_classes], targets)
+            out = model(inputs, text_tokens=self.cur_text_tokens.cuda(), desc_tokens=self.cur_text_tokens.cuda(), train=True)
+            logits_global = out["logits"]
+            # ce_loss = hard_loss(logits_global, targets-self.known_classes)
+            ce_loss = hard_loss(logits_global, targets)
             ce_losses += ce_loss.item()
             loss = ce_loss
-            preds = torch.max(logits_per_image, dim=1)[1]+self.known_classes
+
+            if self.config.alpha>0:
+                text_loss = out["text_loss"]
+                text_losses += text_loss.item()
+                loss += self.config.alpha * text_loss
+
+            logits_local = out["logits_local"]   # 5, B, cls
+            if logits_local is not None:
+                local_loss = hard_loss(logits_local, targets)
+                local_losses += local_loss.item()
+                loss += local_loss
+                preds = torch.max(F.softmax(logits_global,dim=-1)+F.softmax(logits_local,dim=-1), dim=1)[1]
+            else:
+                preds = torch.max(logits_global, dim=1)[1]
 
             if idx == 0:
                 all_preds = preds
@@ -134,28 +224,40 @@ class CLIP_Adapter(Base):
             optimizer.step()
             losses += loss.item()
 
-        train_loss = {'all_loss': losses / len(train_loader), 'loss_clf': ce_losses / len(train_loader)}
+        train_loss = {'all_loss': losses / len(train_loader), 'loss_clf': ce_losses / len(train_loader),
+                      "loss_local": local_losses/len(train_loader), "loss_text": text_losses/len(train_loader)}
 
         return all_preds, all_targets, train_loss
 
     def epoch_test(self, model, test_loader, hard_loss, soft_loss, task_id):
         losses = 0.
-        ce_losses = 0.
+        ce_losses, local_losses, text_losses = 0., 0., 0.
         model.eval()
         with torch.no_grad():
             for idx, (inputs, targets, _) in enumerate(test_loader):
                 inputs, targets = inputs.cuda(), targets.cuda()
-                out = model(inputs, text_tokens=self.cur_text_tokens.cuda())
-                logits_per_image = out["logits"]
-                # features = out["features"]
-                assert logits_per_image.shape[1] == self.cur_classes, "epoch train error"
-                preds = torch.max(logits_per_image, dim=1)[1]
+                out = model(inputs, text_tokens=self.cur_text_tokens.cuda(), desc_tokens=self.cur_text_tokens.cuda())
+                logits_global = out["logits"]
 
-                # ce loss version implementation
-                ce_loss = hard_loss(logits_per_image, targets)
+                # preds = torch.max(logits_global, dim=1)[1]
+                ce_loss = hard_loss(logits_global, targets)
                 ce_losses += ce_loss.item()
                 loss = ce_loss
-                losses += loss.item()
+
+                # text_loss = out["text_loss"]
+                # text_losses += text_loss.item()
+                # loss += self.config.alpha*text_loss
+
+                logits_local = out["logits_local"]  # 5, B, cls
+                if logits_local is not None:
+                    local_loss = hard_loss(logits_local, targets)
+                    local_losses += local_loss.item()
+                    loss += local_loss
+                    preds = torch.max(F.softmax(logits_global,dim=-1)+F.softmax(logits_local,dim=-1), dim=1)[1]
+                else:
+                    preds = torch.max(logits_global, dim=1)[1]
+
+                # losses += loss.item()
                 if idx == 0:
                     all_preds = preds
                     all_targets = targets
@@ -163,7 +265,8 @@ class CLIP_Adapter(Base):
                     all_preds = torch.cat((all_preds, preds))
                     all_targets = torch.cat((all_targets, targets))
 
-            test_loss = {'all_loss': losses / len(test_loader), 'loss_clf': ce_losses / len(test_loader)}
+            test_loss = {'all_loss': losses / len(test_loader), 'loss_clf': ce_losses / len(test_loader),
+                         "loss_local": local_losses/len(test_loader), "loss_text": text_losses/len(test_loader)}
             return all_preds, all_targets, test_loss
 
     def predict(self, model, test_loader, task_id):
@@ -171,11 +274,17 @@ class CLIP_Adapter(Base):
         with torch.no_grad():
             for idx, (inputs, targets, _) in enumerate(test_loader):
                 inputs, targets = inputs.cuda(), targets.cuda()
-                out = model(inputs, text_tokens=self.cur_text_tokens.cuda())
-                logits_per_image = out["logits"]
-                # features = out["features"]
-                assert logits_per_image.shape[1] == self.cur_classes, "epoch train error"
-                scores, preds = torch.max(F.softmax(logits[:, :self.cur_classes], dim=-1), dim=1)
+                out = model(inputs, text_tokens=self.cur_text_tokens.cuda(), desc_tokens=self.cur_text_tokens.cuda())
+                logits_global = out["logits"]
+
+                # qk_loss = out["qk_loss"]
+                # loss += qk_loss
+                # qk_losses += qk_loss.item()
+                logits_local = out["logits_local"]
+                if logits_local is not None:
+                    scores, preds = torch.max(F.softmax(logits_global,dim=-1)+F.softmax(logits_local,dim=-1), dim=1)
+                else:
+                    scores, preds = torch.max(F.softmax(logits_global, dim=-1), dim=1)
 
                 if idx == 0:
                     all_preds = preds

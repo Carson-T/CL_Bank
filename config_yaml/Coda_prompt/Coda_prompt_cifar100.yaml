@@ -1,7 +1,6 @@
 basic:
   random_seed: 1993
   version_name: "Coda_prompt_prefix_t_cifar100_b0i5"
-  wandb_dir: "/data/jiantao"
   is_log: True
   save_checkpoint: True
   save_path: "../checkpoint&log"

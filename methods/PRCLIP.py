@@ -8,7 +8,7 @@ from torch.distributions.multivariate_normal import MultivariateNormal
 import wandb
 from tqdm import tqdm
 from methods.Base import Base
-from model.CLIP_Adapter_Net import CLIP_Adapter_Net
+from model.CLIP_task_adapter_Net import CLIP_Adapter_Net
 from ReplayBank import ReplayBank
 from utils.functions import *
 from utils.train_utils import *
@@ -64,7 +64,8 @@ class PRCLIP(Base):
         if self.model is None:
             self.model = CLIP_Adapter_Net(self.config, self.logger)
             self.model.model_init()
-        self.model.freeze_fe()
+        # self.model.freeze_fe()
+        # self.model.freeze_img_text()
         if checkpoint is not None:
             assert task_id == checkpoint["task_id"]
             model_state_dict = checkpoint["state_dict"]
@@ -75,6 +76,12 @@ class PRCLIP(Base):
         self.model.show_trainable_params()
         self.new_text_tokens = self.model.text_tokenize(self.new_class_names, self.prompt_template)
         self.cur_text_tokens = self.model.text_tokenize(self.cur_class_names, self.prompt_template)
+        if isinstance(self.new_text_tokens, torch.Tensor):
+            self.new_text_tokens = self.new_text_tokens.cuda()
+            self.cur_text_tokens = self.cur_text_tokens.cuda()
+        else:
+            self.new_text_tokens = {k: v.cuda() for k, v in self.new_text_tokens.items()}
+            self.cur_text_tokens = {k: v.cuda() for k, v in self.cur_text_tokens.items()}
         self.model = self.model.cuda()
         # for name, param in self.model.named_parameters():
         #     if param.requires_grad:
@@ -97,8 +104,8 @@ class PRCLIP(Base):
         if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = self.model.module
 
-        if task_id > 0:
-            self.model.param_retention()
+        # if task_id > 0:
+        #     self.model.param_retention()
 
     def epoch_train(self, model, train_loader, hard_loss, soft_loss, optimizer, task_id):
         losses = 0.
@@ -106,7 +113,7 @@ class PRCLIP(Base):
         model.train()
         for idx, (inputs, targets, _) in enumerate(train_loader):
             inputs, targets = inputs.cuda(), targets.cuda()
-            out = model(inputs, text_tokens=self.cur_text_tokens.cuda())
+            out = model(inputs, text_tokens=self.cur_text_tokens)
             logits_per_image = out["logits"]
             # features = out["features"]
             assert logits_per_image.shape[1] == self.cur_classes, "epoch train error"
@@ -141,7 +148,7 @@ class PRCLIP(Base):
         with torch.no_grad():
             for idx, (inputs, targets, _) in enumerate(test_loader):
                 inputs, targets = inputs.cuda(), targets.cuda()
-                out = model(inputs, text_tokens=self.cur_text_tokens.cuda())
+                out = model(inputs, text_tokens=self.cur_text_tokens)
                 logits_per_image = out["logits"]
                 # features = out["features"]
                 assert logits_per_image.shape[1] == self.cur_classes, "epoch train error"
@@ -167,7 +174,7 @@ class PRCLIP(Base):
         with torch.no_grad():
             for idx, (inputs, targets, _) in enumerate(test_loader):
                 inputs, targets = inputs.cuda(), targets.cuda()
-                out = model(inputs, text_tokens=self.cur_text_tokens.cuda())
+                out = model(inputs, text_tokens=self.cur_text_tokens)
                 logits = out["logits"]
                 # features = out["features"]
                 assert logits.shape[1] == self.cur_classes, "epoch train error"
@@ -187,5 +194,5 @@ class PRCLIP(Base):
 
     def after_task(self, task_id):
         super().after_task(task_id)
-        self.model.save_old_param()
+        # self.model.save_old_param()
 
