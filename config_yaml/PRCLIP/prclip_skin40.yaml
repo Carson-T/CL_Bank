@@ -1,6 +1,6 @@
 basic:
-  random_seed: 1145114
-  version_name: "skin40_b0i4_openclip_siglip_1145114"
+  random_seed: 1993
+  version_name: "skin40_b0i4_medclip_zeroshot"
   is_log: True
   save_checkpoint: False
   save_path: "../checkpoint&log"
@@ -14,11 +14,11 @@ usual:
   is_openset_test: True
   data_shuffle: True
   img_size: 224
-  backbone: "OpenCLIP"
+  backbone: "MedCLIP"
 #  pretrained_path: "pretrained_model/CLIP_ViT-B-16.pt"
 #  pretrained_path: "pretrained_model/OpenCLIP_ViT-B-16-DataComp.XL-s13B-b90K"
-  pretrained_path: "pretrained_model/OpenCLIP_ViT-B-16-SigLIP"
-#  pretrained_path: "pretrained_model/MedCLIP_vit_weight"
+#  pretrained_path: "pretrained_model/OpenCLIP_ViT-B-16-SigLIP"
+  pretrained_path: "pretrained_model/MedCLIP_vit_weight"
   drop_rate: 0
   drop_path_rate: 0
   batch_size: 64

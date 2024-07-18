@@ -1,16 +1,17 @@
 basic:
   random_seed: 1993
-  version_name: "CLIP_Adapter_cifar100_b0i10_qk"
+  version_name: "CLIP_Adapter_imagenet_r_b0i20_2stage_proto"
   is_log: True
   save_checkpoint: False
   save_path: "../checkpoint&log"
   method: "CLIP_Adapter"
   increment_type: "CIL"
-  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
-#  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+#  increment_steps: [ 40, 40, 40, 40, 40 ]
+  increment_steps: [ 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+#  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
 
 usual:
-  dataset_name: "cifar100"
+  dataset_name: "imagenet-r"
   is_openset_test: False
   data_shuffle: True
   img_size: 224
@@ -26,17 +27,17 @@ usual:
   scheduler: Cosine
   lr: 0.01
   momentum: 0.9
-  weight_decay: 0.0001
+  weight_decay: 0.00005
   memory_size: 0
   apply_nme: False
   sampling_method: ""
 
 special:
   prompt_template: "a photo of a {}."
-  attr_list: [ "typical shape" ]   #  "primary color", "typical shape", "common environment"
+  attr_list: ["typical shape"]   #  "primary color", "typical shape", "common environment"
   use_addi_desc: False
   prompt_length: 4
-  desc_num: 1
+  desc_num: 0
 
 options:
   Cosine:

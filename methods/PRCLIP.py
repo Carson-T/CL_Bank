@@ -8,7 +8,7 @@ from torch.distributions.multivariate_normal import MultivariateNormal
 import wandb
 from tqdm import tqdm
 from methods.Base import Base
-from model.CLIP_Adapter_Net import CLIP_Adapter_Net
+from model.CLIP_task_adapter_Net import CLIP_Adapter_Net
 from ReplayBank import ReplayBank
 from utils.functions import *
 from utils.train_utils import *
@@ -64,8 +64,8 @@ class PRCLIP(Base):
         if self.model is None:
             self.model = CLIP_Adapter_Net(self.config, self.logger)
             self.model.model_init()
-        self.model.freeze_fe()
-        # self.model.freeze_text()
+        # self.model.freeze_fe()
+        # self.model.freeze_img_text()
         if checkpoint is not None:
             assert task_id == checkpoint["task_id"]
             model_state_dict = checkpoint["state_dict"]
@@ -104,8 +104,8 @@ class PRCLIP(Base):
         if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = self.model.module
 
-        if task_id > 0:
-            self.model.param_retention()
+        # if task_id > 0:
+        #     self.model.param_retention()
 
     def epoch_train(self, model, train_loader, hard_loss, soft_loss, optimizer, task_id):
         losses = 0.
@@ -194,5 +194,5 @@ class PRCLIP(Base):
 
     def after_task(self, task_id):
         super().after_task(task_id)
-        self.model.save_old_param()
+        # self.model.save_old_param()
 

@@ -29,8 +29,8 @@ class DA(Base):
         if self.model is None:
             self.model = DA_Net(self.config, self.logger)
             self.model.model_init()
-        self.model.update_fc(task_id)
-        self.model.unfreeze()
+        self.model.update_model(task_id)
+        self.model.freeze_fe()
         if checkpoint is not None:
             assert task_id == checkpoint["task_id"]
             model_state_dict = checkpoint["state_dict"]
@@ -44,16 +44,16 @@ class DA(Base):
     def incremental_train(self, data_manager, task_id):
         wandb.define_metric("overall/task_id")
         wandb.define_metric("overall/*", step_metric="overall/task_id")
-        if task_id == 0:
-            optimizer = optim.SGD([{"params": self.model.backbone.parameters(), "lr": self.config.lr * 0.01},
-                                   {"params": self.model.fc.parameters(), "lr": self.config.lr},
-                                   {"params": self.model.projector.parameters(), "lr": self.config.lr}],
-                                  lr=self.config.lr, momentum=self.config.momentum, weight_decay=self.config.weight_decay)
-        else:
-            optimizer = get_optimizer(filter(lambda p: p.requires_grad, self.model.parameters()), self.config)
+        # if task_id == 0:
+        #     optimizer = optim.SGD([{"params": self.model.backbone.parameters(), "lr": self.config.lr * 0.01},
+        #                            {"params": self.model.fc.parameters(), "lr": self.config.lr},
+        #                            {"params": self.model.projector.parameters(), "lr": self.config.lr}],
+        #                           lr=self.config.lr, momentum=self.config.momentum, weight_decay=self.config.weight_decay)
+        # else:
+        optimizer = get_optimizer(filter(lambda p: p.requires_grad, self.model.parameters()), self.config)
         scheduler = get_scheduler(optimizer, self.config)
         hard_loss = get_loss_func(self.config)
-        soft_loss = SupConLoss()
+        soft_loss = SupConLoss2()
         if len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")) > 1:
             self.model = nn.DataParallel(self.model)
         self.train_model(self.train_loader, self.test_loader, hard_loss, soft_loss, optimizer, scheduler,
@@ -63,7 +63,7 @@ class DA(Base):
             self.model = self.model.module
 
         if self.config.ca_epoch > 0:
-            self.model.fc_backup()
+            # self.model.fc_backup()
             self.compute_mean_cov(data_manager, task_id)
             self.logger.info("class means and covs computed!")
             if task_id > 0:
@@ -77,15 +77,17 @@ class DA(Base):
         model.train()
         for idx, (inputs, targets, _) in enumerate(train_loader):
             inputs, targets = inputs.cuda(), targets.cuda()
-            out = model(inputs)
+            out = model(inputs, proto=self.class_means.cuda() if self.class_means is not None else None)
             logits = out["logits"]
             assert logits.shape[1] == self.cur_classes, "epoch train error"
             ce_loss = hard_loss(logits[:, self.known_classes:self.cur_classes], targets-self.known_classes)
             ce_losses += ce_loss.item()
             loss = ce_loss
-            if task_id > 0:
-                both_features = out["both_features"]
-                con_loss = soft_loss(both_features, targets)
+            if task_id > 0 and self.config.dm:
+                features = out["features"]
+                old_features = out["old_features"]
+                mapped_proto = out["proto"]
+                con_loss = soft_loss(features.detach(), old_features, targets, proto=mapped_proto, proto_label=torch.arange(0, self.known_classes).cuda())  # , proto=mapped_proto, proto_label=torch.arange(0, self.known_classes)
                 con_losses += con_loss.item()
                 loss += con_loss
             preds = torch.max(logits[:, self.known_classes:self.cur_classes], dim=1)[1] + self.known_classes
@@ -121,11 +123,11 @@ class DA(Base):
                 ce_loss = hard_loss(logits[:, :self.cur_classes], targets)
                 ce_losses += ce_loss.item()
                 loss = ce_loss
-                if task_id > 0:
-                    both_features = out["both_features"]
-                    con_loss = soft_loss(both_features, targets)
-                    con_losses += con_loss.item()
-                    loss += con_loss
+                # if task_id > 0 and self.config.dm:
+                #     both_features = out["both_features"]
+                #     con_loss = soft_loss(both_features, targets, appendent=self.class_means.cuda(), appendent_label=torch.arange(0, self.known_classes).cuda())
+                #     con_losses += con_loss.item()
+                #     loss += con_loss
                 losses += loss.item()
 
                 if idx == 0:
@@ -141,7 +143,8 @@ class DA(Base):
 
     def compute_mean_cov(self, data_manager, task_id, check_diff=False, oracle=False):
         if hasattr(self, 'class_means') and self.class_means is not None:
-            self.class_means = self.model.map_proto(self.class_means.cuda())
+            if self.config.dm:
+                self.class_means = self.model.map_proto(self.class_means.cuda())
             ori_classes = self.class_means.shape[0]
             assert ori_classes == self.known_classes
             cur_class_means = torch.zeros((self.cur_classes, self.model.feature_dim))
@@ -184,7 +187,7 @@ class DA(Base):
 
     def stage2_training(self, task_id):
         self.model.freeze_fe()
-        optimizer2 = optim.SGD(filter(lambda p: p.requires_grad, self.model.parameters()), lr=self.config.ca_lr, momentum=0.9, weight_decay=self.config.weight_decay)
+        optimizer2 = optim.SGD(filter(lambda p: p.requires_grad, self.model.fc.parameters()), lr=self.config.ca_lr, momentum=0.9, weight_decay=self.config.weight_decay)
         scheduler2 = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer=optimizer2, T_max=self.config.ca_epoch)
 
         self.model.eval()
@@ -245,6 +248,5 @@ class DA(Base):
 
     def after_task(self, task_id):
         super().after_task(task_id)
-        self.model.fc_recall()
-        self.model.save_old_fe()
+        # self.model.fc_recall()
 

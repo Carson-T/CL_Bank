@@ -115,8 +115,8 @@ class SupConLoss(nn.Module):
         else:
             raise ValueError('Unknown mode: {}'.format(self.contrast_mode))
 
-        anchor_feature / anchor_feature.norm(dim=-1, keepdim=True)
-        contrast_feature / contrast_feature.norm(dim=-1, keepdim=True)
+        anchor_feature = anchor_feature / anchor_feature.norm(dim=-1, keepdim=True)
+        contrast_feature = contrast_feature / contrast_feature.norm(dim=-1, keepdim=True)
         # compute logits
         anchor_dot_contrast = torch.div(
             torch.matmul(anchor_feature, contrast_feature.T),
@@ -154,5 +154,71 @@ class SupConLoss(nn.Module):
         # loss
         loss = - (self.temperature / self.base_temperature) * mean_log_prob_pos
         loss = loss.view(anchor_count, batch_size).mean()
+
+        return loss
+
+class SupConLoss2(nn.Module):
+    def __init__(self, temperature=0.07, contrast_mode='all',
+                 base_temperature=0.07):
+        super(SupConLoss2, self).__init__()
+        self.temperature = temperature
+        self.contrast_mode = contrast_mode
+        self.base_temperature = base_temperature
+
+    def forward(self, features, old_features, labels, proto=None, proto_label=None):
+        device = (torch.device('cuda')
+                  if features.is_cuda
+                  else torch.device('cpu'))
+
+        labels = torch.cat([labels, labels], dim=0)
+        if proto_label is not None:
+            labels = torch.cat([labels, proto_label], dim=0)
+        labels = labels.contiguous().view(-1, 1)
+        num = len(labels)
+        mask = torch.eq(labels, labels.T).float().to(device)
+
+        contrast_feature = torch.cat([features, old_features], dim=0)
+        if proto is not None:
+            contrast_feature = torch.cat([contrast_feature, proto], dim=0)
+        anchor_feature = contrast_feature
+
+        anchor_feature = anchor_feature / anchor_feature.norm(dim=-1, keepdim=True)
+        contrast_feature = contrast_feature / contrast_feature.norm(dim=-1, keepdim=True)
+        # compute logits
+        anchor_dot_contrast = torch.div(
+            torch.matmul(anchor_feature, contrast_feature.T),
+            self.temperature)
+        # for numerical stability
+        logits_max, _ = torch.max(anchor_dot_contrast, dim=1, keepdim=True)
+        logits = anchor_dot_contrast - logits_max.detach()
+
+        # mask-out self-contrast cases
+        logits_mask = torch.scatter(
+            torch.ones_like(mask),
+            1,
+            torch.arange(num).view(-1, 1).to(device),
+            0
+        )
+        mask = mask * logits_mask
+
+        # compute log_prob
+        exp_logits = torch.exp(logits) * logits_mask
+        log_prob = logits - torch.log(exp_logits.sum(1, keepdim=True))
+
+        # compute mean of log-likelihood over positive
+        # modified to handle edge cases when there is no positive pair
+        # for an anchor point.
+        # Edge case e.g.:-
+        # features of shape: [4,1,...]
+        # labels:            [0,1,1,2]
+        # loss before mean:  [nan, ..., ..., nan]
+        mask_pos_pairs = mask.sum(1)
+        mask_pos_pairs = torch.where(mask_pos_pairs < 1e-6, 1, mask_pos_pairs)
+        mean_log_prob_pos = (mask * log_prob).sum(1) / mask_pos_pairs
+        mean_log_prob_pos = mean_log_prob_pos[:len(labels)*2]
+
+        # loss
+        loss = - (self.temperature / self.base_temperature) * mean_log_prob_pos
+        loss = loss.mean()
 
         return loss

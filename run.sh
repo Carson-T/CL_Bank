@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-device="2"
-#config="config_yaml/PRCLIP/prclip_imagenet_r.yaml"
-config="config_yaml/PRCLIP/prclip_cifar100.yaml"
-#config="config_yaml/PRCLIP/prclip_imagenet100.yaml"
-#config="config_yaml/PRCLIP/prclip_skin40.yaml"
-#config="config_yaml/Proof/proof_cifar100.yaml"
-#config="config_yaml/SLCA/SLCA_imagenet_r.yaml"
+device="1"
+
+#config="config_yaml/CLIP_Adapter/CLIP_adapter_cifar100.yaml"
+config="config_yaml/CLIP_local_fe/imagenet_r.yaml"
+
+
 
 cd ~/projects/My_CL_Bank/code || exit
 conda activate pytorchEnv

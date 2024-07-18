@@ -220,7 +220,7 @@ class Ease(Base):
             for i, (inputs, targets, _) in enumerate(train_loader_for_protonet):
                 inputs = inputs.cuda()
                 targets = targets.cuda()
-                out = self.model(inputs, task_id, train=False)
+                out = self.model(inputs, task_id, use_old=True)
                 features = out["features"]
                 embedding_list.append(features.cpu())
                 label_list.append(targets.cpu())

@@ -188,6 +188,9 @@ class Base():
             cnn_all_scores = cnn_all_scores.cpu().detach().numpy()
             cnn_all_targets = cnn_all_targets.cpu().detach().numpy()
 
+        task_acc, _ = calculate_acc(cnn_all_preds//self.config.increment_steps[0], cnn_all_targets//self.config.increment_steps[0], None, None)
+        self.logger.info("task id acc: {}".format(task_acc))
+
         cnn_overall_acc, cnn_task_acc = calculate_acc(cnn_all_preds, cnn_all_targets, self.cur_classes,
                                                         self.config.increment_steps, cal_task_acc=True)
 

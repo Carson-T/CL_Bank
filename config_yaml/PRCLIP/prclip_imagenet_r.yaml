@@ -1,8 +1,8 @@
 basic:
   random_seed: 1993
-  version_name: "imagenet_r_b0i20_test"
+  version_name: "imagenet_r_b0i20_siglip_test1"
   is_log: True
-  save_checkpoint: True
+  save_checkpoint: False
   save_path: "../checkpoint&log"
   method: "PRCLIP"
   increment_type: "CIL"
@@ -24,19 +24,19 @@ usual:
   drop_path_rate: 0
   batch_size: 64
   num_workers: 8
-  epochs: 10
+  epochs: 1
   optimizer: Adam
   loss_func: CEloss
   scheduler: Cosine
-  lr: 0.0001
+  lr: 0.01
   momentum: 0
   weight_decay: 0
-  memory_size: 2000
+  memory_size: 4000
   apply_nme: False
   sampling_method: "herding"
 
 special:
-  prompt_template: "a photo of a {}."
+  prompt_template: "A photo of a {}."
   ret_ratio: 0.8
 
 options:

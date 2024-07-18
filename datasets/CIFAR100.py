@@ -59,47 +59,48 @@ class CIFAR100:
         #         40, 30, 23, 85, 2, 95, 56, 48, 71, 64, 98, 13, 99, 7, 34, 55, 54, 26, 35, 39
         #     ]
 
+
     def download_data(self):
         train_dataset = datasets.cifar.CIFAR100(os.environ["HOME"]+"/Data/cifar100", train=True, download=True)
         test_dataset = datasets.cifar.CIFAR100(os.environ["HOME"]+"/Data/cifar100", train=False, download=True)
 
-        with open(os.environ["HOME"]+"/projects/My_CL_Bank/code/datasets/class_descs/cifar100_prompts_base.json", "r") as f:
+        with open(os.environ["HOME"]+"/projects/My_CL_Bank/code/datasets/class_descs/cifar100_kv_pairs.json", "r") as f:
             class_descs = json.load(f)
         self.class_descs = class_descs
 
-        # self.class_to_idx = train_dataset.class_to_idx
-        self.class_to_idx = {}
-        for key, value in train_dataset.class_to_idx.items():
-            if key == 'aquarium_fish':
-                print('class {}: {} => {}'.format(value, key, 'goldfish'))
-                key = 'goldfish'
-            elif key == 'lawn_mower':
-                print('class {}: {} => {}'.format(value, key, 'mower'))
-                key = 'mower'
-            elif key == 'maple_tree':
-                print('class {}: {} => {}'.format(value, key, 'maple'))
-                key = 'maple'
-            elif key == 'oak_tree':
-                print('class {}: {} => {}'.format(value, key, 'oak'))
-                key = 'oak'
-            elif key == 'palm_tree':
-                print('class {}: {} => {}'.format(value, key, 'palm'))
-                key = 'palm'
-            elif key == 'pickup_truck':
-                print('class {}: {} => {}'.format(value, key, 'truck'))
-                key = 'truck'
-            elif key == 'pine_tree':
-                print('class {}: {} => {}'.format(value, key, 'pine'))
-                key = 'pine'
-            elif key == 'sweet_pepper':
-                print('class {}: {} => {}'.format(value, key, 'pepper'))
-                key = 'pepper'
-            elif key == 'willow_tree':
-                print('class {}: {} => {}'.format(value, key, 'willow'))
-                key = 'willow'
-            else:
-                print('class {}: {}'.format(value, key))
-            self.class_to_idx[key] = value
+        self.class_to_idx = train_dataset.class_to_idx
+        # self.class_to_idx = {}
+        # for key, value in train_dataset.class_to_idx.items():
+        #     if key == 'aquarium_fish':
+        #         print('class {}: {} => {}'.format(value, key, 'goldfish'))
+        #         key = 'goldfish'
+        #     elif key == 'lawn_mower':
+        #         print('class {}: {} => {}'.format(value, key, 'mower'))
+        #         key = 'mower'
+        #     elif key == 'maple_tree':
+        #         print('class {}: {} => {}'.format(value, key, 'maple'))
+        #         key = 'maple'
+        #     elif key == 'oak_tree':
+        #         print('class {}: {} => {}'.format(value, key, 'oak'))
+        #         key = 'oak'
+        #     elif key == 'palm_tree':
+        #         print('class {}: {} => {}'.format(value, key, 'palm'))
+        #         key = 'palm'
+        #     elif key == 'pickup_truck':
+        #         print('class {}: {} => {}'.format(value, key, 'truck'))
+        #         key = 'truck'
+        #     elif key == 'pine_tree':
+        #         print('class {}: {} => {}'.format(value, key, 'pine'))
+        #         key = 'pine'
+        #     elif key == 'sweet_pepper':
+        #         print('class {}: {} => {}'.format(value, key, 'pepper'))
+        #         key = 'pepper'
+        #     elif key == 'willow_tree':
+        #         print('class {}: {} => {}'.format(value, key, 'willow'))
+        #         key = 'willow'
+        #     else:
+        #         print('class {}: {}'.format(value, key))
+        #     self.class_to_idx[key] = value
 
         self.train_data, self.train_targets = train_dataset.data, np.array(train_dataset.targets)
         self.test_data, self.test_targets = test_dataset.data, np.array(test_dataset.targets)

@@ -1,0 +1,1002 @@
+{
+  "African chameleon": {
+    "primary color": "green or brown",
+    "typical shape": "small, with a curled tail",
+    "common environment": "forests or deserts"
+  },
+  "Granny Smith": {
+    "primary color": "green",
+    "typical shape": "round",
+    "common environment": "orchards or kitchens"
+  },
+  "accordion": {
+    "primary color": "black or red",
+    "typical shape": "boxy with bellows",
+    "common environment": "concerts or street performances"
+  },
+  "acorn": {
+    "primary color": "brown",
+    "typical shape": "small, oval with a cap",
+    "common environment": "forests or under oak trees"
+  },
+  "afghan hound": {
+    "primary color": "varies (black, cream, etc.)",
+    "typical shape": "tall, long hair",
+    "common environment": "household or dog shows"
+  },
+  "ambulance": {
+    "primary color": "white with red markings",
+    "typical shape": "boxy with lights",
+    "common environment": "urban streets or hospitals"
+  },
+  "american egret": {
+    "primary color": "white",
+    "typical shape": "tall, long neck",
+    "common environment": "wetlands or marshes"
+  },
+  "ant": {
+    "primary color": "black or red",
+    "typical shape": "small, segmented",
+    "common environment": "forests or urban areas"
+  },
+  "axolotl": {
+    "primary color": "pink or white",
+    "typical shape": "small, salamander-like with external gills",
+    "common environment": "aquariums or freshwater"
+  },
+  "baboon": {
+    "primary color": "brown or gray",
+    "typical shape": "medium-sized, long snout",
+    "common environment": "savannahs or forests"
+  },
+  "bagel": {
+    "primary color": "brown",
+    "typical shape": "round with a hole",
+    "common environment": "bakeries or kitchens"
+  },
+  "bald eagle": {
+    "primary color": "brown with white head",
+    "typical shape": "large, with hooked beak",
+    "common environment": "forests or mountains"
+  },
+  "banana": {
+    "primary color": "yellow",
+    "typical shape": "crescent-shaped",
+    "common environment": "kitchens or markets"
+  },
+  "barn": {
+    "primary color": "red or brown",
+    "typical shape": "large, rectangular with a peaked roof",
+    "common environment": "farms or countryside"
+  },
+  "baseball player": {
+    "primary color": "varies (team uniform)",
+    "typical shape": "athletic, with cap and glove",
+    "common environment": "baseball field or stadium"
+  },
+  "basketball": {
+    "primary color": "orange",
+    "typical shape": "spherical",
+    "common environment": "basketball court or gym"
+  },
+  "bathtub": {
+    "primary color": "white",
+    "typical shape": "rectangular or oval",
+    "common environment": "bathrooms"
+  },
+  "beagle": {
+    "primary color": "tri-color: black, white, brown",
+    "typical shape": "small, floppy ears",
+    "common environment": "household or outdoors"
+  },
+  "bell pepper": {
+    "primary color": "varies (red, yellow, green)",
+    "typical shape": "round, with lobes",
+    "common environment": "gardens or markets"
+  },
+  "binoculars": {
+    "primary color": "black or green",
+    "typical shape": "twin-barreled with lenses",
+    "common environment": "outdoors or sporting events"
+  },
+  "bison": {
+    "primary color": "dark brown",
+    "typical shape": "large, humpbacked",
+    "common environment": "plains or grasslands"
+  },
+  "bloodhound": {
+    "primary color": "brown or black",
+    "typical shape": "large, long ears",
+    "common environment": "household or countryside"
+  },
+  "border collie": {
+    "primary color": "black and white",
+    "typical shape": "medium-sized, agile",
+    "common environment": "household or farms"
+  },
+  "bow tie": {
+    "primary color": "black or white",
+    "typical shape": "small, tied ribbon",
+    "common environment": "formal events or fashion shows"
+  },
+  "boxer": {
+    "primary color": "fawn or brindle",
+    "typical shape": "medium-sized, muscular",
+    "common environment": "household or outdoors"
+  },
+  "broccoli": {
+    "primary color": "green",
+    "typical shape": "tree-like with florets",
+    "common environment": "garden or grocery store"
+  },
+  "broom": {
+    "primary color": "brown or yellow",
+    "typical shape": "long handle with bristles",
+    "common environment": "households or workshops"
+  },
+  "bucket": {
+    "primary color": "varies (metallic, plastic)",
+    "typical shape": "cylindrical with handle",
+    "common environment": "households or outdoors"
+  },
+  "burrito": {
+    "primary color": "brown (tortilla)",
+    "typical shape": "cylindrical",
+    "common environment": "restaurants or kitchens"
+  },
+  "cabbage": {
+    "primary color": "green or purple",
+    "typical shape": "round with layers of leaves",
+    "common environment": "gardens or markets"
+  },
+  "cannon": {
+    "primary color": "black or green",
+    "typical shape": "large, cylindrical with wheels",
+    "common environment": "battlefields or museums"
+  },
+  "carousel": {
+    "primary color": "multicolored",
+    "typical shape": "circular with mounted animals",
+    "common environment": "amusement parks or fairs"
+  },
+  "centipede": {
+    "primary color": "brown or red",
+    "typical shape": "elongated with many legs",
+    "common environment": "forests or under rocks"
+  },
+  "cheeseburger": {
+    "primary color": "brown (bun), yellow (cheese)",
+    "typical shape": "round, stacked",
+    "common environment": "restaurants or kitchens"
+  },
+  "cheetah": {
+    "primary color": "yellow with black spots",
+    "typical shape": "slender, long legs",
+    "common environment": "savannahs or grasslands"
+  },
+  "chimpanzee": {
+    "primary color": "black or brown",
+    "typical shape": "medium-sized, with long arms",
+    "common environment": "forests or zoos"
+  },
+  "chow chow": {
+    "primary color": "varies (black, red, cream)",
+    "typical shape": "medium-sized, fluffy",
+    "common environment": "household or outdoors"
+  },
+  "clown fish": {
+    "primary color": "orange with white stripes",
+    "typical shape": "small, rounded",
+    "common environment": "coral reefs or aquariums"
+  },
+  "cobra": {
+    "primary color": "brown or black",
+    "typical shape": "slender, hooded",
+    "common environment": "forests or grasslands"
+  },
+  "cockroach": {
+    "primary color": "brown",
+    "typical shape": "flat, oval body with antennae",
+    "common environment": "indoors or dark places"
+  },
+  "collie": {
+    "primary color": "sable, tricolor, or blue merle",
+    "typical shape": "long-haired, slender",
+    "common environment": "household or farms"
+  },
+  "cowboy hat": {
+    "primary color": "brown or black",
+    "typical shape": "wide-brimmed",
+    "common environment": "Western environments or rodeos"
+  },
+  "cucumber": {
+    "primary color": "green",
+    "typical shape": "elongated, cylindrical",
+    "common environment": "gardens or markets"
+  },
+  "dalmatian": {
+    "primary color": "white with black spots",
+    "typical shape": "medium-sized, slender",
+    "common environment": "household or fire stations"
+  },
+  "dragonfly": {
+    "primary color": "blue, green, or brown",
+    "typical shape": "elongated body with wings",
+    "common environment": "wetlands or gardens"
+  },
+  "duck": {
+    "primary color": "white, brown, or green",
+    "typical shape": "small, webbed feet",
+    "common environment": "ponds or lakes"
+  },
+  "eel": {
+    "primary color": "gray or brown",
+    "typical shape": "elongated, snake-like",
+    "common environment": "ocean or freshwater"
+  },
+  "electric guitar": {
+    "primary color": "varies (black, red, etc.)",
+    "typical shape": "solid body with neck and strings",
+    "common environment": "concerts or music studios"
+  },
+  "espresso": {
+    "primary color": "black",
+    "typical shape": "liquid in cup",
+    "common environment": "cafes or kitchens"
+  },
+  "fire engine": {
+    "primary color": "red",
+    "typical shape": "boxy with ladders",
+    "common environment": "urban streets"
+  },
+  "flute": {
+    "primary color": "metallic (silver, gold)",
+    "typical shape": "long, cylindrical with holes",
+    "common environment": "concerts or music studios"
+  },
+  "fly": {
+    "primary color": "black",
+    "typical shape": "small, with wings",
+    "common environment": "indoors or outdoors"
+  },
+  "fox squirrel": {
+    "primary color": "brown or gray",
+    "typical shape": "small, bushy tail",
+    "common environment": "forests or urban areas"
+  },
+  "french bulldog": {
+    "primary color": "varies (fawn, brindle, white)",
+    "typical shape": "small, bat-like ears",
+    "common environment": "household or urban areas"
+  },
+  "gasmask": {
+    "primary color": "black or green",
+    "typical shape": "mask with filters",
+    "common environment": "military or hazardous environments"
+  },
+  "gazelle": {
+    "primary color": "tan with white underparts",
+    "typical shape": "slender, long legs and horns",
+    "common environment": "savannahs or grasslands"
+  },
+  "german shepherd dog": {
+    "primary color": "black and tan",
+    "typical shape": "medium to large, muscular",
+    "common environment": "household or working environments"
+  },
+  "gibbon": {
+    "primary color": "black, brown, or white",
+    "typical shape": "small, long arms",
+    "common environment": "forests or zoos"
+  },
+  "golden retriever": {
+    "primary color": "golden",
+    "typical shape": "medium-sized, muscular",
+    "common environment": "household or park"
+  },
+  "goldfinch": {
+    "primary color": "yellow with black wings",
+    "typical shape": "small, slender",
+    "common environment": "trees or gardens"
+  },
+  "goldfish": {
+    "primary color": "orange",
+    "typical shape": "small, rounded with fins",
+    "common environment": "aquariums or ponds"
+  },
+  "gorilla": {
+    "primary color": "black",
+    "typical shape": "large, muscular",
+    "common environment": "forests or zoos"
+  },
+  "grasshopper": {
+    "primary color": "green or brown",
+    "typical shape": "small, elongated with long legs",
+    "common environment": "fields or gardens"
+  },
+  "great white shark": {
+    "primary color": "gray with a white belly",
+    "typical shape": "streamlined, large fins",
+    "common environment": "ocean or sea"
+  },
+  "grey whale": {
+    "primary color": "gray",
+    "typical shape": "large, streamlined body",
+    "common environment": "ocean or sea"
+  },
+  "guinea pig": {
+    "primary color": "varies (white, brown, black)",
+    "typical shape": "small, rounded body",
+    "common environment": "household or pet stores"
+  },
+  "hammer": {
+    "primary color": "metallic with wooden handle",
+    "typical shape": "long handle with head",
+    "common environment": "toolboxes or workshops"
+  },
+  "hammerhead": {
+    "primary color": "gray or brown",
+    "typical shape": "distinctive T-shaped head",
+    "common environment": "ocean or sea"
+  },
+  "harmonica": {
+    "primary color": "metallic",
+    "typical shape": "rectangular with holes",
+    "common environment": "concerts or music studios"
+  },
+  "harp": {
+    "primary color": "gold or brown",
+    "typical shape": "large, triangular with strings",
+    "common environment": "concerts or music studios"
+  },
+  "hatchet": {
+    "primary color": "metallic with wooden handle",
+    "typical shape": "small axe with short handle",
+    "common environment": "toolboxes or outdoors"
+  },
+  "hen": {
+    "primary color": "brown or white",
+    "typical shape": "small, with feathers",
+    "common environment": "farms or barns"
+  },
+  "hermit crab": {
+    "primary color": "brown or red",
+    "typical shape": "small, with shell",
+    "common environment": "beaches or aquariums"
+  },
+  "hippopotamus": {
+    "primary color": "gray",
+    "typical shape": "large, barrel-shaped",
+    "common environment": "rivers or lakes"
+  },
+  "hotdog": {
+    "primary color": "brown (sausage), yellow (bun)",
+    "typical shape": "elongated",
+    "common environment": "picnic or food stand"
+  },
+  "hummingbird": {
+    "primary color": "varies (green, red, blue)",
+    "typical shape": "small, with long beak",
+    "common environment": "gardens or forests"
+  },
+  "hyena": {
+    "primary color": "spotted or striped brown",
+    "typical shape": "stocky, large jaws",
+    "common environment": "savannahs or grasslands"
+  },
+  "ice cream": {
+    "primary color": "varies (white, brown, pink)",
+    "typical shape": "scooped or soft-serve",
+    "common environment": "ice cream shops or kitchens"
+  },
+  "iguana": {
+    "primary color": "green or brown",
+    "typical shape": "large, with spikes",
+    "common environment": "forests or deserts"
+  },
+  "italian greyhound": {
+    "primary color": "varies (fawn, gray, etc.)",
+    "typical shape": "small, slender",
+    "common environment": "household or dog shows"
+  },
+  "jellyfish": {
+    "primary color": "transparent or blue",
+    "typical shape": "bell-shaped with tentacles",
+    "common environment": "ocean or sea"
+  },
+  "killer whale": {
+    "primary color": "black with white patches",
+    "typical shape": "large, streamlined body",
+    "common environment": "ocean or sea"
+  },
+  "koala": {
+    "primary color": "gray",
+    "typical shape": "small, with round ears",
+    "common environment": "forests or zoos"
+  },
+  "lab coat": {
+    "primary color": "white",
+    "typical shape": "long-sleeved, knee-length",
+    "common environment": "laboratories or hospitals"
+  },
+  "labrador retriever": {
+    "primary color": "yellow, black, or chocolate",
+    "typical shape": "medium to large, muscular",
+    "common environment": "household or outdoors"
+  },
+  "ladybug": {
+    "primary color": "red with black spots",
+    "typical shape": "small, rounded",
+    "common environment": "gardens or fields"
+  },
+  "lawn mower": {
+    "primary color": "green or red",
+    "typical shape": "rectangular, with blades",
+    "common environment": "gardens or lawns"
+  },
+  "lemon": {
+    "primary color": "yellow",
+    "typical shape": "oval",
+    "common environment": "kitchens or markets"
+  },
+  "leopard": {
+    "primary color": "yellow with black spots",
+    "typical shape": "large, muscular",
+    "common environment": "forests or grasslands"
+  },
+  "llama": {
+    "primary color": "white, brown, or black",
+    "typical shape": "tall, long neck",
+    "common environment": "mountains or farms"
+  },
+  "lobster": {
+    "primary color": "red",
+    "typical shape": "elongated with claws",
+    "common environment": "ocean or seafood markets"
+  },
+  "mailbox": {
+    "primary color": "varies (blue, red, etc.)",
+    "typical shape": "rectangular with a lid",
+    "common environment": "streets or yards"
+  },
+  "mantis": {
+    "primary color": "green or brown",
+    "typical shape": "elongated with folded legs",
+    "common environment": "gardens or forests"
+  },
+  "meerkat": {
+    "primary color": "tan with dark eyes",
+    "typical shape": "small, upright posture",
+    "common environment": "deserts or grasslands"
+  },
+  "military aircraft": {
+    "primary color": "camouflage or gray",
+    "typical shape": "aerodynamic with wings",
+    "common environment": "airfields or skies"
+  },
+  "missile": {
+    "primary color": "gray or white",
+    "typical shape": "aerodynamic, cylindrical",
+    "common environment": "military environments or skies"
+  },
+  "monarch butterfly": {
+    "primary color": "orange with black patterns",
+    "typical shape": "winged, delicate",
+    "common environment": "gardens or meadows"
+  },
+  "mushroom": {
+    "primary color": "brown or white",
+    "typical shape": "small, umbrella-shaped",
+    "common environment": "forests or kitchens"
+  },
+  "newt": {
+    "primary color": "brown or green",
+    "typical shape": "small, slender with a tail",
+    "common environment": "wetlands or forests"
+  },
+  "orangutan": {
+    "primary color": "reddish-brown",
+    "typical shape": "large, long arms",
+    "common environment": "forests or zoos"
+  },
+  "ostrich": {
+    "primary color": "brown or black",
+    "typical shape": "large, with long neck",
+    "common environment": "savannahs or farms"
+  },
+  "panda": {
+    "primary color": "black and white",
+    "typical shape": "large, round body",
+    "common environment": "forests or zoos"
+  },
+  "parachute": {
+    "primary color": "varies (white, red, etc.)",
+    "typical shape": "large, dome-shaped",
+    "common environment": "sky or ground"
+  },
+  "peacock": {
+    "primary color": "blue with green plumage",
+    "typical shape": "large, long tail feathers",
+    "common environment": "gardens or zoos"
+  },
+  "pembroke welsh corgi": {
+    "primary color": "red, sable, fawn, or black and tan",
+    "typical shape": "small, short legs",
+    "common environment": "household or farms"
+  },
+  "pickup truck": {
+    "primary color": "varies (red, blue, etc.)",
+    "typical shape": "large, with open cargo area",
+    "common environment": "roads or worksites"
+  },
+  "pig": {
+    "primary color": "pink or brown",
+    "typical shape": "large, round body",
+    "common environment": "farms or barns"
+  },
+  "pineapple": {
+    "primary color": "yellow with green leaves",
+    "typical shape": "oval with spiky skin",
+    "common environment": "tropical regions or markets"
+  },
+  "pizza": {
+    "primary color": "varies (red, yellow, green)",
+    "typical shape": "round, sliced",
+    "common environment": "restaurants or kitchens"
+  },
+  "polar bear": {
+    "primary color": "white",
+    "typical shape": "large, with thick fur",
+    "common environment": "Arctic regions"
+  },
+  "pomegranate": {
+    "primary color": "red",
+    "typical shape": "round with a crown",
+    "common environment": "gardens or markets"
+  },
+  "pomeranian": {
+    "primary color": "varies (orange, black, white)",
+    "typical shape": "small, fluffy",
+    "common environment": "household or dog shows"
+  },
+  "porcupine": {
+    "primary color": "brown or black with quills",
+    "typical shape": "small, round body with quills",
+    "common environment": "forests or grasslands"
+  },
+  "pretzel": {
+    "primary color": "brown",
+    "typical shape": "twisted knot",
+    "common environment": "bakeries or markets"
+  },
+  "puffer fish": {
+    "primary color": "yellow or brown",
+    "typical shape": "round, spiky when inflated",
+    "common environment": "ocean or sea"
+  },
+  "pug": {
+    "primary color": "fawn or black",
+    "typical shape": "small, with wrinkled face",
+    "common environment": "household or urban areas"
+  },
+  "red fox": {
+    "primary color": "red with white underparts",
+    "typical shape": "small, bushy tail",
+    "common environment": "forests or grasslands"
+  },
+  "revolver": {
+    "primary color": "metallic",
+    "typical shape": "cylindrical chamber with barrel",
+    "common environment": "gun ranges or law enforcement"
+  },
+  "rottweiler": {
+    "primary color": "black with tan markings",
+    "typical shape": "large, muscular",
+    "common environment": "household or working environments"
+  },
+  "rugby ball": {
+    "primary color": "brown or white",
+    "typical shape": "oval",
+    "common environment": "rugby fields or stadiums"
+  },
+  "saint bernard": {
+    "primary color": "brown and white",
+    "typical shape": "large, muscular",
+    "common environment": "household or outdoors"
+  },
+  "saxophone": {
+    "primary color": "brass",
+    "typical shape": "curved with keys",
+    "common environment": "concerts or music studios"
+  },
+  "school bus": {
+    "primary color": "yellow",
+    "typical shape": "large, rectangular",
+    "common environment": "urban streets or highways"
+  },
+  "scorpion": {
+    "primary color": "brown or black",
+    "typical shape": "small, with pincers and tail",
+    "common environment": "deserts or forests"
+  },
+  "scottish terrier": {
+    "primary color": "black",
+    "typical shape": "small, wiry coat",
+    "common environment": "household or dog shows"
+  },
+  "sea lion": {
+    "primary color": "brown or black",
+    "typical shape": "large, with flippers",
+    "common environment": "coasts or aquariums"
+  },
+  "skunk": {
+    "primary color": "black with white stripes",
+    "typical shape": "small, bushy tail",
+    "common environment": "woodlands or urban areas"
+  },
+  "snail": {
+    "primary color": "brown or gray",
+    "typical shape": "small, spiral shell",
+    "common environment": "gardens or damp areas"
+  },
+  "snow leopard": {
+    "primary color": "white with black spots",
+    "typical shape": "large, muscular",
+    "common environment": "mountains or zoos"
+  },
+  "spider web": {
+    "primary color": "white or transparent",
+    "typical shape": "circular with radiating threads",
+    "common environment": "gardens or indoors"
+  },
+  "standard poodle": {
+    "primary color": "varies (white, black, brown)",
+    "typical shape": "curly fur, long legs",
+    "common environment": "household or dog shows"
+  },
+  "starfish": {
+    "primary color": "orange or red",
+    "typical shape": "star-shaped",
+    "common environment": "ocean or sea"
+  },
+  "steam locomotive": {
+    "primary color": "black or green",
+    "typical shape": "long, with a smokestack",
+    "common environment": "railways or museums"
+  },
+  "stingray": {
+    "primary color": "gray or brown",
+    "typical shape": "flat, diamond-shaped with a tail",
+    "common environment": "ocean or sea"
+  },
+  "strawberry": {
+    "primary color": "red",
+    "typical shape": "heart-shaped with seeds",
+    "common environment": "gardens or markets"
+  },
+  "submarine": {
+    "primary color": "gray or dark",
+    "typical shape": "cylindrical with conning tower",
+    "common environment": "underwater"
+  },
+  "tabby cat": {
+    "primary color": "gray or brown",
+    "typical shape": "small, with striped pattern",
+    "common environment": "household or urban areas"
+  },
+  "tank": {
+    "primary color": "camouflage or green",
+    "typical shape": "large, armored with tracks",
+    "common environment": "battlefields or military bases"
+  },
+  "tarantula": {
+    "primary color": "brown or black",
+    "typical shape": "large, hairy",
+    "common environment": "forests or arid regions"
+  },
+  "tennis ball": {
+    "primary color": "yellow or green",
+    "typical shape": "spherical",
+    "common environment": "tennis courts or parks"
+  },
+  "timber wolf": {
+    "primary color": "gray or black",
+    "typical shape": "large, muscular",
+    "common environment": "forests or mountains"
+  },
+  "toy poodle": {
+    "primary color": "varies (white, black, brown)",
+    "typical shape": "small, curly fur",
+    "common environment": "household or dog shows"
+  },
+  "tractor": {
+    "primary color": "green or red",
+    "typical shape": "large wheels, cab",
+    "common environment": "farms or fields"
+  },
+  "tree frog": {
+    "primary color": "green or brown",
+    "typical shape": "small, with sticky pads",
+    "common environment": "trees or wetlands"
+  },
+  "trombone": {
+    "primary color": "brass",
+    "typical shape": "long, with slide mechanism",
+    "common environment": "concerts or music studios"
+  },
+  "vase": {
+    "primary color": "varies (blue, white, etc.)",
+    "typical shape": "tall, narrow",
+    "common environment": "homes or galleries"
+  },
+  "violin": {
+    "primary color": "brown",
+    "typical shape": "hourglass with strings",
+    "common environment": "concerts or music studios"
+  },
+  "vulture": {
+    "primary color": "dark brown or black",
+    "typical shape": "large wingspan, bald head",
+    "common environment": "sky or rocky cliffs"
+  },
+  "west highland white terrier": {
+    "primary color": "white",
+    "typical shape": "small, wiry coat",
+    "common environment": "household or dog shows"
+  },
+  "wheelbarrow": {
+    "primary color": "green or red",
+    "typical shape": "single wheel with handles",
+    "common environment": "gardens or construction sites"
+  },
+  "whippet": {
+    "primary color": "varies (fawn, brindle, black)",
+    "typical shape": "small, slender",
+    "common environment": "household or dog shows"
+  },
+  "wine bottle": {
+    "primary color": "green or brown",
+    "typical shape": "tall, cylindrical",
+    "common environment": "kitchens or bars"
+  },
+  "wood rabbit": {
+    "primary color": "brown or gray",
+    "typical shape": "small, long ears",
+    "common environment": "forests or grasslands"
+  },
+  "yorkshire terrier": {
+    "primary color": "black and tan",
+    "typical shape": "small, silky fur",
+    "common environment": "household or dog shows"
+  },
+  "toucan": {
+    "primary color": "black with colorful beak",
+    "typical shape": "medium-sized, with large beak",
+    "common environment": "rainforests"
+  },
+  "jeep": {
+    "primary color": "varies (green, black, etc.)",
+    "typical shape": "boxy, with four wheels",
+    "common environment": "off-road or urban areas"
+  },
+  "beer glass": {
+    "primary color": "transparent, filled with amber liquid",
+    "typical shape": "cylindrical, with handle",
+    "common environment": "bars or restaurants"
+  },
+  "chihuahua": {
+    "primary color": "varies (tan, black, white)",
+    "typical shape": "small, with large ears",
+    "common environment": "households"
+  },
+  "basset hound": {
+    "primary color": "tricolor (black, white, brown)",
+    "typical shape": "long body, short legs, long ears",
+    "common environment": "households or outdoors"
+  },
+  "bee": {
+    "primary color": "yellow and black",
+    "typical shape": "small, with wings",
+    "common environment": "gardens or meadows"
+  },
+  "cauldron": {
+    "primary color": "black",
+    "typical shape": "large, rounded with handle",
+    "common environment": "kitchens or witch-themed settings"
+  },
+  "assault rifle": {
+    "primary color": "black or camouflaged",
+    "typical shape": "long, with stock and barrel",
+    "common environment": "military or combat zones"
+  },
+  "lorikeet": {
+    "primary color": "brightly colored (red, blue, green)",
+    "typical shape": "small, with short beak",
+    "common environment": "forests or gardens"
+  },
+  "flamingo": {
+    "primary color": "pink",
+    "typical shape": "tall, with long legs and neck",
+    "common environment": "wetlands or zoos"
+  },
+  "cocker spaniels": {
+    "primary color": "varies (black, golden, brown)",
+    "typical shape": "medium-sized, with long ears and wavy fur",
+    "common environment": "households or outdoors"
+  },
+  "soccer ball": {
+    "primary color": "white with black patches",
+    "typical shape": "spherical",
+    "common environment": "soccer fields or sports stores"
+  },
+  "volcano": {
+    "primary color": "gray or black",
+    "typical shape": "conical, with crater",
+    "common environment": "mountainous areas"
+  },
+  "canoe": {
+    "primary color": "varies (brown, green, etc.)",
+    "typical shape": "long and narrow, with pointed ends",
+    "common environment": "lakes or rivers"
+  },
+  "mitten": {
+    "primary color": "varies (red, blue, etc.)",
+    "typical shape": "hand-shaped, with separate thumb",
+    "common environment": "cold weather"
+  },
+  "shield": {
+    "primary color": "varies (metallic, painted, etc.)",
+    "typical shape": "flat and rounded or angular",
+    "common environment": "battlefields or historical displays"
+  },
+  "tiger": {
+    "primary color": "orange with black stripes",
+    "typical shape": "large, muscular with long tail",
+    "common environment": "forests or zoos"
+  },
+  "goose": {
+    "primary color": "white or gray",
+    "typical shape": "medium to large, with long neck",
+    "common environment": "lakes or parks"
+  },
+  "king penguin": {
+    "primary color": "black and white with yellow markings",
+    "typical shape": "medium-sized, with flippers",
+    "common environment": "Antarctica or zoos"
+  },
+  "lipstick": {
+    "primary color": "varies (red, pink, etc.)",
+    "typical shape": "small, cylindrical",
+    "common environment": "cosmetic stores or handbags"
+  },
+  "pelican": {
+    "primary color": "white or gray",
+    "typical shape": "large, with long beak and throat pouch",
+    "common environment": "coastal areas"
+  },
+  "candle": {
+    "primary color": "varies (white, red, etc.)",
+    "typical shape": "cylindrical, with wick",
+    "common environment": "homes or religious settings"
+  },
+  "scuba diver": {
+    "primary color": "varies (black, blue, etc.)",
+    "typical shape": "human with gear",
+    "common environment": "underwater"
+  },
+  "pirate ship": {
+    "primary color": "brown with black sails",
+    "typical shape": "large, with masts and sails",
+    "common environment": "oceans"
+  },
+  "joystick": {
+    "primary color": "black",
+    "typical shape": "small, with handle and buttons",
+    "common environment": "gaming consoles or arcades"
+  },
+  "scarf": {
+    "primary color": "varies (red, blue, etc.)",
+    "typical shape": "long and narrow",
+    "common environment": "cold weather"
+  },
+  "grand piano": {
+    "primary color": "black or white",
+    "typical shape": "large, with curved body",
+    "common environment": "concert halls or homes"
+  },
+  "lighthouse": {
+    "primary color": "white with red stripes",
+    "typical shape": "tall and cylindrical",
+    "common environment": "coastal areas"
+  },
+  "guillotine": {
+    "primary color": "wooden",
+    "typical shape": "tall, with blade",
+    "common environment": "historical settings"
+  },
+  "badger": {
+    "primary color": "black and white",
+    "typical shape": "small, with stocky body",
+    "common environment": "forests or grasslands"
+  },
+  "black swan": {
+    "primary color": "black with red beak",
+    "typical shape": "medium-sized, with long neck",
+    "common environment": "lakes or rivers"
+  },
+  "sandal": {
+    "primary color": "varies (brown, black, etc.)",
+    "typical shape": "open-toed with straps",
+    "common environment": "beaches or casual settings"
+  },
+  "birdhouse": {
+    "primary color": "varies (brown, white, etc.)",
+    "typical shape": "small, with entrance hole",
+    "common environment": "gardens or backyards"
+  },
+  "weimaraner": {
+    "primary color": "gray",
+    "typical shape": "medium-sized, with short coat",
+    "common environment": "households or outdoors"
+  },
+  "space shuttle": {
+    "primary color": "white with black",
+    "typical shape": "large, with wings",
+    "common environment": "space or launch sites"
+  },
+  "husky": {
+    "primary color": "black and white or gray",
+    "typical shape": "medium-sized, with thick fur",
+    "common environment": "cold regions or households"
+  },
+  "junco": {
+    "primary color": "gray or brown",
+    "typical shape": "small, with short beak",
+    "common environment": "forests or gardens"
+  },
+  "backpack": {
+    "primary color": "varies (blue, black, etc.)",
+    "typical shape": "rectangular, with straps",
+    "common environment": "schools or outdoors"
+  },
+  "lion": {
+    "primary color": "golden or tan",
+    "typical shape": "large, with mane",
+    "common environment": "savannas or zoos"
+  },
+  "mobile phone": {
+    "primary color": "varies (black, white, etc.)",
+    "typical shape": "rectangular, with screen",
+    "common environment": "everywhere"
+  },
+  "castle": {
+    "primary color": "gray or brown",
+    "typical shape": "large, with towers",
+    "common environment": "historical sites"
+  },
+  "boston terrier": {
+    "primary color": "black and white",
+    "typical shape": "small, with short coat",
+    "common environment": "households"
+  },
+  "beaver": {
+    "primary color": "brown",
+    "typical shape": "medium-sized, with flat tail",
+    "common environment": "rivers or lakes"
+  },
+  "shih tzu": {
+    "primary color": "varies (white, black, brown)",
+    "typical shape": "small, with long fur",
+    "common environment": "households"
+  },
+  "zebra": {
+    "primary color": "black and white",
+    "typical shape": "medium-sized, with stripes",
+    "common environment": "savannas or zoos"
+  },
+  "schooner": {
+    "primary color": "varies (wooden, white)",
+    "typical shape": "large, with sails",
+    "common environment": "oceans or harbors"
+  }
+}
