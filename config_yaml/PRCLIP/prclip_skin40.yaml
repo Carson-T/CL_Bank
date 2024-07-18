@@ -1,0 +1,47 @@
+basic:
+  random_seed: 1993
+  version_name: "skin40_b0i4_medclip_zeroshot"
+  is_log: True
+  save_checkpoint: False
+  save_path: "../checkpoint&log"
+  method: "PRCLIP"
+  increment_type: "CIL"
+  increment_steps: [ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 ]
+#  increment_steps: [ 8, 8, 8, 8, 8 ]
+
+usual:
+  dataset_name: "Skin40"
+  is_openset_test: True
+  data_shuffle: True
+  img_size: 224
+  backbone: "MedCLIP"
+#  pretrained_path: "pretrained_model/CLIP_ViT-B-16.pt"
+#  pretrained_path: "pretrained_model/OpenCLIP_ViT-B-16-DataComp.XL-s13B-b90K"
+#  pretrained_path: "pretrained_model/OpenCLIP_ViT-B-16-SigLIP"
+  pretrained_path: "pretrained_model/MedCLIP_vit_weight"
+  drop_rate: 0
+  drop_path_rate: 0
+  batch_size: 64
+  num_workers: 8
+  epochs: 10
+  optimizer: Adam
+  loss_func: CEloss
+  scheduler: Cosine
+  lr: 0.01
+  momentum: 0
+  weight_decay: 0
+  memory_size: 80
+  apply_nme: False
+  sampling_method: "herding"
+
+special:
+  prompt_template: "a photo of a {}."
+  ret_ratio: 0.8
+
+options:
+  Cosine:
+    eta_min: 0
+  Warm-up-Cosine-Annealing:
+    init_ratio: 0.1
+    warm_up_steps: 2
+    min_lr_ratio: 0.001

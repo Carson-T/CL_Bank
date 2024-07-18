@@ -1,0 +1,502 @@
+{
+  "road": {
+    "color": "gray or black",
+    "shape_or_size": "long and narrow",
+    "typical_location": "outdoors, between fields, buildings, or natural landscapes"
+  },
+  "palm_tree": {
+    "color": "brown trunk with green fronds",
+    "shape_or_size": "tall with a slender trunk",
+    "typical_location": "tropical or subtropical regions"
+  },
+  "snake": {
+    "color": "varies, often green, brown, or patterned",
+    "shape_or_size": "elongated and cylindrical",
+    "typical_location": "forests, deserts, or near water"
+  },
+  "bicycle": {
+    "color": "varies, often bright or metallic",
+    "shape_or_size": "two-wheeled with a triangular frame",
+    "typical_location": "roads, paths, or parks"
+  },
+  "cloud": {
+    "color": "white or gray",
+    "shape_or_size": "amorphous and variable",
+    "typical_location": "sky, at various altitudes"
+  },
+  "table": {
+    "color": "varies, commonly brown, black, or white",
+    "shape_or_size": "flat horizontal surface with legs",
+    "typical_location": "indoors or outdoors, often in homes or offices"
+  },
+  "train": {
+    "color": "varies, often with distinctive markings",
+    "shape_or_size": "long with multiple carriages",
+    "typical_location": "railway tracks and stations"
+  },
+  "rabbit": {
+    "color": "usually brown, gray, or white",
+    "shape_or_size": "small and compact with long ears",
+    "typical_location": "fields, forests, or domesticated environments"
+  },
+  "shrew": {
+    "color": "brown or gray",
+    "shape_or_size": "very small, mouse-like",
+    "typical_location": "grasslands, forests, or underground"
+  },
+  "skyscraper": {
+    "color": "varies, often metallic or glassy",
+    "shape_or_size": "very tall and multi-storied",
+    "typical_location": "urban city centers"
+  },
+  "lamp": {
+    "color": "varies, often white or metallic",
+    "shape_or_size": "tall or short with a shade",
+    "typical_location": "indoors, on tables or floors"
+  },
+  "tractor": {
+    "color": "commonly green or red",
+    "shape_or_size": "large with big tires",
+    "typical_location": "farms or agricultural fields"
+  },
+  "bear": {
+    "color": "brown, black, or white",
+    "shape_or_size": "large and bulky",
+    "typical_location": "forests, mountains, or arctic regions"
+  },
+  "tulip": {
+    "color": "varies, often red, yellow, or pink",
+    "shape_or_size": "tall stem with a cup-shaped flower",
+    "typical_location": "gardens or fields"
+  },
+  "otter": {
+    "color": "brown or gray",
+    "shape_or_size": "small with a sleek body",
+    "typical_location": "rivers, lakes, or coastal areas"
+  },
+  "bottle": {
+    "color": "transparent or opaque, various colors",
+    "shape_or_size": "cylindrical with a narrow neck",
+    "typical_location": "indoors, on tables or shelves"
+  },
+  "crab": {
+    "color": "red, brown, or blue",
+    "shape_or_size": "small with a hard shell and claws",
+    "typical_location": "beaches or coastal areas"
+  },
+  "squirrel": {
+    "color": "brown, gray, or black",
+    "shape_or_size": "small with a bushy tail",
+    "typical_location": "trees, parks, or forests"
+  },
+  "lion": {
+    "color": "tawny or golden",
+    "shape_or_size": "large with a mane (males)",
+    "typical_location": "savannas or grasslands"
+  },
+  "kangaroo": {
+    "color": "brown or gray",
+    "shape_or_size": "large with powerful hind legs",
+    "typical_location": "Australian outback or grasslands"
+  },
+  "pickup_truck": {
+    "color": "varies, often metallic or bright",
+    "shape_or_size": "large with an open cargo area",
+    "typical_location": "roads, farms, or construction sites"
+  },
+  "rose": {
+    "color": "varies, often red, pink, or white",
+    "shape_or_size": "thorny stem with a large bloom",
+    "typical_location": "gardens or bouquets"
+  },
+  "snail": {
+    "color": "brown, gray, or yellow",
+    "shape_or_size": "small with a spiral shell",
+    "typical_location": "gardens, forests, or near water"
+  },
+  "aquarium_fish": {
+    "color": "varies, often bright and colorful",
+    "shape_or_size": "small with various fin shapes",
+    "typical_location": "aquariums or fish tanks"
+  },
+  "tank": {
+    "color": "green, brown, or camouflage",
+    "shape_or_size": "large with a turret and tracks",
+    "typical_location": "military bases or battlefields"
+  },
+  "cattle": {
+    "color": "black, brown, or white",
+    "shape_or_size": "large with a sturdy body",
+    "typical_location": "farms or pastures"
+  },
+  "castle": {
+    "color": "stone gray or brick red",
+    "shape_or_size": "large with towers and battlements",
+    "typical_location": "historical sites or hilltops"
+  },
+  "mouse": {
+    "color": "gray or brown",
+    "shape_or_size": "small with a long tail",
+    "typical_location": "fields, homes, or laboratories"
+  },
+  "cup": {
+    "color": "varies, often white or patterned",
+    "shape_or_size": "small with a handle",
+    "typical_location": "kitchens, tables, or cafes"
+  },
+  "orange": {
+    "color": "orange",
+    "shape_or_size": "round and medium-sized",
+    "typical_location": "trees, orchards, or fruit bowls"
+  },
+  "bus": {
+    "color": "varies, often yellow, red, or blue",
+    "shape_or_size": "large with multiple seats",
+    "typical_location": "streets, bus stops, or terminals"
+  },
+  "streetcar": {
+    "color": "varies, often red, yellow, or green",
+    "shape_or_size": "long with multiple doors",
+    "typical_location": "urban streets or tram lines"
+  },
+  "lobster": {
+    "color": "red, brown, or blue",
+    "shape_or_size": "medium with claws and a hard shell",
+    "typical_location": "ocean floors or seafood markets"
+  },
+  "sunflower": {
+    "color": "yellow petals with a brown center",
+    "shape_or_size": "tall with a large flower head",
+    "typical_location": "fields or gardens"
+  },
+  "bee": {
+    "color": "yellow and black striped",
+    "shape_or_size": "small with wings and a stinger",
+    "typical_location": "flowers, gardens, or hives"
+  },
+  "pine_tree": {
+    "color": "green needles with brown bark",
+    "shape_or_size": "tall with a conical shape",
+    "typical_location": "forests or mountainous areas"
+  },
+  "sweet_pepper": {
+    "color": "varies, often red, yellow, or green",
+    "shape_or_size": "medium-sized and bell-shaped",
+    "typical_location": "gardens, farms, or kitchens"
+  },
+  "can": {
+    "color": "varies, often metallic or labeled",
+    "shape_or_size": "cylindrical with a lid",
+    "typical_location": "kitchens, pantries, or stores"
+  },
+  "camel": {
+    "color": "brown or tan",
+    "shape_or_size": "large with humps",
+    "typical_location": "deserts or arid regions"
+  },
+  "lizard": {
+    "color": "green, brown, or gray",
+    "shape_or_size": "small to medium with a long tail",
+    "typical_location": "forests, deserts, or homes"
+  },
+  "trout": {
+    "color": "varies, often speckled with green or brown",
+    "shape_or_size": "medium with a streamlined body",
+    "typical_location": "rivers, lakes, or streams"
+  },
+  "lawn_mower": {
+    "color": "varies, often green or red",
+    "shape_or_size": "medium-sized with a handle and blades",
+    "typical_location": "lawns, gardens, or sheds"
+  },
+  "seal": {
+    "color": "gray or brown",
+    "shape_or_size": "medium with a sleek body and flippers",
+    "typical_location": "coastal areas or ocean"
+  },
+  "plain": {
+    "color": "green or brown",
+    "shape_or_size": "vast and flat",
+    "typical_location": "open fields or grasslands"
+  },
+  "spider": {
+    "color": "black, brown, or colorful",
+    "shape_or_size": "small with eight legs",
+    "typical_location": "webs, corners, or gardens"
+  },
+  "oak_tree": {
+    "color": "green leaves with brown bark",
+    "shape_or_size": "large with a broad canopy",
+    "typical_location": "forests or parks"
+  },
+  "chair": {
+    "color": "varies, often brown, black, or white",
+    "shape_or_size": "small with a seat and backrest",
+    "typical_location": "indoors, offices, or homes"
+  },
+  "bowl": {
+    "color": "varies, often white or patterned",
+    "shape_or_size": "small to medium with a round shape",
+    "typical_location": "kitchens, tables, or dining areas"
+  },
+  "elephant": {
+    "color": "gray",
+    "shape_or_size": "large with a trunk and tusks",
+    "typical_location": "savannas, forests, or zoos"
+  },
+  "orchid": {
+    "color": "varies, often pink, white, or purple",
+    "shape_or_size": "delicate with a unique shape",
+    "typical_location": "gardens, homes, or greenhouses"
+  },
+  "house": {
+    "color": "varies, often white, brown, or brick",
+    "shape_or_size": "medium to large with a roof and windows",
+    "typical_location": "residential areas or neighborhoods"
+  },
+  "whale": {
+    "color": "gray, blue, or black",
+    "shape_or_size": "very large with a streamlined body",
+    "typical_location": "oceans"
+  },
+  "butterfly": {
+    "color": "varies, often bright and colorful",
+    "shape_or_size": "small with large wings",
+    "typical_location": "gardens, meadows, or forests"
+  },
+  "sea": {
+    "color": "blue or green",
+    "shape_or_size": "vast and expansive",
+    "typical_location": "coastal areas or oceans"
+  },
+  "willow_tree": {
+    "color": "green leaves with brown bark",
+    "shape_or_size": "tall with drooping branches",
+    "typical_location": "near water or parks"
+  },
+  "woman": {
+    "color": "varies, skin tones range from light to dark",
+    "shape_or_size": "varies, typically average height",
+    "typical_location": "various settings, indoors or outdoors"
+  },
+  "wolf": {
+    "color": "gray, white, or black",
+    "shape_or_size": "medium to large with a bushy tail",
+    "typical_location": "forests, mountains, or tundras"
+  },
+  "baby": {
+    "color": "varies, skin tones range from light to dark",
+    "shape_or_size": "small and delicate",
+    "typical_location": "homes, nurseries, or strollers"
+  },
+  "possum": {
+    "color": "gray or brown",
+    "shape_or_size": "small with a long tail",
+    "typical_location": "trees, forests, or urban areas"
+  },
+  "raccoon": {
+    "color": "gray with black markings",
+    "shape_or_size": "small to medium with a bushy tail",
+    "typical_location": "forests, urban areas, or near water"
+  },
+  "leopard": {
+    "color": "yellow with black spots",
+    "shape_or_size": "medium to large with a sleek body",
+    "typical_location": "savannas, forests, or mountains"
+  },
+  "clock": {
+    "color": "varies, often white, black, or metallic",
+    "shape_or_size": "small to large with a round face",
+    "typical_location": "walls, tables, or offices"
+  },
+  "girl": {
+    "color": "varies, skin tones range from light to dark",
+    "shape_or_size": "small to medium",
+    "typical_location": "various settings, indoors or outdoors"
+  },
+  "telephone": {
+    "color": "varies, often black, white, or metallic",
+    "shape_or_size": "small with buttons or touchscreen",
+    "typical_location": "homes, offices, or pockets"
+  },
+  "cockroach": {
+    "color": "brown or black",
+    "shape_or_size": "small with a flat body",
+    "typical_location": "indoors, kitchens, or dark areas"
+  },
+  "fox": {
+    "color": "red, gray, or white",
+    "shape_or_size": "small to medium with a bushy tail",
+    "typical_location": "forests, fields, or urban areas"
+  },
+  "television": {
+    "color": "black or silver",
+    "shape_or_size": "medium to large with a flat screen",
+    "typical_location": "living rooms, bedrooms, or offices"
+  },
+  "chimpanzee": {
+    "color": "black or brown",
+    "shape_or_size": "medium with long arms",
+    "typical_location": "forests or zoos"
+  },
+  "worm": {
+    "color": "brown or pink",
+    "shape_or_size": "small and cylindrical",
+    "typical_location": "soil, gardens, or compost"
+  },
+  "apple": {
+    "color": "red, green, or yellow",
+    "shape_or_size": "round and medium-sized",
+    "typical_location": "trees, orchards, or fruit bowls"
+  },
+  "tiger": {
+    "color": "orange with black stripes",
+    "shape_or_size": "large and muscular",
+    "typical_location": "forests, grasslands, or zoos"
+  },
+  "crocodile": {
+    "color": "green or brown",
+    "shape_or_size": "large with a long snout",
+    "typical_location": "rivers, swamps, or wetlands"
+  },
+  "caterpillar": {
+    "color": "green, brown, or colorful",
+    "shape_or_size": "small and segmented",
+    "typical_location": "plants, leaves, or gardens"
+  },
+  "wardrobe": {
+    "color": "varies, often brown, white, or black",
+    "shape_or_size": "large with doors",
+    "typical_location": "bedrooms, closets, or dressing rooms"
+  },
+  "boy": {
+    "color": "varies, skin tones range from light to dark",
+    "shape_or_size": "small to medium",
+    "typical_location": "various settings, indoors or outdoors"
+  },
+  "bridge": {
+    "color": "varies, often gray or metallic",
+    "shape_or_size": "large and arched",
+    "typical_location": "rivers, roads, or valleys"
+  },
+  "maple_tree": {
+    "color": "green leaves with brown bark",
+    "shape_or_size": "medium to large with a broad canopy",
+    "typical_location": "forests, parks, or streets"
+  },
+  "couch": {
+    "color": "varies, often brown, gray, or patterned",
+    "shape_or_size": "large with cushions",
+    "typical_location": "living rooms, offices, or lounges"
+  },
+  "dolphin": {
+    "color": "gray or blue",
+    "shape_or_size": "medium with a streamlined body",
+    "typical_location": "oceans or aquariums"
+  },
+  "man": {
+    "color": "varies, skin tones range from light to dark",
+    "shape_or_size": "medium to large",
+    "typical_location": "various settings, indoors or outdoors"
+  },
+  "poppy": {
+    "color": "red, orange, or yellow",
+    "shape_or_size": "tall with a delicate flower",
+    "typical_location": "fields, gardens, or meadows"
+  },
+  "rocket": {
+    "color": "white, gray, or metallic",
+    "shape_or_size": "large and cylindrical",
+    "typical_location": "space launch sites or outer space"
+  },
+  "hamster": {
+    "color": "brown, white, or black",
+    "shape_or_size": "small and furry",
+    "typical_location": "cages, homes, or pet stores"
+  },
+  "plate": {
+    "color": "varies, often white or patterned",
+    "shape_or_size": "flat and round",
+    "typical_location": "kitchens, tables, or dining areas"
+  },
+  "beetle": {
+    "color": "varies, often black, brown, or metallic",
+    "shape_or_size": "small with a hard shell",
+    "typical_location": "gardens, forests, or fields"
+  },
+  "porcupine": {
+    "color": "brown or black",
+    "shape_or_size": "medium with quills",
+    "typical_location": "forests, grasslands, or deserts"
+  },
+  "skunk": {
+    "color": "black with white stripes",
+    "shape_or_size": "small to medium with a bushy tail",
+    "typical_location": "forests, fields, or urban areas"
+  },
+  "bed": {
+    "color": "varies, often white, brown, or patterned",
+    "shape_or_size": "large with a headboard and mattress",
+    "typical_location": "bedrooms, hotels, or dormitories"
+  },
+  "flatfish": {
+    "color": "brown or gray with spots",
+    "shape_or_size": "small to medium with a flat body",
+    "typical_location": "ocean floors or coastal waters"
+  },
+  "beaver": {
+    "color": "brown",
+    "shape_or_size": "medium with a flat tail",
+    "typical_location": "rivers, lakes, or wetlands"
+  },
+  "mushroom": {
+    "color": "varies, often brown, white, or red",
+    "shape_or_size": "small to medium with a cap and stem",
+    "typical_location": "forests, fields, or gardens"
+  },
+  "motorcycle": {
+    "color": "varies, often black, red, or metallic",
+    "shape_or_size": "medium with two wheels",
+    "typical_location": "roads, highways, or garages"
+  },
+  "shark": {
+    "color": "gray or blue",
+    "shape_or_size": "large with a streamlined body",
+    "typical_location": "oceans"
+  },
+  "turtle": {
+    "color": "green or brown",
+    "shape_or_size": "small to medium with a hard shell",
+    "typical_location": "rivers, ponds, or oceans"
+  },
+  "keyboard": {
+    "color": "varies, often black or white",
+    "shape_or_size": "small to medium with keys",
+    "typical_location": "desks, offices, or homes"
+  },
+  "ray": {
+    "color": "gray or brown with spots",
+    "shape_or_size": "medium to large with a flat body",
+    "typical_location": "oceans or aquariums"
+  },
+  "dinosaur": {
+    "color": "varies, often green, brown, or patterned",
+    "shape_or_size": "large with a varied body shape",
+    "typical_location": "historical depictions, museums, or fossil sites"
+  },
+  "mountain": {
+    "color": "gray or brown with snow caps",
+    "shape_or_size": "large and towering",
+    "typical_location": "mountain ranges or natural landscapes"
+  },
+  "pear": {
+    "color": "green, yellow, or brown",
+    "shape_or_size": "medium with a bulbous shape",
+    "typical_location": "trees, orchards, or fruit bowls"
+  },
+  "forest": {
+    "color": "green with brown trunks",
+    "shape_or_size": "large and densely packed",
+    "typical_location": "natural landscapes or parks"
+  }
+}
