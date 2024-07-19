@@ -82,17 +82,17 @@ class MoE_Adapter4cil(Base):
         model.train()
         for idx, (inputs, targets, _) in enumerate(train_loader):
             inputs, targets = inputs.cuda(), targets.cuda()
-            out = model(inputs, text_tokens=self.new_text_tokens.cuda(), train=True)
+            out = model(inputs, text_tokens=self.cur_text_tokens.cuda(), train=True)
             logits_per_image = out["logits"]
             # features = out["features"]
-            assert logits_per_image.shape[1] == self.new_classes, "epoch train error"
+            # assert logits_per_image.shape[1] == self.new_classes, "epoch train error"
 
             # ce loss version implementation
-            ce_loss = hard_loss(logits_per_image, targets-self.known_classes)
+            ce_loss = hard_loss(logits_per_image, targets)
             # ce_loss = F.cross_entropy(logits[:, :self.cur_classes], targets)
             ce_losses += ce_loss.item()
             loss = ce_loss
-            preds = torch.max(logits_per_image, dim=1)[1]+self.known_classes
+            preds = torch.max(logits_per_image, dim=1)[1]
 
             if idx == 0:
                 all_preds = preds

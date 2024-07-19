@@ -1,6 +1,6 @@
 basic:
   random_seed: 1993
-  version_name: "imagenet_r_b0i20_replay_no_text_loss_v2"
+  version_name: "imagenet_r_b0i20_task_specific"
   is_log: True
   save_checkpoint: False
   save_path: "../checkpoint&log"
@@ -28,9 +28,9 @@ usual:
   lr: 0.005
   momentum: 0.9
   weight_decay: 0.00005
-  memory_size: 2000
+  memory_size: 0
   apply_nme: False
-  sampling_method: "herding"
+  sampling_method: ""
 
 special:
   prompt_template: "a photo of a {}."
