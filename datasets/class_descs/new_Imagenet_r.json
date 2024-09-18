@@ -1,0 +1,1402 @@
+{
+  "submarine": [
+    "Long cylindrical body with a sleek, smooth surface, often painted in dark colors.",
+    "Protruding conning tower with small windows and antennas, typically located on the top.",
+    "Multiple small fins or stabilizers along the sides and rear, often in triangular shapes.",
+    "Circular or oval hatches and portholes along the sides and top, often metallic in color.",
+    "Torpedo tubes or missile launchers near the front, integrated into the body design."
+  ],
+  "fire engine": [
+    "Bright red body with a boxy, rectangular shape, often with white or reflective striping.",
+    "Large ladder mounted on top or along the side, extending upward in a straight line.",
+    "Numerous compartments with metal doors along the sides, used for storing equipment.",
+    "Chrome-plated bumpers and rims, adding a shiny, metallic contrast to the red body.",
+    "Prominent lights and sirens on the roof and front, typically colored red or blue."
+  ],
+  "golden retriever": [
+    "Golden fur coat with a dense, wavy texture, ranging from light to dark shades.",
+    "Friendly face with a broad snout and dark, expressive eyes, often with a smiling expression.",
+    "Floppy ears that hang down close to the cheeks, covered in the same golden fur.",
+    "Long, bushy tail that often wags energetically, covered in thick fur.",
+    "Strong, muscular legs with a sturdy build, giving a balanced and athletic appearance."
+  ],
+  "vulture": [
+    "Bald head with wrinkled skin, often in shades of red or pink, contrasting with dark feathers.",
+    "Large, hooked beak, typically yellow or pale in color, designed for tearing flesh.",
+    "Broad wings with dark, mottled feathers, often held in a shallow 'V' shape during flight.",
+    "Thick, sturdy legs with sharp talons, often dark in color, used for gripping prey.",
+    "Long, featherless neck that allows for greater flexibility when feeding on carrion."
+  ],
+  "broccoli": [
+    "Thick green stalk with a rough, fibrous texture, supporting the head of the vegetable.",
+    "Dense cluster of small, tightly packed green florets at the top, forming a tree-like shape.",
+    "Slightly rounded crown with a bumpy surface, made up of numerous tiny buds.",
+    "Bright, vibrant green color throughout, sometimes with a slight bluish tint.",
+    "Occasional dark green leaves attached to the stalk, broad and crinkled in appearance."
+  ],
+  "skunk": [
+    "Black fur with a distinctive white stripe running down the back and tail, creating a stark contrast.",
+    "Bushy tail with a long, thick plume of fur, often tipped with white.",
+    "Small, pointed face with a short snout and dark, beady eyes.",
+    "Small, rounded ears that are usually black, blending in with the fur.",
+    "Short legs with sharp claws, suited for digging, and a low, sturdy body."
+  ],
+  "tractor": [
+    "Boxy, utilitarian body with a large, exposed engine compartment, often in green or red.",
+    "Large rear wheels with thick, deep treads, designed for traction on rough terrain.",
+    "Smaller front wheels, often mounted on an axle that allows for sharp turning.",
+    "Open or enclosed driver's seat, sometimes with a protective canopy or cab.",
+    "Prominent exhaust pipe extending upward from the engine, often in a black or metallic color."
+  ],
+  "gazelle": [
+    "Slender, graceful body covered in short, light brown fur with white underbelly.",
+    "Long, curved horns that are slightly ridged, typically extending backward.",
+    "Large, dark eyes with a gentle expression, often outlined by a lighter patch of fur.",
+    "Long, thin legs built for speed, with small, delicate hooves.",
+    "Short, tufted tail that flicks back and forth, matching the body color."
+  ],
+  "beagle": [
+    "Short, smooth coat with a tricolor pattern of black, brown, and white.",
+    "Broad, rounded head with a short snout and large, expressive eyes.",
+    "Long, floppy ears that hang down close to the cheeks, often brown or black.",
+    "Muscular, compact body with a sturdy build, giving a balanced appearance.",
+    "Curved tail that is often held upright, with a white tip that contrasts with the body."
+  ],
+  "saxophone": [
+    "Brass body with a shiny, polished finish, featuring a curved neck and flared bell.",
+    "Series of round keys along the length of the body, arranged in a flowing pattern.",
+    "Reed mouthpiece attached to the curved neck, often black or dark brown.",
+    "Intricate engravings or patterns etched into the brass surface, adding decorative detail.",
+    "Various levers and rods connecting the keys, creating a complex mechanical appearance."
+  ],
+  "banana": [
+    "Curved, elongated body with a smooth, bright yellow peel that splits easily when ripe.",
+    "Soft, creamy interior that is pale yellow in color, often segmented into sections.",
+    "Peel often has small brown spots or speckles when the banana is fully ripe.",
+    "Tapered ends, with one end having a small, dark brown tip where it was attached to the stem.",
+    "Peel opens up in sections, revealing the fruit inside, which has a slightly glossy texture."
+  ],
+  "hyena": [
+    "Sturdy body covered in coarse, spotted fur, typically brown or grey with black spots.",
+    "Short, bushy tail that often hangs low, blending with the body’s coloration.",
+    "Strong, sloping back with a larger front half, giving a hunched appearance.",
+    "Powerful jaws with large teeth, suited for crushing bones.",
+    "Rounded ears and dark, intense eyes, contributing to a fierce expression."
+  ],
+  "scorpion": [
+    "Segmented body with a hard exoskeleton, often dark brown or black in color.",
+    "Pair of large pincers at the front, used for grasping prey, usually serrated or ridged.",
+    "Curved tail with a venomous stinger at the tip, often held arched over the back.",
+    "Multiple pairs of jointed legs, giving a spindly, agile appearance.",
+    "Small, narrow head with tiny, sharp mandibles and several eyes on the top."
+  ],
+  "strawberry": [
+    "Heart-shaped, bright red body covered in tiny, yellow seeds scattered on the surface.",
+    "Short green leafy cap at the top, often with a small stem attached.",
+    "Glossy, slightly bumpy surface that glistens when ripe.",
+    "Flesh inside is juicy and red, with a soft, slightly fibrous texture.",
+    "Smaller seeds give the surface a textured appearance, adding to the overall visual appeal."
+  ],
+  "jellyfish": [
+    "Translucent, bell-shaped body that often glows or shimmers in the water.",
+    "Long, flowing tentacles that trail behind, often lined with stinging cells.",
+    "Central umbrella-like structure with a smooth, gelatinous texture.",
+    "Body color can range from clear to vibrant hues like pink, blue, or purple.",
+    "Pulsating movements as it contracts and expands to propel through the water."
+  ],
+  "newt": [
+    "Slender, elongated body with smooth, moist skin that is often bright orange or brown.",
+    "Small, rounded head with large eyes that are slightly bulging.",
+    "Four short legs with tiny, webbed toes, suited for swimming and walking.",
+    "Tail is long and flat, tapering to a point, and used for propulsion in water.",
+    "Body is often covered in tiny spots or patterns, adding to the visual detail."
+  ],
+  "military aircraft": [
+    "Angular, aerodynamic body with sharp lines and edges, often painted in camouflage colors.",
+    "Wings are swept back, often with missile mounts or additional fuel tanks attached.",
+    "Cockpit is sleek and enclosed, with a tinted canopy that blends with the fuselage.",
+    "Tail fins and stabilizers are sharp and angled, contributing to a menacing profile.",
+    "Exhaust nozzles at the rear are large and often emit a heat haze or vapor trail."
+  ],
+  "koala": [
+    "Round, fluffy body covered in dense grey fur, with a lighter patch on the chest.",
+    "Large, rounded ears with a tuft of white fur inside, giving a cute, teddy bear-like appearance.",
+    "Broad, flat nose that is dark in color, contrasting with the rest of the face.",
+    "Short, stumpy limbs with sharp claws, adapted for climbing trees.",
+    "Small, beady eyes that give a sleepy, content expression."
+  ],
+  "standard poodle": [
+    "Curly, dense coat that can be a variety of colors including black, white, or brown.",
+    "Elegant, elongated body with a proud, upright posture.",
+    "Long, straight muzzle with a well-defined stop, leading to a refined expression.",
+    "Tail is often carried high, with a slight curl, adding to the dignified appearance.",
+    "Long, floppy ears that are covered in the same curly fur as the body."
+  ],
+  "Granny Smith": [
+    "Round, smooth body with a vibrant green skin that has a slight sheen.",
+    "Crisp, white flesh inside that is juicy and tart, often visible when sliced.",
+    "Stem is short and thin, usually brown and slightly curved.",
+    "Occasional small spots or freckles on the skin, adding to the natural appearance.",
+    "Firm texture with a satisfying crunch when bitten, giving a fresh, clean look."
+  ],
+  "bison": [
+    "Large, bulky body covered in shaggy brown fur, with a thick mane around the neck.",
+    "Massive, humped shoulders that give a powerful, imposing appearance.",
+    "Short, curved horns on the head, often dark and sharp.",
+    "Broad, square-shaped face with a prominent snout and small, dark eyes.",
+    "Thick legs with hooves that are suited for running and supporting its heavy frame."
+  ],
+  "goldfinch": [
+    "Small, vibrant yellow body with black wings and a short, conical beak.",
+    "Black cap on the head, contrasting with the bright yellow feathers.",
+    "Wings have white streaks or spots, adding a pattern to the black feathers.",
+    "Tail is short and forked, with a similar black and white pattern as the wings.",
+    "Bright, cheerful appearance with a sleek, streamlined body shape."
+  ],
+  "cockroach": [
+    "Flat, oval-shaped body with a hard, shiny exoskeleton that is usually dark brown or black.",
+    "Long, spindly legs with tiny spines, allowing for quick, scuttling movements.",
+    "Pair of long antennae that extend from the head, used for sensing the environment.",
+    "Small, rounded head with tiny eyes and a set of mandibles for chewing.",
+    "Wings are often folded flat against the back, sometimes extending slightly beyond the body."
+  ],
+  "grey whale": [
+    "Massive, streamlined body with a grey, mottled skin that often has patches of barnacles.",
+    "Broad, flat head with a pair of blowholes on top, used for breathing.",
+    "Small, rounded pectoral fins on the sides, contributing to the overall bulky appearance.",
+    "Large, triangular tail fluke that is used for propulsion, often with a slight notch in the middle.",
+    "Eyes are small and positioned near the mouth, giving a calm, gentle expression."
+  ],
+  "accordion": [
+    "Rectangular body with a set of bellows in the middle, often made of fabric or leather.",
+    "Series of keys or buttons on one or both sides, arranged in a neat, orderly pattern.",
+    "Body is usually decorated with intricate designs or patterns, adding visual interest.",
+    "Shiny metal corners or edges, reinforcing the instrument's structure.",
+    "Bellows expand and contract, creating a dynamic visual movement as it is played."
+  ],
+  "bloodhound": [
+    "Loose, wrinkled skin with short, smooth fur that is usually a mix of brown and black.",
+    "Long, droopy ears that hang close to the face, contributing to a sad expression.",
+    "Strong, muscular build with a broad chest and thick neck.",
+    "Large, dark, droopy eyes that give a solemn, tired appearance.",
+    "Long, straight tail that often tapers to a point, covered in short fur."
+  ],
+  "llama": [
+    "Long neck and legs, with a woolly coat that can be white, brown, black, or a mix of these colors.",
+    "Large, pointed ears that stand upright, often with a slight inward curve.",
+    "Long, narrow face with a small, rounded snout and expressive eyes.",
+    "Curved back with a thick, shaggy mane along the neck and shoulders.",
+    "Slender, padded feet with two toes, adapted for walking on uneven terrain."
+  ],
+  "goldfish": [
+    "Smooth, shiny scales that are typically orange or gold, giving a metallic sheen.",
+    "Large, rounded fins that fan out gracefully, often with a flowing appearance.",
+    "Wide, rounded eyes that protrude slightly from the head, giving a curious expression.",
+    "Short, forked tail that is often as wide as the body, providing propulsion.",
+    "Rounded body that tapers slightly towards the tail, with a prominent dorsal fin."
+  ],
+  "orangutan": [
+    "Long, shaggy reddish-brown fur covering the body, with lighter patches on the face.",
+    "Large, round face with a prominent brow ridge and wide, flat nose.",
+    "Long arms that extend well past the knees, with strong, grasping hands.",
+    "Large, expressive eyes that convey intelligence and curiosity.",
+    "Broad, muscular chest with a pot-bellied appearance, giving a powerful build."
+  ],
+  "hotdog": [
+    "Elongated, cylindrical shape with a smooth, shiny surface, often a light brown or tan color.",
+    "Split, toasted bun that cradles the hotdog, typically a golden brown color.",
+    "Toppings such as ketchup, mustard, or relish drizzled along the top, adding vibrant colors.",
+    "Ends of the hotdog often protrude slightly from the bun, showing the smooth texture.",
+    "Grill marks or slight charring along the hotdog, giving a textured, cooked appearance."
+  ],
+  "monarch butterfly": [
+    "Vibrant orange wings with black veins and white spots along the edges, creating a bold contrast.",
+    "Slender black body with small white spots along the thorax and abdomen.",
+    "Large, rounded wings that are symmetrical in shape, with a distinctive black border.",
+    "Long, thin antennae that extend from the head, often with small knobs at the ends.",
+    "Delicate legs with tiny claws, used for gripping onto surfaces."
+  ],
+  "french bulldog": [
+    "Compact, muscular body with a smooth coat, typically in colors like fawn, brindle, or white.",
+    "Large, bat-like ears that stand erect, giving a distinctive silhouette.",
+    "Short, flat snout with a wrinkled face and a small, black nose.",
+    "Wide, expressive eyes that are often dark and slightly bulging.",
+    "Short, straight tail that is usually set low, often appearing as a small stub."
+  ],
+  "hen": [
+    "Plump, rounded body covered in feathers that can vary in color from white to brown to black.",
+    "Short, curved beak that is often yellow or orange, with a sharp tip.",
+    "Prominent red comb on top of the head, with a matching wattle under the beak.",
+    "Strong, clawed feet with three forward-facing toes and one backward-facing toe.",
+    "Rounded wings that are usually tucked close to the body, with feathers layered neatly."
+  ],
+  "hammerhead": [
+    "Flat, hammer-shaped head with eyes positioned at the ends, giving a wide field of view.",
+    "Smooth, gray skin that tapers into a streamlined, torpedo-shaped body.",
+    "Large, crescent-shaped dorsal fin that is often more prominent than other fins.",
+    "Long, slender tail with a broad caudal fin, contributing to swift movement in water.",
+    "Rows of sharp, triangular teeth within a wide mouth, located on the underside of the head."
+  ],
+  "barn": [
+    "Rectangular structure with a peaked, gabled roof, often painted red with white trim.",
+    "Large, sliding doors at the front, usually made of wood with cross-bracing.",
+    "Rows of windows along the sides, providing ventilation and natural light.",
+    "Wooden siding with visible grain, sometimes weathered, adding to a rustic appearance.",
+    "Ventilation cupola on the roof, often with a weather vane or small spire."
+  ],
+  "violin": [
+    "Curved wooden body with a smooth, polished surface, typically in a warm brown or reddish color.",
+    "Four strings stretched across the body, leading to a scroll at the top of the neck.",
+    "F-shaped sound holes carved into the body, allowing sound to resonate.",
+    "Long, slender neck with a fingerboard, usually made of a darker wood like ebony.",
+    "Elegant, hourglass shape with a slightly raised bridge holding the strings above the body."
+  ],
+  "guinea pig": [
+    "Round, plump body covered in short, soft fur that can come in a variety of colors and patterns.",
+    "Short legs with tiny, clawed feet, giving a sturdy appearance.",
+    "Small, round head with large, dark eyes and a tiny, pink nose.",
+    "Short, rounded ears that sit close to the head, often with a slight fold.",
+    "Whiskers on the face, adding to the alert and curious expression."
+  ],
+  "ladybug": [
+    "Small, dome-shaped body with a shiny red shell, often marked with black spots.",
+    "Short, black legs that are tucked close to the body, allowing for quick movement.",
+    "Tiny, black head with small antennae used for sensing the environment.",
+    "Wings hidden beneath the hard, red shell, which opens when in flight.",
+    "Distinctive, round shape that is both colorful and easily recognizable."
+  ],
+  "gibbon": [
+    "Slender, agile body with long arms that extend beyond the knees, adapted for swinging.",
+    "Dark, smooth fur that covers most of the body, often with lighter patches on the face.",
+    "Round face with a flat nose, large eyes, and a small mouth, giving an expressive look.",
+    "Curved fingers and toes, perfect for gripping branches and other objects.",
+    "Small, rounded ears that are often hidden by the fur, contributing to a sleek appearance."
+  ],
+  "great white shark": [
+    "Streamlined, torpedo-shaped body covered in rough, gray skin with a white underbelly.",
+    "Large, triangular dorsal fin that is a distinctive feature, often seen above water.",
+    "Sharp, serrated teeth arranged in rows within a wide, powerful jaw.",
+    "Small, dark eyes positioned near the head, giving a menacing expression.",
+    "Broad, crescent-shaped tail fin that provides powerful propulsion in the water."
+  ],
+  "lab coat": [
+    "Long, white garment with a buttoned front, typically with a crisp, clean appearance.",
+    "Collar that can be worn flat or turned up, giving a professional look.",
+    "Long sleeves with cuffs that may be buttoned or left open, often slightly loose.",
+    "Large, functional pockets on the front, used for carrying tools or instruments.",
+    "Straight, tailored cut that extends down to the knees, creating a neat silhouette."
+  ],
+  "tarantula": [
+    "Hairy, robust body covered in dense, often dark-colored hairs, giving a furry appearance.",
+    "Eight long, segmented legs that radiate from the central body, each ending in small claws.",
+    "Large, bulbous abdomen that can vary in color, often with patterns or stripes.",
+    "Small, beady eyes arranged in a cluster on the top of the head, providing limited vision.",
+    "Pair of large, prominent fangs located near the mouth, used for hunting and defense."
+  ],
+  "hammer": [
+    "Solid, cylindrical handle made of wood or metal, designed for a firm grip.",
+    "Heavy, flat head with a broad striking surface on one side, often made of metal.",
+    "Claw on the opposite side of the head, curved and split for pulling nails.",
+    "Smooth, polished finish on the handle and head, often with visible grain in wooden handles.",
+    "Tapered end of the handle, designed to prevent slipping during use."
+  ],
+  "carousel": [
+    "Circular platform with a rotating mechanism, often adorned with bright, colorful lights.",
+    "Rows of elaborately decorated horses or other animals mounted on poles.",
+    "Canopy or roof above the platform, often with decorative patterns and fringe.",
+    "Mirrors and lights arranged around the central axis, adding to the festive appearance.",
+    "Elegant, swirling designs painted on the animals and platform, creating a whimsical feel."
+  ],
+  "tabby cat": [
+    "Short, dense fur with distinctive striped or swirled patterns, often in shades of brown or gray.",
+    "M-shaped marking on the forehead, typical of the tabby pattern.",
+    "Long, slender tail with alternating dark and light rings, adding to the striped appearance.",
+    "Rounded, expressive eyes that can be green, gold, or blue, depending on the coat color.",
+    "Small, triangular ears with a slight tuft of fur at the tips, giving a sharp, alert look."
+  ],
+  "duck": [
+    "Feathered body with a broad, flat bill, typically in colors ranging from white to brown.",
+    "Webbed feet with three forward-facing toes, perfect for swimming.",
+    "Rounded head with a short neck, giving a compact, sleek appearance.",
+    "Short, curved wings that fold neatly against the body when not in use.",
+    "Small, beady eyes set high on the head, often giving a curious or alert expression."
+  ],
+  "vase": [
+    "Tall, cylindrical or rounded body, often made of ceramic, glass, or metal.",
+    "Narrow neck that flares out to a wider opening, perfect for holding flowers.",
+    "Smooth, polished surface, sometimes decorated with intricate patterns or designs.",
+    "Base that is slightly wider for stability, balancing the structure.",
+    "Elegant curves or straight lines that give it a refined, graceful appearance."
+  ],
+  "collie": [
+    "Long, flowing coat of fur that can be a mix of white, black, and tan.",
+    "Slender, athletic build with a long neck and a well-defined, graceful shape.",
+    "Pointed ears that stand erect or slightly folded, giving an alert expression.",
+    "Long, bushy tail that often curls upward slightly, covered in thick fur.",
+    "Expressive, almond-shaped eyes that are often brown or blue, with a keen, intelligent gaze."
+  ],
+  "baseball player": [
+    "Wearing a uniform with a jersey and pants, often in team colors with numbers and logos.",
+    "Cap with a curved brim, usually worn forward, shielding the eyes from the sun.",
+    "Holding a bat, glove, or ball, depending on their role, showcasing the gear of the game.",
+    "Athletic stance, with knees slightly bent and eyes focused, ready for action.",
+    "Cleats on the feet, providing grip and stability on the field."
+  ],
+  "basketball": [
+    "Round, spherical shape with a textured surface, typically orange with black lines.",
+    "Series of narrow, curved grooves that divide the ball into panels.",
+    "Matte or slightly glossy finish, designed to provide grip during play.",
+    "Brand or league logos often printed on the surface, adding visual detail.",
+    "Inflated structure that maintains its roundness and bounce, critical for the game."
+  ],
+  "dragonfly": [
+    "Long, slender body with a segmented appearance, often metallic or iridescent in color.",
+    "Two pairs of transparent wings that are intricately veined and held outstretched when at rest.",
+    "Large, compound eyes that take up most of the head, providing excellent vision.",
+    "Delicate legs that are positioned close to the body, used for perching.",
+    "Fast, darting flight pattern, with wings that move rapidly, giving a buzzing sound."
+  ],
+  "american egret": [
+    "Tall, slender bird with long, white feathers and a graceful, elongated neck.",
+    "Sharp, pointed yellow beak that contrasts with the pure white plumage.",
+    "Long, thin legs that are dark in color, ideal for wading through shallow water.",
+    "Elegant, flowing plumes that extend from the back during breeding season.",
+    "Small, round head with piercing yellow eyes, giving a watchful appearance."
+  ],
+  "meerkat": [
+    "Slender body covered in short, tan or sandy fur with darker markings on the back.",
+    "Pointed snout with a black nose, used for sniffing out food.",
+    "Small, rounded ears that sit high on the head, contributing to their alert expression.",
+    "Long, tapering tail that often stands upright, used for balance.",
+    "Dark, circular eye patches that highlight their bright, inquisitive eyes."
+  ],
+  "gorilla": [
+    "Muscular, broad body covered in dark, coarse hair with a silver streak on the back in males.",
+    "Large, rounded head with a prominent brow ridge and deep-set eyes.",
+    "Strong, powerful arms that are longer than the legs, used for knuckle-walking.",
+    "Wide, flat nose with large nostrils, contributing to their distinctive facial features.",
+    "Calm, intelligent expression with eyes that convey a sense of awareness and understanding."
+  ],
+  "porcupine": [
+    "Stout, round body covered in sharp, stiff quills that can be black, white, or brown.",
+    "Small head with a blunt snout and large, round eyes.",
+    "Short legs with strong claws, used for digging and climbing.",
+    "Quills are interspersed with softer fur, providing a mix of textures.",
+    "Short, bushy tail that also contains quills, used for defense."
+  ],
+  "peacock": [
+    "Vibrant, iridescent feathers that shimmer in shades of blue, green, and gold.",
+    "Long, fan-shaped tail feathers that can be spread out in a dazzling display.",
+    "Slender neck and small head with a delicate crest of feathers on top.",
+    "Short, curved beak that is light in color, contrasting with the bright plumage.",
+    "Elegant, slender legs that support the body and contribute to a graceful stance."
+  ],
+  "electric guitar": [
+    "Solid body with a sleek, curved design, often painted in vibrant colors.",
+    "Long neck with a fingerboard, usually featuring inlaid position markers.",
+    "Six metal strings that run from the headstock to the bridge, capable of producing a wide range of tones.",
+    "Pickups embedded in the body, designed to capture the sound vibrations from the strings.",
+    "Control knobs and a switch on the body, used for adjusting volume and tone."
+  ],
+  "baboon": [
+    "Sturdy body covered in coarse fur, often gray or brown, with a distinctive red or pink face.",
+    "Long, dog-like snout with large, sharp teeth, used for eating and defense.",
+    "Prominent buttock pads that are hairless and brightly colored, used for sitting.",
+    "Long, powerful arms and legs adapted for both walking and climbing.",
+    "Expressive eyes that convey a range of emotions, from curiosity to aggression."
+  ],
+  "bagel": [
+    "Round, doughy shape with a smooth, golden-brown crust and a hole in the center.",
+    "Chewy texture on the inside, often with a slightly glossy surface.",
+    "Can be topped with seeds like sesame or poppy, adding visual and textural contrast.",
+    "Evenly baked appearance, with a slight shine from egg wash or steaming.",
+    "Dense, uniform shape that is perfect for slicing and spreading with toppings."
+  ],
+  "killer whale": [
+    "Smooth, streamlined body with a striking black and white color pattern.",
+    "Large, curved dorsal fin that is tall and prominent, particularly in males.",
+    "Rounded pectoral fins and a broad, powerful tail fluke, aiding in swift swimming.",
+    "White patches above the eyes and on the belly, creating a distinctive contrast with the black.",
+    "Rounded head with a small, narrow mouth that contains sharp teeth."
+  ],
+  "axolotl": [
+    "Slender, elongated body with smooth, soft skin, typically pale pink or albino in color.",
+    "External gills that fan out from the sides of the head, giving a feathery appearance.",
+    "Wide, flat head with small, lidless eyes that appear almost bead-like.",
+    "Short, stubby legs with delicate, webbed toes.",
+    "Long, tapering tail that is finned and used for swimming."
+  ],
+  "acorn": [
+    "Small, nut-like shape with a smooth, glossy surface, typically brown in color.",
+    "Rounded, slightly tapered body with a pointed tip at the bottom.",
+    "Cap at the top, often rough and textured, resembling a small, ribbed hat.",
+    "Subtle ridges along the body, adding a touch of texture to the smooth surface.",
+    "Compact, symmetrical form that is easily recognizable as a seed of the oak tree."
+  ],
+  "harmonica": [
+    "Rectangular, compact shape with a metal or plastic body, often silver or black.",
+    "Series of small holes along one side, where the player blows or draws air.",
+    "Reeds inside the instrument, visible through the holes, which vibrate to produce sound.",
+    "Simple, functional design with a smooth, polished finish.",
+    "Brand name or key of the harmonica often engraved on the top or side."
+  ],
+  "bald eagle": [
+    "Large bird with a distinctive white head and tail, contrasting with its dark brown body.",
+    "Sharp, hooked yellow beak designed for tearing flesh.",
+    "Powerful, yellow talons with sharp claws, used for hunting and gripping prey.",
+    "Piercing, yellow eyes with a stern, focused expression.",
+    "Broad wings that are dark in color, providing a strong, majestic appearance in flight."
+  ],
+  "binoculars": [
+    "Two parallel cylindrical tubes with lenses at both ends, connected by a hinge.",
+    "Rubber or plastic grip along the body, providing a secure hold.",
+    "Adjustable focus wheel in the center, allowing for clear viewing at various distances.",
+    "Often black or dark in color, with a matte finish to reduce glare.",
+    "Eyepiece caps that can be adjusted for comfort and clarity."
+  ],
+  "stingray": [
+    "Flat, disc-shaped body with smooth, flexible skin, often gray or brown.",
+    "Long, whip-like tail that may have a sharp barb for defense.",
+    "Broad, wing-like pectoral fins that extend from the sides of the body.",
+    "Small, beady eyes positioned on top of the head, with a mouth located on the underside.",
+    "Rounded, undulating movements as it swims gracefully through the water."
+  ],
+  "snail": [
+    "Soft, elongated body with a coiled, spiral shell on its back, usually brown or beige.",
+    "Two long, retractable tentacles with eyes at the tips, used for sensing the environment.",
+    "Smooth, slimy skin that allows for slow, gliding movement.",
+    "Small mouth with a radula, used for scraping food.",
+    "Shell with distinct, swirling patterns, providing protection and a unique appearance."
+  ],
+  "german shepherd dog": [
+    "Strong, athletic build with a well-muscled body covered in a dense, double-layered coat.",
+    "Pointed ears that stand erect, giving an alert and attentive expression.",
+    "Intelligent, almond-shaped eyes that convey a keen, focused gaze.",
+    "Long, bushy tail that hangs down and curves slightly when relaxed.",
+    "Coat colors typically include a mix of black, tan, and sometimes sable, with a saddle pattern on the back."
+  ],
+  "parachute": [
+    "Large, rounded canopy made of lightweight fabric, usually in bright colors or patterns.",
+    "Long, thin suspension lines that connect the canopy to the harness or load.",
+    "Air vents or slits in the canopy that help control the descent speed and direction.",
+    "Compact, folded design when packed, expanding to full size when deployed.",
+    "Often includes a ripcord or release mechanism for deployment."
+  ],
+  "trombone": [
+    "Long, cylindrical brass instrument with a smooth, shiny surface, usually gold or silver in color.",
+    "Slide mechanism that extends and retracts to change the pitch, a defining feature.",
+    "Flared bell at the end, where the sound is projected outward.",
+    "Series of tubing that loops back on itself, giving the instrument a distinct, coiled appearance.",
+    "Mouthpiece at the other end, where the player blows to produce sound."
+  ],
+  "pineapple": [
+    "Oval or cylindrical shape with a tough, spiky outer skin that is green, brown, or yellow.",
+    "Crown of stiff, pointed leaves at the top, often dark green in color.",
+    "Diamond-shaped pattern on the skin, created by the overlapping scales.",
+    "Fibrous, juicy flesh inside, typically yellow or light orange.",
+    "Distinct, tropical appearance with a textured surface and vibrant colors."
+  ],
+  "rottweiler": [
+    "Strong, robust build with a muscular body covered in a short, dense coat.",
+    "Broad head with a pronounced stop and a powerful jaw.",
+    "Dark, almond-shaped eyes that convey a confident, alert expression.",
+    "Short, docked tail (in some regions) or a natural tail that hangs down.",
+    "Typical coat colors are black with clearly defined tan or mahogany markings."
+  ],
+  "scottish terrier": [
+    "Compact, sturdy body with a distinctive wiry coat, often black, brindle, or wheaten in color.",
+    "Short legs with a strong, muscular build, giving a solid stance.",
+    "Long, broad head with a distinctive beard and bushy eyebrows.",
+    "Pointed ears that stand erect, contributing to an alert, inquisitive expression.",
+    "Tail that is thick at the base and tapers to a point, often carried upright."
+  ],
+  "italian greyhound": [
+    "Slender, elegant body with a fine, short coat that can come in various colors.",
+    "Long, narrow head with a pointed snout and large, expressive eyes.",
+    "Long, thin legs built for speed, contributing to a graceful appearance.",
+    "Deep chest that narrows to a slim waist, emphasizing their sleek form.",
+    "Tail that is long and slender, often curved slightly at the end."
+  ],
+  "hippopotamus": [
+    "Large, barrel-shaped body covered in thick, gray or brown skin, often with a shiny, wet appearance.",
+    "Short, sturdy legs with wide, splayed toes, adapted for supporting their massive weight.",
+    "Broad, flat head with a wide mouth that can open to reveal large, tusk-like teeth.",
+    "Small, round ears and eyes positioned high on the head, allowing them to see and hear while submerged.",
+    "Tail that is short and tapered, often used to flick away flies."
+  ],
+  "dalmatian": [
+    "Medium-sized, athletic body covered in short, white fur with distinctive black or liver-colored spots.",
+    "Long, straight legs and a deep chest, contributing to a strong, muscular build.",
+    "Long tail that tapers to a point, often carried in a slight curve.",
+    "Long, flat ears that hang close to the head, giving a sleek appearance.",
+    "Bright, expressive eyes that are typically dark brown or blue, adding to their alert expression."
+  ],
+  "missile": [
+    "Long, cylindrical shape with a pointed nose cone, designed for aerodynamic flight.",
+    "Fins at the base that stabilize and guide the missile during flight.",
+    "Smooth, metallic surface with minimal markings, often in shades of gray, silver, or green.",
+    "Can be equipped with various guidance systems, sometimes visible as small sensors or cameras.",
+    "Compact, streamlined design that emphasizes speed and precision."
+  ],
+  "tank": [
+    "Large, armored vehicle with a low, wide profile and a turret mounted on top.",
+    "Long, barrel-shaped gun extending from the turret, capable of rotating to aim.",
+    "Tracks on either side, composed of linked metal plates, designed for rugged terrain.",
+    "Thick, reinforced armor plating covering the entire vehicle, often in camouflage colors.",
+    "Hatches and periscopes visible on the top, used for crew entry and visibility."
+  ],
+  "burrito": [
+    "Cylindrical shape with a tightly wrapped tortilla, slightly browned on the surface.",
+    "Visible filling bulging slightly through the soft tortilla wrap, often with hints of vibrant ingredients.",
+    "Ends folded in to secure the contents, giving it a smooth, compact appearance.",
+    "Surface can be lightly grilled, adding a slight texture and a warm, golden color.",
+    "Often served with visible layers of filling, such as meat, beans, and cheese, wrapped inside."
+  ],
+  "border collie": [
+    "Dense, double-layered coat with a mix of black and white fur, creating a striking contrast.",
+    "Sharp, intelligent eyes with a focused, keen expression.",
+    "Erect or semi-erect ears, contributing to an alert and attentive demeanor.",
+    "Bushy tail carried low or in a slight curve, with fur that often matches the coat colors.",
+    "Slim, agile build with well-defined muscles, giving a sleek and athletic appearance."
+  ],
+  "pomegranate": [
+    "Round, thick-skinned fruit with a leathery, reddish exterior.",
+    "Crowned with a small, star-shaped calyx at the top, adding a unique visual detail.",
+    "Smooth, glossy surface with a subtle, dimpled texture.",
+    "Inside, filled with clusters of juicy, ruby-red seeds encased in a white membrane.",
+    "Tough outer rind that protects the vibrant, jewel-like seeds within."
+  ],
+  "tree frog": [
+    "Smooth, moist skin with a glossy appearance, often in shades of green or brown.",
+    "Large, round eyes with horizontal pupils, providing a wide-eyed look.",
+    "Long, sticky toes with pads at the ends, adapted for climbing and gripping surfaces.",
+    "Compact body with subtle, camouflaged patterns that blend into their surroundings.",
+    "Slender limbs that give them a delicate, agile form, perfect for leaping."
+  ],
+  "lemon": [
+    "Oval or slightly oblong shape with a bright yellow, dimpled skin.",
+    "Smooth, glossy surface that often catches the light with a slight sheen.",
+    "Tapered ends with a small, rounded nipple on one side, adding to its distinct shape.",
+    "Fresh, citrusy scent that emanates from the skin, indicative of its tart flavor.",
+    "When sliced, reveals a juicy, segmented interior with pale yellow flesh."
+  ],
+  "polar bear": [
+    "Thick, white fur that covers the entire body, providing insulation and a snowy appearance.",
+    "Broad, flat paws with sharp claws, adapted for walking on ice and swimming.",
+    "Small, rounded ears and dark eyes that stand out against the white fur.",
+    "Muscular neck leading to a small, rounded head with a black nose.",
+    "Short, dense fur on the face and ears, contributing to their streamlined look."
+  ],
+  "pembroke welsh corgi": [
+    "Short, sturdy body with a low, long torso covered in a dense, weather-resistant coat.",
+    "Erect, triangular ears that give an alert and curious expression.",
+    "Short, stubby tail, often docked, adding to their compact and balanced appearance.",
+    "Bright, expressive eyes that convey a cheerful and intelligent demeanor.",
+    "Coat colors can vary, often seen in red, sable, fawn, or black and tan, usually with white markings."
+  ],
+  "cheeseburger": [
+    "Round, soft bun with a lightly toasted surface, often topped with sesame seeds.",
+    "Juicy beef patty with melted cheese on top, oozing slightly around the edges.",
+    "Layered with fresh toppings like lettuce, tomato, and pickles, adding vibrant color and texture.",
+    "Condiments like ketchup, mustard, or mayonnaise visible between the layers, adding to the flavor.",
+    "Bun slightly compresses the ingredients together, giving a compact, hand-held form."
+  ],
+  "cobra": [
+    "Slender, elongated body covered in smooth, glossy scales, often in shades of brown or black.",
+    "Distinctive hood that flares out when threatened, adding to its intimidating appearance.",
+    "Smooth, sinuous movements as it glides, with a body that tapers to a pointed tail.",
+    "Wide head with large, round eyes that give a piercing gaze.",
+    "Intricate, often symmetrical patterns on the hood and body, contributing to its striking look."
+  ],
+  "flute": [
+    "Long, slender cylindrical body made of metal, often silver or gold in color.",
+    "Series of small circular holes along the body, with keys to cover them.",
+    "Mouthpiece at one end, where the player blows to produce sound.",
+    "Smooth, shiny surface with a polished finish that reflects light.",
+    "Delicate engravings or markings on the body, adding subtle decorative elements."
+  ],
+  "eel": [
+    "Elongated, snake-like body with smooth, slick skin that can be brown, green, or gray.",
+    "Small, pointed head with a wide mouth and sharp teeth.",
+    "Continuous dorsal fin running along the back, merging seamlessly with the tail.",
+    "Small, beady eyes positioned on the sides of the head, giving a keen look.",
+    "Undulating movements as it swims, creating a fluid, wave-like motion."
+  ],
+  "cowboy hat": [
+    "Wide-brimmed hat with a tall, creased crown, often made of felt or leather.",
+    "Curved edges of the brim, typically turned up on the sides.",
+    "Smooth, unadorned surface, sometimes with a decorative band around the base of the crown.",
+    "Classic, recognizable shape that provides shade and style.",
+    "Crown often features a pinch or indent at the top, adding to its distinct look."
+  ],
+  "fox squirrel": [
+    "Bushy tail with a full, fluffy appearance, often with a mix of brown, gray, and reddish fur.",
+    "Rounded ears that stand erect, covered in short fur.",
+    "Bright, inquisitive eyes that give a lively and alert expression.",
+    "Coat can vary in color, typically with a reddish-brown or grayish hue.",
+    "Compact, agile body built for climbing and quick movements."
+  ],
+  "bathtub": [
+    "Smooth, oval or rectangular shape with a glossy, porcelain or acrylic finish.",
+    "Curved edges that taper down towards the base, creating a comfortable interior.",
+    "Often features a sloped backrest for added comfort when reclining.",
+    "Visible drain at one end, sometimes with overflow holes near the top edge.",
+    "Supported by small legs or mounted directly to the floor, giving it a sturdy appearance."
+  ],
+  "bucket": [
+    "Cylindrical container with a wide, open top and a flat bottom.",
+    "Often made of metal, plastic, or wood, with a smooth or slightly textured surface.",
+    "Curved handle attached to the sides, usually made of the same material or metal.",
+    "Simple, functional design with a uniform color, often in shades of gray, blue, or red.",
+    "Rim around the top edge, sometimes with a slight lip for easier pouring."
+  ],
+  "labrador retriever": [
+    "Short, dense coat that can be black, yellow, or chocolate in color, with a smooth texture.",
+    "Broad head with a pronounced stop and a strong jaw.",
+    "Friendly, expressive eyes that convey warmth and intelligence.",
+    "Otter-like tail that is thick at the base and tapers to a point, often carried high.",
+    "Muscular, well-balanced body with a sturdy, athletic build."
+  ],
+  "tennis ball": [
+    "Round, soft ball with a bright neon yellow or green surface, covered in a fuzzy texture.",
+    "Visible seam that curves around the ball, creating a distinctive pattern.",
+    "Lightweight, hollow interior that allows for a bouncy feel.",
+    "Smooth, consistent shape that is perfectly spherical.",
+    "Slightly squishy to the touch, with a uniform color and texture."
+  ],
+  "afghan hound": [
+    "Long, silky coat that flows elegantly, often in shades of cream, black, or golden.",
+    "Narrow, elongated head with a long snout and expressive eyes.",
+    "Ears covered in long, straight hair, adding to the breed's regal appearance.",
+    "Tail carried in a ring or curve, with a tuft of hair at the end.",
+    "Slender, graceful build with a dignified posture."
+  ],
+  "lawn mower": [
+    "Rectangular or rounded base with a set of wheels, often in black or green.",
+    "Handlebar extending from the back, usually with a rubber or foam grip.",
+    "Rotary blade or cutting mechanism visible underneath, protected by a guard.",
+    "Engine or motor housing on top, sometimes with a pull cord for starting.",
+    "Compact, functional design with a straightforward, utilitarian appearance."
+  ],
+  "chow chow": [
+    "Thick, double-layered coat that can be red, black, blue, cinnamon, or cream, giving a fluffy appearance.",
+    "Broad head with a short snout and distinctive blue-black tongue.",
+    "Small, triangular ears that stand erect, contributing to a lion-like appearance.",
+    "Tail that curls over the back, covered in dense fur.",
+    "Compact, sturdy build with a strong, muscular body."
+  ],
+  "hatchet": [
+    "Short, curved handle made of wood or synthetic material, designed for easy grip.",
+    "Sharp, wedge-shaped blade at the end, often made of steel or iron.",
+    "Smooth, polished surface on the blade, sometimes with a slight sheen.",
+    "Compact design with a balanced weight distribution between the handle and blade.",
+    "Handle may have a slight texture or pattern for better control."
+  ],
+  "pomeranian": [
+    "Fluffy, double coat with a thick ruff around the neck, often in shades of orange, cream, or black.",
+    "Small, fox-like face with a short snout and bright, alert eyes.",
+    "Erect ears that are triangular in shape, adding to their alert expression.",
+    "Plumed tail that curls over the back, covered in dense fur.",
+    "Compact, well-proportioned body with a proud, lively posture."
+  ],
+  "gasmask": [
+    "Rubber or silicone facepiece that covers the nose and mouth, often with a dark, matte finish.",
+    "Round, glass or plastic eye lenses, giving a bug-eyed appearance.",
+    "Filter or canister attached to the front or side, often cylindrical in shape.",
+    "Straps extending from the sides, designed to secure the mask to the head.",
+    "Bulky, utilitarian design with a focus on functionality over aesthetics."
+  ],
+  "whippet": [
+    "Slim, athletic build with a deep chest and a narrow waist, covered in a short, smooth coat.",
+    "Long, slender legs that contribute to their speed and agility.",
+    "Elongated head with a tapering snout and large, expressive eyes.",
+    "Ears that are often folded back, adding to their sleek, streamlined appearance.",
+    "Tail that tapers to a point, usually carried low, contributing to their elegant silhouette."
+  ],
+  "cheetah": [
+    "Slim, aerodynamic body with a short, sleek coat covered in distinctive black spots.",
+    "Small, rounded head with tear-like black streaks running from the eyes down the face.",
+    "Long, powerful legs built for speed, contributing to their graceful and agile movements.",
+    "Long tail with a series of black rings, often ending in a bushy white tip.",
+    "Golden-yellow fur with a warm, sandy hue, providing excellent camouflage in their natural habitat."
+  ],
+  "starfish": [
+    "Flat, radial body with five or more arms extending from a central disk.",
+    "Rough, textured surface often covered in small, bumpy protrusions or spines.",
+    "Colors can vary, with many starfish being orange, red, or brown, sometimes with patterns or spots.",
+    "Underside of the arms covered in tiny tube feet used for movement.",
+    "Symmetrical shape with arms that taper to a point, giving a star-like appearance."
+  ],
+  "pickup truck": [
+    "Boxy, robust body with an open cargo bed in the back, often with a tailgate that can be lowered.",
+    "Large, rugged wheels with visible tread, built for off-road capability.",
+    "Cab section with a raised, spacious interior, often with two or four doors.",
+    "Prominent grille at the front, flanked by large headlights.",
+    "Heavy-duty appearance with a high ground clearance, emphasizing durability and strength."
+  ],
+  "wood rabbit": [
+    "Soft, dense fur that can range in color from brown to gray, with a subtle, camouflaged pattern.",
+    "Long ears that stand upright, often with a slight curve at the tips.",
+    "Bright, alert eyes that convey a watchful and cautious expression.",
+    "Short, fluffy tail that often blends with the fur color.",
+    "Compact, agile body built for quick, darting movements."
+  ],
+  "red fox": [
+    "Thick, russet-red coat with a white underbelly and a bushy tail tipped with white.",
+    "Sharp, pointed ears that stand erect, adding to their keen, alert expression.",
+    "Slender muzzle with a black nose and bright, intelligent eyes.",
+    "Long, bushy tail often carried low, with a distinctive white tip.",
+    "Black legs and ears, creating a striking contrast against the red fur."
+  ],
+  "pizza": [
+    "Round, flat base covered with a layer of tomato sauce, cheese, and various toppings.",
+    "Crust can be thin and crispy or thick and soft, often golden-brown and slightly charred.",
+    "Toppings can vary, but often include meats, vegetables, and herbs, adding color and texture.",
+    "Melted cheese that can be stretchy and golden, often bubbling at the surface.",
+    "Slices are usually triangular, with the toppings and cheese distributed evenly."
+  ],
+  "snow leopard": [
+    "Thick, pale gray coat with large, black rosettes and spots, providing excellent camouflage in snow.",
+    "Large, rounded head with small, rounded ears and a strong jaw.",
+    "Long, bushy tail with dark rings, used for balance and warmth.",
+    "Powerful, muscular body with short legs adapted for climbing and leaping.",
+    "Bright, piercing eyes that stand out against their light-colored fur."
+  ],
+  "hermit crab": [
+    "Small, spiral-shaped shell that it carries on its back, often with a rough, natural texture.",
+    "Crab-like body with a segmented exoskeleton, partially exposed from the shell.",
+    "Two prominent claws, one often larger than the other, used for defense and handling food.",
+    "Long, thin legs that extend from the shell, covered in small hairs or spines.",
+    "Eyes on stalks, giving them a curious, cautious appearance."
+  ],
+  "ambulance": [
+    "Boxy, rectangular vehicle with a large, prominent cab and a spacious rear compartment.",
+    "Bright, reflective exterior with bold, red and white markings, often including a red cross or medical symbol.",
+    "Flashing lights on the roof and sides, usually red or blue.",
+    "Large, visible windows on the sides and rear doors, often tinted.",
+    "Robust, utilitarian design with a focus on practicality and visibility."
+  ],
+  "harp": [
+    "Tall, curved frame with a hollow, resonant body, often made of wood.",
+    "Series of vertical strings of varying lengths, stretched across the frame.",
+    "Decorative carvings or engravings on the wood, adding to its elegant appearance.",
+    "Strings can be made of gut, nylon, or metal, each producing a different tone.",
+    "Smooth, polished surface with a glossy finish, often in natural wood tones."
+  ],
+  "pig": [
+    "Round, stout body covered in coarse, bristly hair, often pink or gray in color.",
+    "Flat, rounded snout with large nostrils, giving them a distinctive, blunt appearance.",
+    "Small, beady eyes positioned on the sides of the head.",
+    "Short, curly tail that often twirls in a tight spiral.",
+    "Ears that are either large and floppy or small and erect, depending on the breed."
+  ],
+  "grasshopper": [
+    "Slender, elongated body with a hard exoskeleton, often green or brown.",
+    "Large, powerful hind legs adapted for jumping, with visible joints and spines.",
+    "Small, triangular head with large compound eyes and short antennae.",
+    "Wings that fold neatly along the back, often transparent or lightly colored.",
+    "Segmented body with a distinct, angular shape, giving a streamlined appearance."
+  ],
+  "toy poodle": [
+    "Curly, dense coat that can come in a variety of colors, including white, black, and apricot.",
+    "Compact, well-proportioned body with a square shape and an elegant posture.",
+    "Bright, alert eyes that convey intelligence and curiosity.",
+    "Ears that are long and floppy, often covered in curly hair.",
+    "Tail that is usually docked, carried high and covered in fur."
+  ],
+  "west highland white terrier": [
+    "Compact, sturdy body covered in a dense, white double coat, giving a fluffy appearance.",
+    "Bright, dark eyes that stand out against the white fur, conveying a lively expression.",
+    "Erect, triangular ears that contribute to their alert and spirited demeanor.",
+    "Short, straight tail carried upright, often described as carrot-shaped.",
+    "Broad head with a short snout, giving them a bold and confident look."
+  ],
+  "mushroom": [
+    "Rounded cap with a smooth or slightly textured surface, often in shades of brown or white.",
+    "Thin, cylindrical stem that supports the cap, usually pale in color.",
+    "Gills or pores on the underside of the cap, often radiating out from the center.",
+    "Cap can vary in shape, from flat to conical or bell-shaped.",
+    "Soft, spongy texture that can be slightly moist to the touch."
+  ],
+  "revolver": [
+    "Compact, cylindrical chamber that holds the bullets, often with a matte or polished finish.",
+    "Short barrel that extends from the frame, sometimes with visible rifling inside.",
+    "Trigger guard that encircles the trigger, adding to the gun's balanced design.",
+    "Smooth, ergonomic handle often made of wood or synthetic material, providing a firm grip.",
+    "Front and rear sights aligned along the top of the barrel for aiming."
+  ],
+  "timber wolf": [
+    "Thick, dense fur that can range from gray to brown, with a mix of black and white markings.",
+    "Broad head with a strong jaw and sharp, pointed ears.",
+    "Piercing, yellow or amber eyes that convey intensity and focus.",
+    "Long, bushy tail that hangs low, covered in dense fur.",
+    "Powerful, muscular body built for endurance and strength, with a streamlined silhouette."
+  ],
+  "hummingbird": [
+    "Tiny, iridescent feathers that can appear in shades of green, blue, or red, depending on the species.",
+    "Long, slender beak adapted for sipping nectar from flowers.",
+    "Wings that beat rapidly, often a blur in motion, creating a humming sound.",
+    "Compact, agile body that can hover in place with remarkable precision.",
+    "Tail feathers that can be short and rounded or long and forked, often adding to their agile movements."
+  ],
+  "centipede": [
+    "Long, segmented body with a hard exoskeleton, often in shades of brown or reddish-brown.",
+    "Many pairs of legs, one per body segment, giving them a distinctive, multi-legged appearance.",
+    "Flat, elongated head with a pair of antennae and small, sharp mandibles.",
+    "Body that tapers towards the end, with the last pair of legs often longer than the rest.",
+    "Quick, wriggling movements, with legs that move in a wave-like pattern."
+  ],
+  "puffer fish": [
+    "Round, inflatable body covered in short spines or spikes, which can puff up when threatened.",
+    "Smooth, leathery skin, often in shades of gray, brown, or yellow, with distinct patterns.",
+    "Large, bulbous eyes that give them a slightly comical expression.",
+    "Small, puckered mouth that can appear almost beak-like.",
+    "Fins that are relatively small compared to the body, often translucent."
+  ],
+  "panda": [
+    "Thick, soft fur with distinctive black and white markings, including black patches around the eyes.",
+    "Rounded face with large, dark eyes and a small, black nose.",
+    "Ears that are small and rounded, adding to their endearing appearance.",
+    "Strong, stocky body built for a life of climbing and foraging.",
+    "Short, fluffy tail that blends with the fur color."
+  ],
+  "boxer": [
+    "Muscular, athletic build with a short, smooth coat that can be fawn, brindle, or white.",
+    "Square, broad head with a short muzzle and a strong jaw.",
+    "Expressive, dark eyes that convey a lively, alert demeanor.",
+    "Ears that are often cropped, standing erect, or natural and folded.",
+    "Deep chest and well-defined muscles, contributing to their powerful appearance."
+  ],
+  "broom": [
+    "Long, cylindrical handle, often made of wood or plastic, with a smooth finish.",
+    "Bristles at the bottom, arranged in a fan shape, typically made of natural fibers or synthetic materials.",
+    "Bristles are usually tightly packed, giving a dense appearance.",
+    "Handle may have a slight taper towards the end, making it easier to grip.",
+    "Simple, functional design with a focus on practicality and ease of use."
+  ],
+  "rugby ball": [
+    "Oval-shaped, elongated ball with slightly pointed ends, typically in brown or white.",
+    "Surface often textured for grip, with visible seams or panels.",
+    "Bold, contrasting stripes or logos printed on the sides.",
+    "Stitched laces along one side, providing a secure grip for passing.",
+    "Symmetrical design with a balanced, aerodynamic shape for flight."
+  ],
+  "mailbox": [
+    "Tall, rectangular shape with a curved or flat top, often made of metal.",
+    "Front door or slot for inserting mail, sometimes with a small flag attached.",
+    "Painted in bold colors, often red, white, or blue, sometimes with decorative elements.",
+    "Sturdy, upright post or stand supporting the box.",
+    "Simple, functional design with a focus on weather resistance and durability."
+  ],
+  "clown fish": [
+    "Bright orange body with distinctive white stripes bordered by black, creating a striking contrast.",
+    "Rounded, oval-shaped body with a smooth, glossy texture.",
+    "Large, expressive eyes positioned towards the front of the face.",
+    "Fins that are small and rounded, often tinged with black.",
+    "Playful, darting movements that reflect their lively personality."
+  ],
+  "cabbage": [
+    "Round, dense head made up of tightly packed, overlapping leaves.",
+    "Leaves can range in color from pale green to deep purple, often with a slightly waxy texture.",
+    "Outer leaves may be loose and ruffled, while inner leaves are more tightly compacted.",
+    "Smooth, rounded shape with a firm, heavy feel.",
+    "Stems that are short and thick, connecting the leaves to the base."
+  ],
+  "cannon": [
+    "Large, cylindrical barrel made of metal, often with a matte or weathered finish.",
+    "Sturdy, wooden or metal carriage with large, spoked wheels.",
+    "Barrel may have visible seams or reinforcements, adding to its robust appearance.",
+    "Muzzle often flared slightly at the end, giving a distinctive silhouette.",
+    "Functional, utilitarian design focused on durability and power."
+  ],
+  "steam locomotive": [
+    "Long, cylindrical boiler with a shiny, metallic surface, often painted black or green.",
+    "Large, spoked wheels connected by visible rods and pistons.",
+    "Tall, narrow smokestack extending from the front, often emitting smoke.",
+    "Cab section with a slightly raised roof, often with visible windows and control levers.",
+    "Robust, industrial design with a focus on strength and efficiency."
+  ],
+  "ant": [
+    "Small, segmented body with a hard exoskeleton, typically in shades of black, brown, or red.",
+    "Three distinct body sections: head, thorax, and abdomen, connected by narrow waists.",
+    "Pair of long, thin antennae extending from the head.",
+    "Six legs, each with small, sharp claws at the ends.",
+    "Mandibles at the front of the head, used for gripping and cutting."
+  ],
+  "fly": [
+    "Small, compact body with a shiny, often metallic surface, usually black or dark brown.",
+    "Large, bulbous eyes that dominate the head, often with a red or iridescent sheen.",
+    "Transparent wings with visible veins, extending out from the thorax.",
+    "Short, bristly hairs covering the body, giving a slightly fuzzy appearance.",
+    "Thin, spindly legs that end in tiny, gripping pads."
+  ],
+  "saint bernard": [
+    "Large, muscular body covered in a thick, dense coat, often in shades of brown and white.",
+    "Broad, expressive face with dark, soulful eyes and a short snout.",
+    "Ears that are large and floppy, adding to their gentle, friendly appearance.",
+    "Barrel-shaped chest and strong, sturdy legs built for endurance.",
+    "Tail that is long and bushy, often carried low or wagging slowly."
+  ],
+  "iguana": [
+    "Long, slender body covered in rough, scaly skin, often in shades of green or brown.",
+    "Dewlap (a flap of skin) under the chin that can be extended for display.",
+    "Long, whip-like tail that can be used for balance or defense.",
+    "Sharp claws on each foot, adapted for climbing.",
+    "Distinctive, spiky crest running down the back, adding to their prehistoric appearance."
+  ],
+  "spider web": [
+    "Intricate, radial pattern with thin, silken strands forming a delicate structure.",
+    "Sticky threads arranged in a spiral or concentric circles, designed to trap prey.",
+    "Central hub where the spider often rests, with radiating lines extending outward.",
+    "Silvery sheen that can catch the light, making the web appear almost invisible at certain angles.",
+    "Symmetrical, geometric design that is both functional and visually striking."
+  ],
+  "African chameleon": [
+    "Laterally compressed body covered in rough, granular skin, often in shades of green or brown.",
+    "Independently rotating eyes that can move in different directions simultaneously.",
+    "Prehensile tail that curls tightly when not in use, aiding in balance and grip.",
+    "Zygodactylous feet with toes grouped in pairs, adapted for gripping branches.",
+    "Ability to change color, with skin that can display a range of hues and patterns."
+  ],
+  "wine bottle": [
+    "Tall, cylindrical shape with a narrow neck and a flared lip at the top.",
+    "Typically made of glass, often green or brown, with a smooth, glossy finish.",
+    "Cork or screw-top closure, sealing the contents inside.",
+    "Body may be labeled with detailed information about the wine, often featuring decorative elements.",
+    "Base is slightly indented, creating a sturdy, balanced foundation."
+  ],
+  "pug": [
+    "Compact, muscular body with a broad chest and short legs.",
+    "Wrinkled face with a short, flat muzzle and large, expressive eyes.",
+    "Small, button ears that can be either folded or slightly erect.",
+    "Curly tail that is tightly coiled over the back.",
+    "Short, smooth coat that can be fawn, black, or silver in color."
+  ],
+  "wheelbarrow": [
+    "Rectangular or shallow, basin-like container mounted on a single wheel at the front.",
+    "Two long handles extending from the back, designed for lifting and pushing.",
+    "Metal or wooden frame with sturdy legs for support when stationary.",
+    "Large, pneumatic or solid rubber wheel for easy maneuvering.",
+    "Simple, utilitarian design focused on balance and ease of use."
+  ],
+  "ostrich": [
+    "Long neck and small head with soft, downy feathers.",
+    "Strong, powerful legs with two-toed feet.",
+    "Black and white plumage in males, brown in females.",
+    "Small wings with soft, fluffy feathers.",
+    "Large, round eyes with long lashes."
+  ],
+  "toucan": [
+    "Bright, colorful beak that is often large and curved.",
+    "Black body with contrasting white throat or chest.",
+    "Short, stubby tail with vibrant colors.",
+    "Bright, striking eyes surrounded by colored skin.",
+    "Small wings with glossy, smooth feathers."
+  ],
+  "jeep": [
+    "Boxy, rugged body with a flat front grille.",
+    "Round headlights mounted on the front.",
+    "Visible spare tire often attached to the rear.",
+    "Large, all-terrain tires with deep treads.",
+    "Angular, utilitarian design with exposed metal components."
+  ],
+  "beer glass": [
+    "Tall, cylindrical shape that tapers slightly towards the top.",
+    "Smooth, transparent glass surface.",
+    "Wide, open mouth for easy drinking.",
+    "Thick, stable base to prevent tipping.",
+    "Clear, reflective appearance that shows the liquid inside."
+  ],
+  "chihuahua": [
+    "Smooth or long coat that can come in various colors.",
+    "Large, upright ears that are pointed and alert.",
+    "Short muzzle with a slightly rounded head.",
+    "Bright, expressive eyes that dominate the face.",
+    "Compact body with a straight, thin tail."
+  ],
+  "basset hound": [
+    "Long, droopy ears that hang close to the face.",
+    "Short legs and a long body with loose, wrinkled skin.",
+    "Smooth coat, often with tri-color or bi-color patterns.",
+    "Sad, soulful eyes with a drooping expression.",
+    "Broad, strong nose and a deep chest."
+  ],
+  "bee": [
+    "Compact, segmented body with black and yellow stripes.",
+    "Transparent wings that are often veined and iridescent.",
+    "Small, round head with large, compound eyes.",
+    "Thin, delicate legs with small hooks at the ends.",
+    "Fuzzy, hairy appearance, especially on the thorax."
+  ],
+  "cauldron": [
+    "Round, deep pot with a wide opening and a heavy base.",
+    "Dark, often blackened metal surface with a rough texture.",
+    "Three short, sturdy legs for stability.",
+    "Large, curved handles on the sides.",
+    "Thick, reinforced rim around the top."
+  ],
+  "assault rifle": [
+    "Long, sleek barrel with a sturdy, matte finish.",
+    "Pistol grip and adjustable stock for better control.",
+    "Attached magazine that extends from the bottom.",
+    "Metallic or polymer body with rails for attachments.",
+    "Iron sights or optical scope mounted on top."
+  ],
+  "lorikeet": [
+    "Vivid, multicolored plumage with bright greens, blues, and reds.",
+    "Short, curved beak that is typically orange or red.",
+    "Slender body with a pointed tail.",
+    "Small, round eyes with a curious expression.",
+    "Compact wings with rapid, fluttering flight."
+  ],
+  "flamingo": [
+    "Long, slender legs with knobby knees.",
+    "Curved, pink beak with a black tip.",
+    "Bright pink or coral feathers with soft, downy texture.",
+    "S-shaped neck that often curves gracefully.",
+    "Small, round eyes set close to the head."
+  ],
+  "cocker spaniels": [
+    "Long, wavy ears that hang close to the head.",
+    "Soft, flowing coat that is often feathered on the legs and belly.",
+    "Round, dark eyes that give a gentle expression.",
+    "Short, slightly upturned muzzle with a broad nose.",
+    "Compact, well-proportioned body with a wagging tail."
+  ],
+  "sea lion": [
+    "Streamlined body with a smooth, glossy coat that is usually brown or gray.",
+    "Long, strong flippers that extend from the front of the body.",
+    "Small, rounded ears that are visible on the sides of the head.",
+    "Short, thick neck and a broad, flat face.",
+    "Whiskers on the snout that are long and sensitive."
+  ],
+  "soccer ball": [
+    "Round shape with a pattern of hexagonal and pentagonal panels.",
+    "Black and white color scheme is common, though other colors may be used.",
+    "Smooth, glossy surface with visible stitching.",
+    "Symmetrical design for even weight distribution.",
+    "Inflated, firm structure that maintains its shape."
+  ],
+  "volcano": [
+    "Conical or dome-shaped landform with a central crater at the top.",
+    "Dark, rocky surface often streaked with lava flows.",
+    "Smoke or steam rising from the crater.",
+    "Layered appearance with ash, rock, and lava.",
+    "Jagged edges and a rugged, uneven base."
+  ],
+  "canoe": [
+    "Long, narrow boat with pointed ends and an open top.",
+    "Smooth, curved hull often made of wood or fiberglass.",
+    "Flat, shallow interior with seats or kneeling areas.",
+    "Symmetrical design with a slightly raised bow and stern.",
+    "Paddles with wide, flat blades for rowing."
+  ],
+  "mitten": [
+    "Soft, rounded shape with a single compartment for fingers.",
+    "Thick, often knitted or padded fabric for warmth.",
+    "Cuff at the wrist that can be ribbed or elastic.",
+    "Smooth, seamless surface with minimal stitching.",
+    "Simple, functional design with a focus on insulation."
+  ],
+  "shield": [
+    "Curved or flat surface with a broad, rounded shape.",
+    "Decorative designs or emblems on the front.",
+    "Metallic or wooden construction with a polished finish.",
+    "Handle or straps on the back for holding.",
+    "Reinforced edges or borders for added strength."
+  ],
+  "mantis": [
+    "Elongated body with a segmented thorax and abdomen.",
+    "Large, triangular head with bulging compound eyes.",
+    "Forelegs that are folded in a praying position, lined with spines.",
+    "Thin, flexible antennae extending from the head.",
+    "Wings that lay flat against the back when not in use."
+  ],
+  "tiger": [
+    "Bold, orange coat with black vertical stripes.",
+    "Broad, rounded head with a white underbelly and face markings.",
+    "Long, muscular body with a thick, powerful tail.",
+    "Sharp, retractable claws on large paws.",
+    "Bright, piercing eyes with round pupils."
+  ],
+  "goose": [
+    "Long, slender neck with smooth, glossy feathers.",
+    "Broad, flat beak that is often orange or black.",
+    "Rounded body with a soft, downy underbelly.",
+    "Webbed feet that are often bright orange or yellow.",
+    "Strong wings with visible primary feathers."
+  ],
+  "king penguin": [
+    "Smooth, sleek feathers with a black back and white belly.",
+    "Bright orange or yellow patches on the neck and beak.",
+    "Short, sturdy legs with webbed feet.",
+    "Tall, upright posture with a streamlined body.",
+    "Small, beady eyes set close to the beak."
+  ],
+  "cucumber": [
+    "Elongated, cylindrical shape with a smooth, green skin.",
+    "Slightly tapered ends with a rough, textured surface.",
+    "Pale, watery flesh visible when cut open.",
+    "Thin, waxy skin with small, raised bumps.",
+    "Straight or slightly curved form with a firm texture."
+  ],
+  "lipstick": [
+    "Cylindrical tube with a twist-up mechanism.",
+    "Smooth, glossy surface with a shiny or matte finish.",
+    "Bright, bold colors often in shades of red, pink, or nude.",
+    "Flat, angled tip for precise application.",
+    "Decorative casing with metallic or patterned design."
+  ],
+  "pelican": [
+    "Large, long beak with a hooked tip and a flexible throat pouch.",
+    "Pale, often white or gray feathers with a smooth texture.",
+    "Broad wings with dark tips and a distinctive, gliding flight.",
+    "Short legs with webbed feet for swimming.",
+    "Rounded, stocky body with a strong neck."
+  ],
+  "candle": [
+    "Cylindrical shape with a smooth, waxy surface.",
+    "Visible wick at the top, often blackened from burning.",
+    "Glossy or matte finish depending on the material.",
+    "Evenly melting wax that creates a small pool at the base.",
+    "Simple, symmetrical design with a focus on functionality."
+  ],
+  "scuba diver": [
+    "Wetsuit with a tight, form-fitting design and a smooth, glossy surface.",
+    "Large, clear mask covering the eyes and nose.",
+    "Breathing apparatus with a regulator and hoses.",
+    "Fins attached to the feet, often wide and flexible.",
+    "Air tank mounted on the back, usually metallic and cylindrical."
+  ],
+  "pirate ship": [
+    "Tall, wooden hull with multiple masts and sails.",
+    "Billowing sails often marked with a skull and crossbones.",
+    "Decorative figurehead mounted on the bow.",
+    "Cannons visible along the sides of the ship.",
+    "Rope rigging connecting the sails and masts."
+  ],
+  "joystick": [
+    "Tall, slender stick with a rounded or flat top.",
+    "Base with buttons or switches for additional control.",
+    "Smooth, matte surface for a comfortable grip.",
+    "Wired or wireless connection to a gaming device.",
+    "Simple, ergonomic design with a focus on precision."
+  ],
+  "scarf": [
+    "Long, rectangular fabric that can be wrapped around the neck.",
+    "Soft, often knitted or woven material with a smooth texture.",
+    "Fringed edges or decorative patterns.",
+    "Lightweight or thick, depending on the fabric used.",
+    "Versatile design with various ways to wear it."
+  ],
+  "grand piano": [
+    "Glossy, polished surface often in black or white.",
+    "Large, curved body with a raised lid on one side.",
+    "Long, white and black keys arranged in a row.",
+    "Elegant, ornate legs supporting the body.",
+    "Open strings visible inside when the lid is raised."
+  ],
+  "lighthouse": [
+    "Tall, cylindrical tower with a smooth, tapered shape.",
+    "Light beacon at the top, often encased in glass.",
+    "Spiral staircase or ladder visible inside.",
+    "Windows or small openings along the tower.",
+    "Brightly painted exterior, often in red and white stripes."
+  ],
+  "guillotine": [
+    "Tall, wooden frame with a heavy, angled blade suspended at the top.",
+    "Angled or flat base where the subject is positioned.",
+    "Rope or pulley system used to release the blade.",
+    "Metallic blade with a sharp, gleaming edge.",
+    "Simple, utilitarian design with a focus on function."
+  ],
+  "badger": [
+    "Short, stocky body with coarse, dark fur and distinctive white stripes on the face.",
+    "Broad, flat head with small, round ears.",
+    "Sharp claws on short, sturdy legs.",
+    "Pointed snout with a keen sense of smell.",
+    "Thick, bushy tail with a rough texture."
+  ],
+  "yorkshire terrier": [
+    "Silky, long coat that often flows to the ground.",
+    "Small, pointed ears that stand upright.",
+    "Bright, expressive eyes with a sharp gaze.",
+    "Short muzzle with a black nose and small, white teeth.",
+    "Compact body with a high-set, wagging tail."
+  ],
+  "black swan": [
+    "Smooth, jet-black feathers with a glossy sheen.",
+    "Long, curved neck with a graceful arch.",
+    "Bright red beak with a white tip.",
+    "Dark, webbed feet visible beneath the body.",
+    "White flight feathers visible when wings are extended."
+  ],
+  "sandal": [
+    "Open-toed design with straps that cross over the foot.",
+    "Flat or slightly raised sole with a smooth finish.",
+    "Adjustable buckles or Velcro for a secure fit.",
+    "Soft, cushioned footbed for comfort.",
+    "Simple, minimalist design with a focus on breathability."
+  ],
+  "birdhouse": [
+    "Small, enclosed structure with a round or square entrance hole.",
+    "Wooden or metal construction with a painted or natural finish.",
+    "Sloped roof to protect from the weather.",
+    "Perch or small ledge near the entrance.",
+    "Simple, functional design with an emphasis on shelter."
+  ],
+  "weimaraner": [
+    "Short, sleek coat in shades of gray or silver.",
+    "Long, floppy ears that hang close to the face.",
+    "Bright, piercing eyes with a pale hue.",
+    "Long, straight tail that tapers to a point.",
+    "Lean, muscular body with an athletic build."
+  ],
+  "space shuttle": [
+    "Streamlined, aerodynamic body with a pointed nose.",
+    "Large, delta-shaped wings with visible tiles.",
+    "External fuel tank and solid rocket boosters attached to the sides.",
+    "White and black color scheme with visible NASA insignia.",
+    "Cockpit windows arranged in a distinctive pattern."
+  ],
+  "husky": [
+    "Thick, double-layered coat in shades of gray, black, or white.",
+    "Pointed ears that stand erect, giving an alert expression.",
+    "Bright, piercing eyes that can be blue or brown.",
+    "Bushy tail that curls over the back.",
+    "Strong, muscular body built for endurance."
+  ],
+  "junco": [
+    "Small, round body with soft, fluffy feathers.",
+    "Dark gray or black upper parts with a contrasting white belly.",
+    "Short, conical beak that is pale in color.",
+    "Rounded wings with a smooth, streamlined appearance.",
+    "Small, dark eyes that give a sharp, alert look."
+  ],
+  "backpack": [
+    "Rectangular shape with multiple zippered compartments.",
+    "Adjustable shoulder straps with padded support.",
+    "Durable fabric, often with a water-resistant finish.",
+    "Side pockets or mesh holders for bottles.",
+    "Simple, practical design with a focus on carrying capacity."
+  ],
+  "lion": [
+    "Thick, tawny coat with a flowing mane around the head.",
+    "Broad, powerful muzzle with a black nose.",
+    "Bright, piercing eyes with a focused gaze.",
+    "Strong, muscular body with a long, tufted tail.",
+    "Sharp claws and large, padded paws for silent movement."
+  ],
+  "mobile phone": [
+    "Rectangular shape with a smooth, glossy screen.",
+    "Slim, lightweight body often with rounded edges.",
+    "Visible buttons or touchscreen controls on the front.",
+    "Camera lens and flash on the back.",
+    "Minimalist design with a focus on sleekness and functionality."
+  ],
+  "school bus": [
+    "Long, rectangular body with a bright yellow paint job.",
+    "Large, rectangular windows along the sides.",
+    "Front-mounted stop sign that swings out when stopped.",
+    "Wide, flat front with prominent headlights.",
+    "Rounded corners and a slightly elevated chassis."
+  ],
+  "chimpanzee": [
+    "Coarse, dark fur covering most of the body.",
+    "Round, expressive face with a protruding brow ridge.",
+    "Long arms and short legs for climbing and swinging.",
+    "Bare, wrinkled skin on the face, hands, and feet.",
+    "Bright, inquisitive eyes with a curious expression."
+  ],
+  "castle": [
+    "Tall, stone walls with battlements and towers.",
+    "Thick, arched doorways and windows with wooden shutters.",
+    "Large, central keep or fortress structure.",
+    "Drawbridge or gatehouse at the entrance.",
+    "Moat or defensive structures surrounding the perimeter."
+  ],
+  "pretzel": [
+    "Twisted, knotted shape with a golden-brown crust.",
+    "Smooth, glossy surface with a slight sheen.",
+    "Sprinkling of coarse salt on top.",
+    "Soft, doughy interior visible when broken.",
+    "Even, symmetrical design with a distinctive looped form."
+  ],
+  "bow tie": [
+    "Symmetrical, bow-shaped knot with even loops.",
+    "Smooth, often satin or silk material with a glossy finish.",
+    "Adjustable strap or clip for securing around the collar.",
+    "Classic, elegant design often used in formal wear.",
+    "Simple, minimalist style with a focus on symmetry."
+  ],
+  "boston terrier": [
+    "Short, smooth coat in black and white or brindle patterns.",
+    "Square, broad head with a short muzzle and upright ears.",
+    "Bright, round eyes that give a lively expression.",
+    "Compact, muscular body with a straight tail.",
+    "White markings on the face, chest, and paws."
+  ],
+  "leopard": [
+    "Golden-yellow coat with distinctive black rosettes.",
+    "Muscular body with a long, powerful tail.",
+    "Broad, rounded head with sharp, white whiskers.",
+    "Bright, piercing eyes with a fierce gaze.",
+    "Strong legs with retractable claws and padded paws."
+  ],
+  "beaver": [
+    "Smooth, brown fur with a glossy sheen.",
+    "Flat, wide tail with a scaly texture.",
+    "Large, orange teeth visible when the mouth is open.",
+    "Short, webbed feet with strong claws for digging.",
+    "Broad, flat head with small, round ears."
+  ],
+  "shih tzu": [
+    "Long, flowing coat that often reaches the ground.",
+    "Rounded face with large, dark eyes and a short muzzle.",
+    "Small, floppy ears that are often hidden by fur.",
+    "Compact, sturdy body with a straight, fluffy tail.",
+    "Soft, silky fur that is often tied back from the face."
+  ],
+  "zebra": [
+    "Distinctive black and white striped coat with a unique pattern.",
+    "Short, upright mane that is also striped.",
+    "Slender, muscular body with long legs.",
+    "Rounded ears that are alert and expressive.",
+    "Large, dark eyes set wide apart on the head."
+  ],
+  "espresso": [
+    "Dark, rich liquid with a glossy surface.",
+    "Small, thick layer of crema on top.",
+    "Deep, opaque color that is almost black.",
+    "Smooth, velvety texture when poured.",
+    "Simple, concentrated appearance in a small cup."
+  ],
+  "lobster": [
+    "Hard, segmented shell with a dark, reddish-brown color.",
+    "Long, powerful claws with sharp, serrated edges.",
+    "Long antennae extending from the head.",
+    "Tail that is broad and fan-shaped, with visible segments.",
+    "Smooth, glossy surface with small, beady eyes."
+  ],
+  "ice cream": [
+    "Soft, smooth texture with a creamy appearance.",
+    "Bright, often pastel colors depending on the flavor.",
+    "Visible swirls or chunks of toppings in the mix.",
+    "Glossy surface with a slightly melted sheen.",
+    "Scooped into round, even mounds with a symmetrical shape."
+  ],
+  "bell pepper": [
+    "Smooth, glossy skin that comes in vibrant colors like red, yellow, green, or orange.",
+    "Hollow interior with a central cluster of seeds.",
+    "Thick, crisp walls that snap when broken.",
+    "Rounded, slightly squarish shape with a flat bottom.",
+    "Sturdy stem attached to the top."
+  ],
+  "schooner": [
+    "Tall, slender masts with multiple sails rigged between them.",
+    "Long, narrow hull with a sleek, curved shape.",
+    "Sails that are often triangular and arranged in tiers.",
+    "Decorative figurehead or carvings on the bow.",
+    "Open deck with visible rigging and spars."
+  ]
+}

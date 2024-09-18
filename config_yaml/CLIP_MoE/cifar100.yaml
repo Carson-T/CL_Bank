@@ -1,0 +1,50 @@
+basic:
+  random_seed: 1993
+  version_name: "cifar100_b0i10_2adapter"
+  is_log: True
+  save_checkpoint: False
+  save_path: "../checkpoint&log"
+  method: "CLIP_MoE"
+  increment_type: "CIL"
+#  increment_steps: [ 40, 40, 40, 40, 40 ]
+  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+#  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
+
+usual:
+  dataset_name: "cifar100"
+  is_openset_test: False
+  data_shuffle: True
+  img_size: 224
+  backbone: "CLIP"
+  pretrained_path: "pretrained_model/CLIP_ViT-B-16.pt"
+  drop_rate: 0
+  drop_path_rate: 0
+  batch_size: 32
+  num_workers: 8
+  epochs: 10
+  optimizer: AdamW
+  loss_func: CEloss
+  scheduler: Cosine
+  lr: 0.001
+  momentum: 0.9
+  weight_decay: 0.0001
+  memory_size: 2000
+  apply_nme: False
+  sampling_method: "herding"
+
+special:
+  prompt_template: "a photo of a {}."
+  attr_list: ["typical shape"]   #  "primary color", "typical shape", "common environment"
+  use_addi_desc: False
+  prompt_length: 0
+  desc_num: 0
+  topk: 0
+  alpha: 0
+
+options:
+  Cosine:
+    eta_min: 0
+  Warm-up-Cosine-Annealing:
+    init_ratio: 0.1
+    warm_up_steps: 2
+    min_lr_ratio: 0.001
