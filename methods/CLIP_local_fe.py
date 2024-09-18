@@ -4,6 +4,7 @@ import math
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
+from torch.cuda.amp import autocast, GradScaler
 from torch.distributions.multivariate_normal import MultivariateNormal
 import wandb
 from tqdm import tqdm
@@ -191,26 +192,28 @@ class CLIP_local_fe(Base):
         model.train()
         for idx, (inputs, targets, _) in enumerate(train_loader):
             inputs, targets = inputs.cuda(), targets.cuda()
-            out = model(inputs, text_tokens=self.new_text_tokens.cuda(), desc_tokens=self.new_text_tokens.cuda(), train=True, task_id=task_id)
-            logits_global = out["logits"]
-            ce_loss = hard_loss(logits_global, targets-self.known_classes)
-            # ce_loss = hard_loss(logits_global, targets)
-            ce_losses += ce_loss.item()
-            loss = ce_loss
+            with autocast():
+                out = model(inputs, text_tokens=self.cur_text_tokens.cuda(), desc_tokens=self.cur_text_tokens.cuda(), train=True, task_id=task_id)
+                # out = model(inputs, text_tokens=self.cur_text_tokens.cuda(), train=True, task_id=task_id)
+                logits_global = out["logits"]
+                # ce_loss = hard_loss(logits_global, targets-self.known_classes)
+                ce_loss = hard_loss(logits_global.softmax(dim=-1), targets)
+                ce_losses += ce_loss.item()
+                loss = ce_loss
 
-            if self.config.alpha>0:
-                text_loss = out["text_loss"]
-                text_losses += text_loss.item()
-                loss += self.config.alpha * text_loss
+                if self.config.alpha > 0:
+                    text_loss = out["text_loss"]
+                    text_losses += text_loss.item()
+                    loss += self.config.alpha * text_loss
 
-            logits_local = out["logits_local"]   # 5, B, cls
-            if logits_local is not None:
-                local_loss = hard_loss(logits_local, targets-self.known_classes)
-                local_losses += local_loss.item()
-                loss += local_loss
-                preds = torch.max(F.softmax(logits_global,dim=-1)+F.softmax(logits_local,dim=-1), dim=1)[1]+self.known_classes
-            else:
-                preds = torch.max(logits_global, dim=1)[1]+self.known_classes
+                logits_local = out["logits_local"]
+                if logits_local is not None:
+                    local_loss = hard_loss(logits_local.softmax(dim=-1), targets)
+                    local_losses += local_loss.item()
+                    loss += local_loss
+                    preds = torch.max(logits_global+logits_local, dim=1)[1]
+                else:
+                    preds = torch.max(logits_global, dim=1)[1]
 
             if idx == 0:
                 all_preds = preds
@@ -219,9 +222,15 @@ class CLIP_local_fe(Base):
                 all_preds = torch.cat((all_preds, preds))
                 all_targets = torch.cat((all_targets, targets))
 
+            # optimizer.zero_grad()
+            # loss.backward()
+            # optimizer.step()
+            # losses += loss.item()
+
             optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
+            self.scaler.scale(loss).backward()
+            self.scaler.step(optimizer)
+            self.scaler.update()
             losses += loss.item()
 
         train_loss = {'all_loss': losses / len(train_loader), 'loss_clf': ce_losses / len(train_loader),
@@ -237,10 +246,11 @@ class CLIP_local_fe(Base):
             for idx, (inputs, targets, _) in enumerate(test_loader):
                 inputs, targets = inputs.cuda(), targets.cuda()
                 out = model(inputs, text_tokens=self.cur_text_tokens.cuda(), desc_tokens=self.cur_text_tokens.cuda(), task_id=task_id)
+                # out = model(inputs, text_tokens=self.cur_text_tokens.cuda(), task_id=task_id)
                 logits_global = out["logits"]
 
                 # preds = torch.max(logits_global, dim=1)[1]
-                ce_loss = hard_loss(logits_global, targets)
+                ce_loss = hard_loss(logits_global.softmax(dim=-1), targets)
                 ce_losses += ce_loss.item()
                 loss = ce_loss
 
@@ -250,14 +260,14 @@ class CLIP_local_fe(Base):
 
                 logits_local = out["logits_local"]  # 5, B, cls
                 if logits_local is not None:
-                    local_loss = hard_loss(logits_local, targets)
+                    local_loss = hard_loss(logits_local.softmax(dim=-1), targets)
                     local_losses += local_loss.item()
                     loss += local_loss
-                    preds = torch.max(F.softmax(logits_global,dim=-1)+F.softmax(logits_local,dim=-1), dim=1)[1]
+                    preds = torch.max(logits_global + logits_local, dim=1)[1]
                 else:
                     preds = torch.max(logits_global, dim=1)[1]
 
-                # losses += loss.item()
+                losses += loss.item()
                 if idx == 0:
                     all_preds = preds
                     all_targets = targets
@@ -275,14 +285,16 @@ class CLIP_local_fe(Base):
             for idx, (inputs, targets, _) in enumerate(test_loader):
                 inputs, targets = inputs.cuda(), targets.cuda()
                 out = model(inputs, text_tokens=self.cur_text_tokens.cuda(), desc_tokens=self.cur_text_tokens.cuda(), task_id=task_id)
+                # out = model(inputs, text_tokens=self.cur_text_tokens.cuda(), task_id=task_id)
                 logits_global = out["logits"]
 
                 # qk_loss = out["qk_loss"]
                 # loss += qk_loss
                 # qk_losses += qk_loss.item()
+
                 logits_local = out["logits_local"]
                 if logits_local is not None:
-                    scores, preds = torch.max(F.softmax(logits_global,dim=-1)+F.softmax(logits_local,dim=-1), dim=1)
+                    scores, preds = torch.max(F.softmax(logits_global+logits_local, dim=-1), dim=1)
                 else:
                     scores, preds = torch.max(F.softmax(logits_global, dim=-1), dim=1)
 

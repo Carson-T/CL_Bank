@@ -18,7 +18,10 @@ class Skin40():
         self.use_path = True
         self.img_size = img_size
         self.train_transform = [
+            # transforms.RandomResizedCrop(size=224, scale=(0.7, 1.0)),
             transforms.RandomHorizontalFlip(),
+            # transforms.Resize((self.img_size, self.img_size)),
+            # transforms.ColorJitter(0.2, 0.2, 0.2, 0.1)
             ]
 
         self.test_transform = []
@@ -48,9 +51,9 @@ class Skin40():
         return np.array(data), np.array(targets)
 
     def download_data(self):
-        train_dir = os.path.join(os.environ["HOME"], "Datasets/Datasets/SD-198/main_classes_split/train_1.txt")
-        test_dir = os.path.join(os.environ["HOME"], "Datasets/Datasets/SD-198/main_classes_split/val_1.txt")
-        img_dir = os.path.join(os.environ["HOME"], 'Datasets/Datasets/SD-198/images')
+        train_dir = os.path.join(os.environ["HOME"], "Data/skin40/train_1.txt")
+        test_dir = os.path.join(os.environ["HOME"], "Data/skin40/val_1.txt")
+        img_dir = os.path.join(os.environ["HOME"], 'Data/skin40/images')
 
         self.class_to_idx = {
             "Stasis Ulcer": 0,

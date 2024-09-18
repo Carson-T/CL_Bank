@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
-device="4"
+device="3"
 
+#config="config_yaml/CLIP_Adapter/CLIP_adapter_imagenet_r.yaml"
 #config="config_yaml/CLIP_Adapter/CLIP_adapter_cifar100.yaml"
-#config="config_yaml/CLIP_local_fe/imagenet_r.yaml"
-config="config_yaml/MoE_Adapter4cil/Moe_adapter4cil_cifar100.yaml"
+#config="config_yaml/CLIP_Adapter/CLIP_adapter_skin40.yaml"
+#config="config_yaml/CLIP_Adapter/CLIP_adapter_cub200.yaml"
+config="config_yaml/CLIP_Adapter/CLIP_adapter_cars196.yaml"
+
 
 
 cd ~/projects/My_CL_Bank/code || exit

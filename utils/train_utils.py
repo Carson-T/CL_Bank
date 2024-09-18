@@ -40,10 +40,10 @@ def get_scheduler(optimizer, config):
     return scheduler
 
 
-def get_loss_func(config):
+def get_loss_func(config, weight=None):
     loss_func = None
     if config.loss_func == "CEloss":
-        loss_func = nn.CrossEntropyLoss(label_smoothing=config.label_smoothing if config.label_smoothing is not None else 0)
+        loss_func = nn.CrossEntropyLoss(label_smoothing=config.label_smoothing if config.label_smoothing is not None else 0, weight=weight)
 
     return loss_func
 

@@ -19,12 +19,18 @@ class DataManager(object):
             self.data = ImageNet100(shuffle=config.data_shuffle, img_size=config.img_size)
         elif config.dataset_name == "Skin40":
             self.data = Skin40(shuffle=config.data_shuffle, img_size=config.img_size)
+        elif config.dataset_name == "CUB200":
+            self.data = CUB200(shuffle=config.data_shuffle, img_size=config.img_size)
+        elif config.dataset_name == "Cars196":
+            self.data = Cars196(shuffle=config.data_shuffle, img_size=config.img_size)
         self.img_size = self.data.img_size
         self.use_valid = False
 
         self.data.download_data()
         if hasattr(self.data, "class_descs"):
             self.class_descs = self.data.class_descs
+        else:
+            self.class_descs = None
         self.class_order = self.data.class_order
         self.logger.info("class_order: {}".format(self.class_order))
         self.total_class_num = len(self.data.class_order)

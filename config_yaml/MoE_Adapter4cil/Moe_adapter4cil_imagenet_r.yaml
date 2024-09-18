@@ -1,34 +1,34 @@
 basic:
   random_seed: 1993
-  version_name: "Moe_adapter4cil_imagenet_r_b0i10"
+  version_name: "Moe_adapter4cil_imagenet_r_b0i20_replay"
   is_log: True
-  save_checkpoint: True
+  save_checkpoint: False
   save_path: "../checkpoint&log"
   method: "MoE_Adapter4cil"
   increment_type: "CIL"
-#  increment_steps: [ 20, 20, 20, 20, 20, 20, 20, 20, 20, 20 ]
-  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
+  increment_steps: [ 20, 20, 20, 20, 20, 20, 20, 20, 20, 20 ]
+#  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
 
 usual:
   dataset_name: "imagenet-r"
   data_shuffle: True
   img_size: 224
   backbone: "CLIP"
-  pretrained_path: "pretrained_model/CLIP_ViT-B-32.pt"
+  pretrained_path: "pretrained_model/CLIP_ViT-B-16.pt"
   drop_rate: 0
   drop_path_rate: 0
-  batch_size: 64
+  batch_size: 32
   num_workers: 8
-  epochs: 20
+  epochs: 10
   optimizer: AdamW
   loss_func: CEloss
-  scheduler: Warm-up-Cosine-Annealing
+  scheduler: Cosine
   lr: 0.001
   momentum: 0
-  weight_decay: 0
-  memory_size: 0
+  weight_decay: 0.0001
+  memory_size: 2000
   apply_nme: False
-  sampling_method: ""
+  sampling_method: "herding"
 
 special:
   prompt_template: "a photo of a {}."

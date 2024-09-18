@@ -23,7 +23,7 @@ usual:
   optimizer: AdamW
   loss_func: CEloss
   scheduler: Cosine
-  lr: 0.005
+  lr: 0.001
   momentum: 0
   weight_decay: 0.00005
   memory_size: 2000

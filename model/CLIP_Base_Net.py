@@ -58,9 +58,9 @@ class CLIP_Base_Net(Base_Net):
         if self.config.backbone == "CLIP":
             text = [prompt_template.format(c) for c in class_names]
             if descs is not None:
-                for attr in descs:
-                    for i in range(len(class_names)):
-                        text[i] += attr[i]
+                assert len(class_names) == len(descs)
+                for i in range(len(class_names)):
+                    text[i] += descs[i]
             text_tokens = tokenize(text)
         elif self.config.backbone == "OpenCLIP":
             # tokenizer = open_clip.get_tokenizer("ViT-B-16-SigLIP")
@@ -88,17 +88,6 @@ class CLIP_Base_Net(Base_Net):
 
             return {"logits": logits, "features": image_features_normed}
 
-    def forward_with_vectors(self, x, text_tokens):
-        x = x.type(self.backbone.dtype)
-        image_features = self.img_final_adapter(x)
-        text_features = self.backbone.encode_text(text_tokens, self.text_adapter_list)
-        image_features_normed = image_features / image_features.norm(dim=1, keepdim=True)
-        text_features_normed = text_features / text_features.norm(dim=1, keepdim=True)
-        # cosine similarity as logits
-        logit_scale = self.backbone.logit_scale.exp()
-        logits_per_image = logit_scale * image_features_normed @ text_features_normed.t()
-        logits_per_text = logits_per_image.t()
-        return {"logits": logits_per_image, "features": image_features}
 
     def save_old_param(self):
         self.old_adapter_state_dict = copy.deepcopy(self.img_final_adapter.state_dict())

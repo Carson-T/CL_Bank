@@ -23,17 +23,17 @@ class CIFAR100:
         super().__init__()
         self.use_path = False
         self.img_size = img_size
+        # self.train_transform = [
+        #     transforms.RandomCrop(32, padding=4),
+        #     transforms.RandomHorizontalFlip(p=0.5),
+        #     transforms.ColorJitter(brightness=63 / 255)
+        # ]
         self.train_transform = [
-            transforms.RandomCrop(32, padding=4),
+            transforms.Resize(256),
+            transforms.RandomResizedCrop(224, scale=(0.5, 1.0)),
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.ColorJitter(brightness=63 / 255)
         ]
-        # self.train_transform = [
-        #     transforms.Resize(256),
-        #     transforms.RandomResizedCrop(224, scale=(0.5, 1.0)),
-        #     transforms.RandomHorizontalFlip(p=0.5),
-        #     # transforms.ColorJitter(brightness=63 / 255)
-        # ]
 
         self.test_transform = []
         self.common_transform = [
@@ -64,7 +64,7 @@ class CIFAR100:
         train_dataset = datasets.cifar.CIFAR100(os.environ["HOME"]+"/Data/cifar100", train=True, download=True)
         test_dataset = datasets.cifar.CIFAR100(os.environ["HOME"]+"/Data/cifar100", train=False, download=True)
 
-        with open(os.environ["HOME"]+"/projects/My_CL_Bank/code/datasets/class_descs/cifar100_kv_pairs.json", "r") as f:
+        with open(os.environ["HOME"]+"/projects/My_CL_Bank/code/datasets/class_descs/cifar100_prompts_base.json", "r") as f:
             class_descs = json.load(f)
         self.class_descs = class_descs
 

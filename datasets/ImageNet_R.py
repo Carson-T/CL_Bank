@@ -25,7 +25,7 @@ class ImageNet_R:
         self.img_size = img_size
 
         self.train_transform = [
-            transforms.RandomResizedCrop(size=224, scale=(0.3, 1.0)),
+            transforms.RandomResizedCrop(size=224, scale=(0.5, 1.0)),
             transforms.RandomHorizontalFlip(),
             transforms.ColorJitter(0.4, 0.4, 0.4, 0.1)
         ]
@@ -53,7 +53,7 @@ class ImageNet_R:
         train_dataset = datasets.ImageFolder(root=os.environ["HOME"] + "/Data/imagenet_r/train")
         test_dataset = datasets.ImageFolder(root=os.environ["HOME"]+"/Data/imagenet_r/test")
         assert train_dataset.class_to_idx == test_dataset.class_to_idx
-        with open(os.environ["HOME"] + "/projects/My_CL_Bank/code/datasets/class_descs/imagenet_r_kv_pairs.json", "r") as f:
+        with open(os.environ["HOME"] + "/projects/My_CL_Bank/code/datasets/class_descs/new_Imagenet_r.json", "r") as f:
             class_descs = json.load(f)
         self.class_descs = class_descs
 

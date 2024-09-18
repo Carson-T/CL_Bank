@@ -1,12 +1,13 @@
 basic:
-  random_seed: 1993
-  version_name: "CLIP_task_adapter_cifar100_b0i10"
+  random_seed: 2016
+  version_name: "cifar100_b0i10_2016_moe2048(3top3_0.033)_aug0.5"
   is_log: True
-  save_checkpoint: False
+  save_checkpoint: True
   save_path: "../checkpoint&log"
-  method: "CLIP_Adapter"
+  method: "CLIP_task_adapter"
   increment_type: "CIL"
-  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
+#  increment_steps: [ 20, 20, 20, 20, 20 ]
+  increment_steps: [ 10, 10, 10, 10, 10, 10, 10, 10, 10 ]
 #  increment_steps: [ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 
 usual:
@@ -18,25 +19,31 @@ usual:
   pretrained_path: "pretrained_model/CLIP_ViT-B-16.pt"
   drop_rate: 0
   drop_path_rate: 0
-  batch_size: 32
+  batch_size: 64
   num_workers: 8
-  epochs: 10
+  epochs: 30
   optimizer: AdamW
   loss_func: CEloss
   scheduler: Cosine
-  lr: 0.01
+  lr: 0.001
   momentum: 0.9
-  weight_decay: 0.0001
+  weight_decay: 0.00001
   memory_size: 0
   apply_nme: False
   sampling_method: ""
 
 special:
   prompt_template: "a photo of a {}."
-  attr_list: [ "typical shape" ]   #  "primary color", "typical shape", "common environment"
+  attr_list: ["typical shape"]   #  "primary color", "typical shape", "common environment"
   use_addi_desc: False
-  prompt_length: 4
-  desc_num: 1
+  prompt_length: 0
+  desc_num: 0
+  ca_epoch: 5
+  ca_lr: 0.001
+  num_sampled_pcls: 256
+  ca_logit_norm: 0
+  cluster_num: 0
+  n_components: 0
 
 options:
   Cosine:

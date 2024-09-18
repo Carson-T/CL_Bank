@@ -4,6 +4,7 @@ from abc import abstractmethod
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
+from torch.cuda.amp import autocast, GradScaler
 import wandb
 from tqdm import tqdm
 from model.Inc_Net import Inc_Net
@@ -36,6 +37,8 @@ class Base():
         self.cnn_auc_curve = []
         self.cnn_fpr95_curve = []
         self.cnn_AP_curve = []
+
+        self.scaler = GradScaler()
 
     def update_class_num(self, task_id):
         self.new_classes = self.config.increment_steps[task_id]
@@ -188,8 +191,8 @@ class Base():
             cnn_all_scores = cnn_all_scores.cpu().detach().numpy()
             cnn_all_targets = cnn_all_targets.cpu().detach().numpy()
 
-        task_acc, _ = calculate_acc(cnn_all_preds//self.config.increment_steps[0], cnn_all_targets//self.config.increment_steps[0], None, None)
-        self.logger.info("task id acc: {}".format(task_acc))
+        # task_acc, _ = calculate_acc(cnn_all_preds//self.config.increment_steps[0], cnn_all_targets//self.config.increment_steps[0], None, None)
+        # self.logger.info("task id acc: {}".format(task_acc))
 
         cnn_overall_acc, cnn_task_acc = calculate_acc(cnn_all_preds, cnn_all_targets, self.cur_classes,
                                                         self.config.increment_steps, cal_task_acc=True)

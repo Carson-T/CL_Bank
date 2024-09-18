@@ -170,7 +170,8 @@ class QuickGELU(nn.Module):
 
 
 class ResidualAttentionBlock(nn.Module):
-    def __init__(self, d_model: int, n_head: int, attn_mask: torch.Tensor = None, ffn_adapt_option="parallel", lora_rank=0):
+    def __init__(self, d_model: int, n_head: int, attn_mask: torch.Tensor = None, ffn_adapt_option="sequential",
+                 lora_rank=0):
         super().__init__()
         self.ffn_adapt_option = ffn_adapt_option
         if lora_rank > 0:
@@ -191,24 +192,43 @@ class ResidualAttentionBlock(nn.Module):
         self.attn_mask = self.attn_mask.to(dtype=x.dtype, device=x.device) if self.attn_mask is not None else None
         return self.attn(x, x, x, need_weights=False, attn_mask=self.attn_mask)[0]
 
-    def forward(self, x: torch.Tensor, adapter=None):
+    def get_selected_module(self, x, adapter_list, router):
+        if router is not None:
+            query = x[0, :, :]
+            clean_logits = query @ router[0]
+            if router[1] is not None:
+                raw_noise_stddev = query @ router[1]
+                noise_stddev = F.softplus(raw_noise_stddev) + 1e-2
+                logits = clean_logits + (torch.randn_like(clean_logits) * noise_stddev)
+            else:
+                logits = clean_logits
+
+            values, indices = torch.topk(logits, k=2, dim=-1)
+            mask = F.softmax(values, dim=-1)
+            all_out = torch.stack([adapter(x, add_residual=False) for adapter in adapter_list], dim=2)
+            selected_out = torch.gather(all_out, dim=2, index=indices.reshape(1, x.shape[1], -1, 1).expand(x.shape[0], -1, -1, x.shape[2]))
+            adapt_out = (selected_out*mask.reshape(1, x.shape[1], -1, 1)).sum(dim=2)
+        else:
+            adapt_out = adapter_list(x, add_residual=False)
+        return adapt_out
+
+    def forward(self, x: torch.Tensor, adapter_list=None, router=None):
         attn_out = x + self.attention(self.ln_1(x))
-        if adapter is not None:
-            adapt_out = adapter(attn_out, add_residual=False)
+        if adapter_list is not None and self.ffn_adapt_option == "parallel":
+            adapt_out = self.get_selected_module(attn_out, adapter_list, router)
         else:
             adapt_out = None
 
-        mlp_out = self.mlp(self.ln_2(attn_out))
-
-        if adapt_out is not None:
+        mlp_out = attn_out+self.mlp(self.ln_2(attn_out))
+        if adapter_list is not None:
             if self.ffn_adapt_option == 'sequential':
-                mlp_out = adapter(mlp_out)
+                mlp_out = mlp_out+self.get_selected_module(mlp_out, adapter_list, router)
             elif self.ffn_adapt_option == 'parallel':
                 mlp_out = mlp_out + adapt_out
             else:
                 pass
 
-        out = attn_out + mlp_out
+        out = mlp_out
 
         return out
 
@@ -218,13 +238,14 @@ class Transformer(nn.Module):
         super().__init__()
         self.width = width
         self.layers = layers
-        self.resblocks = nn.Sequential(*[ResidualAttentionBlock(width, heads, attn_mask, lora_rank=lora_rank) for _ in range(layers)])
+        self.resblocks = nn.Sequential(
+            *[ResidualAttentionBlock(width, heads, attn_mask, lora_rank=lora_rank) for _ in range(layers)])
 
-    def forward(self, x: torch.Tensor, adapter_list=None):
+    def forward(self, x: torch.Tensor, adapter_list=None, router_list=None):
         if adapter_list is not None:
             for i, blk in enumerate(self.resblocks):
                 if i < len(adapter_list):
-                    x = blk(x, adapter_list[i])
+                    x = blk(x, adapter_list[i], [router_list[0][i], router_list[1][i]] if router_list is not None else None)
                 else:
                     x = blk(x)
             return x
@@ -233,7 +254,8 @@ class Transformer(nn.Module):
 
 
 class VisionTransformer(nn.Module):
-    def __init__(self, input_resolution: int, patch_size: int, width: int, layers: int, heads: int, output_dim: int, lora_rank=0):
+    def __init__(self, input_resolution: int, patch_size: int, width: int, layers: int, heads: int, output_dim: int,
+                 lora_rank=0):
         super().__init__()
         self.input_resolution = input_resolution
         self.output_dim = output_dim
@@ -249,16 +271,18 @@ class VisionTransformer(nn.Module):
         self.ln_post = LayerNorm(width)
         self.proj = nn.Parameter(scale * torch.randn(width, output_dim))
 
-    def forward(self, x: torch.Tensor, adapter_list=None, ret_all=False):
+    def forward(self, x: torch.Tensor, adapter_list=None, router_list=None, ret_all=False):
         x = self.conv1(x)  # shape = [*, width, grid, grid]
         x = x.reshape(x.shape[0], x.shape[1], -1)  # shape = [*, width, grid ** 2]
         x = x.permute(0, 2, 1)  # shape = [*, grid ** 2, width]
-        x = torch.cat([self.class_embedding.to(x.dtype) + torch.zeros(x.shape[0], 1, x.shape[-1], dtype=x.dtype, device=x.device), x], dim=1)  # shape = [*, grid ** 2 + 1, width]
+        x = torch.cat(
+            [self.class_embedding.to(x.dtype) + torch.zeros(x.shape[0], 1, x.shape[-1], dtype=x.dtype, device=x.device),
+             x], dim=1)  # shape = [*, grid ** 2 + 1, width]
         x = x + self.positional_embedding.to(x.dtype)
         x = self.ln_pre(x)
 
         x = x.permute(1, 0, 2)  # NLD -> LND
-        x = self.transformer(x, adapter_list)
+        x = self.transformer(x, adapter_list, router_list)
         all_tokens = x.permute(1, 0, 2)  # LND -> NLD
         patch_tokens = all_tokens[:, 1:, :]
         x = self.ln_post(all_tokens[:, 0, :])
@@ -378,17 +402,17 @@ class CLIP(nn.Module):
     def dtype(self):
         return self.visual.conv1.weight.dtype
 
-    def encode_image(self, image, adapter_list=None, ret_all=False):
-        return self.visual(image.type(self.dtype), adapter_list, ret_all)
+    def encode_image(self, image, adapter_list=None, ret_all=False, router_list=None):
+        return self.visual(image.type(self.dtype), adapter_list, router_list=router_list, ret_all=ret_all)
 
-    def encode_text(self, text, adapter_list=None, prompt=None):
+    def encode_text(self, text, adapter_list=None, router_list=None, prompt=None):
         x = self.token_embedding(text).type(self.dtype)  # [batch_size, n_ctx, d_model]
         if prompt is not None:
-            x = torch.cat([x[:, 0:1, :], prompt.type(self.dtype), x[:, 1+prompt.shape[1]:, :]], dim=1)
+            x = torch.cat([x[:, 0:1, :], prompt.type(self.dtype), x[:, 1 + prompt.shape[1]:, :]], dim=1)
         x = x + self.positional_embedding.type(self.dtype)
         x = x.permute(1, 0, 2)  # NLD -> LND
         # print(x.shape)
-        x = self.transformer(x, adapter_list)
+        x = self.transformer(x, adapter_list, router_list=router_list)
         x = x.permute(1, 0, 2)  # LND -> NLD
         x = self.ln_final(x).type(self.dtype)
 
@@ -446,12 +470,14 @@ def build_model(state_dict: dict, lora_r, prompt_length):
 
     if vit:
         vision_width = state_dict["visual.conv1.weight"].shape[0]
-        vision_layers = len([k for k in state_dict.keys() if k.startswith("visual.") and k.endswith(".attn.in_proj_weight")])
+        vision_layers = len(
+            [k for k in state_dict.keys() if k.startswith("visual.") and k.endswith(".attn.in_proj_weight")])
         vision_patch_size = state_dict["visual.conv1.weight"].shape[-1]
         grid_size = round((state_dict["visual.positional_embedding"].shape[0] - 1) ** 0.5)
         image_resolution = vision_patch_size * grid_size
     else:
-        counts: list = [len(set(k.split(".")[2] for k in state_dict if k.startswith(f"visual.layer{b}"))) for b in [1, 2, 3, 4]]
+        counts: list = [len(set(k.split(".")[2] for k in state_dict if k.startswith(f"visual.layer{b}"))) for b in
+                        [1, 2, 3, 4]]
         vision_layers = tuple(counts)
         vision_width = state_dict["visual.layer1.0.conv1.weight"].shape[0]
         output_width = round((state_dict["visual.attnpool.positional_embedding"].shape[0] - 1) ** 0.5)

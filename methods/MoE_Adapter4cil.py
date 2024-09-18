@@ -12,12 +12,14 @@ from model.CLIP_MoE_Adapter4cil import clip
 from ReplayBank import ReplayBank
 from utils.functions import *
 from utils.train_utils import *
+from torch.cuda.amp import autocast, GradScaler
+scaler = GradScaler()
 
 
 class MoE_Adapter4cil(Base):
     def __init__(self, config, logger):
         super().__init__(config, logger)
-
+        self.memory_bank = ReplayBank(config, logger)
         self.class_to_idx = None
         self.current_class_names = []
         self.new_class_names = []
@@ -69,6 +71,7 @@ class MoE_Adapter4cil(Base):
             if checkpoint["class_means"] is not None:
                 self.class_means = checkpoint["class_means"]
             self.logger.info("checkpoint loaded!")
+        self.model.show_trainable_params()
         self.new_text_tokens = self.model.text_tokenize(self.new_class_names, self.prompt_template)
         self.cur_text_tokens = self.model.text_tokenize(self.current_class_names, self.prompt_template)
         self.model = self.model.cuda()
@@ -82,16 +85,17 @@ class MoE_Adapter4cil(Base):
         model.train()
         for idx, (inputs, targets, _) in enumerate(train_loader):
             inputs, targets = inputs.cuda(), targets.cuda()
-            out = model(inputs, text_tokens=self.cur_text_tokens.cuda(), train=True)
-            logits_per_image = out["logits"]
-            # features = out["features"]
-            # assert logits_per_image.shape[1] == self.new_classes, "epoch train error"
+            with autocast():
+                out = model(inputs, text_tokens=self.cur_text_tokens.cuda())
+                logits_per_image = out["logits"]
+                # features = out["features"]
+                # assert logits_per_image.shape[1] == self.new_classes, "epoch train error"
 
-            # ce loss version implementation
-            ce_loss = hard_loss(logits_per_image, targets)
-            # ce_loss = F.cross_entropy(logits[:, :self.cur_classes], targets)
-            ce_losses += ce_loss.item()
-            loss = ce_loss
+                # ce loss version implementation
+                ce_loss = hard_loss(logits_per_image, targets)
+                # ce_loss = F.cross_entropy(logits[:, :self.cur_classes], targets)
+                ce_losses += ce_loss.item()
+                loss = ce_loss
             preds = torch.max(logits_per_image, dim=1)[1]
 
             if idx == 0:
@@ -101,9 +105,15 @@ class MoE_Adapter4cil(Base):
                 all_preds = torch.cat((all_preds, preds))
                 all_targets = torch.cat((all_targets, targets))
 
+            # optimizer.zero_grad()
+            # loss.backward()
+            # optimizer.step()
+            # losses += loss.item()
+
             optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
+            scaler.scale(loss).backward()
+            scaler.step(optimizer)
+            scaler.update()
             losses += loss.item()
 
         train_loss = {'all_loss': losses / len(train_loader), 'loss_clf': ce_losses / len(train_loader)}
@@ -117,7 +127,7 @@ class MoE_Adapter4cil(Base):
         with torch.no_grad():
             for idx, (inputs, targets, _) in enumerate(test_loader):
                 inputs, targets = inputs.cuda(), targets.cuda()
-                out = model(inputs, text_tokens=self.cur_text_tokens.cuda(), train=True)
+                out = model(inputs, text_tokens=self.cur_text_tokens.cuda())
                 logits_per_image = out["logits"]
                 # features = out["features"]
                 assert logits_per_image.shape[1] == self.cur_classes, "epoch train error"
@@ -143,7 +153,7 @@ class MoE_Adapter4cil(Base):
         with torch.no_grad():
             for idx, (inputs, targets, _) in enumerate(test_loader):
                 inputs, targets = inputs.cuda(), targets.cuda()
-                out = model(inputs, text_tokens=self.cur_text_tokens.cuda(), train=True)
+                out = model(inputs, text_tokens=self.cur_text_tokens.cuda())
                 logits = out["logits"]
                 scores, preds = torch.max(F.softmax(logits[:, :self.cur_classes], dim=-1), dim=1)
 

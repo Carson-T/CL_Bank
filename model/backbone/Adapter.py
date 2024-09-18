@@ -8,13 +8,15 @@ class Adapter(nn.Module):
                  d_model=768,
                  bottleneck=64,
                  dropout=0.0,
+                 nonlinear=nn.ReLU,
+                 is_ss=False,
                  init_option="bert",
                  adapter_scalar="1.0",
                  adapter_layernorm_option=None):
         super().__init__()
         self.n_embd = d_model
         self.down_size = bottleneck
-
+        self.is_ss = is_ss
         # _before
         self.adapter_layernorm_option = adapter_layernorm_option
 
@@ -28,9 +30,11 @@ class Adapter(nn.Module):
             self.scale = float(adapter_scalar)
 
         self.down_proj = nn.Linear(self.n_embd, self.down_size)
-        self.non_linear_func = nn.ReLU()
+        self.non_linear_func = nonlinear()
         self.up_proj = nn.Linear(self.down_size, self.n_embd)
-
+        if self.is_ss:
+            self.alpha = nn.Parameter(torch.ones(d_model))
+            self.beta = nn.Parameter(torch.ones(d_model))
         self.dropout = dropout
         if init_option == "bert":
             raise NotImplementedError
@@ -45,12 +49,12 @@ class Adapter(nn.Module):
         residual = x if residual is None else residual
         if self.adapter_layernorm_option == 'in':
             x = self.adapter_layer_norm_before(x)
-
+        if self.is_ss:
+            x = self.alpha*x + self.beta
         down = self.down_proj(x)
         down = self.non_linear_func(down)
         down = nn.functional.dropout(down, p=self.dropout, training=self.training)
         up = self.up_proj(down)
-
         up = up * self.scale
 
         if self.adapter_layernorm_option == 'out':
